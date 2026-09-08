@@ -20,7 +20,8 @@ export const ui = {
       correo: 'Correo',
       whatsapp: 'WhatsApp',
       reclamaciones: 'Libro de Reclamaciones',
-      portal: 'Portal de clientes',
+      seguimiento: 'Seguimiento',
+      portal: 'Zona Cliente',
     },
     comun: {
       cotizar: 'Cotiza ahora',
@@ -152,7 +153,7 @@ export const ui = {
       tituloItalica: 'en todo momento',
       texto:
         'Rastreo 24/7 y trazabilidad documental de inicio a fin. Ingresa al panel de seguimiento y consulta el estado real de cada embarque, sin llamadas ni correos de por medio.',
-      cta: 'Entrar al panel',
+      cta: 'Ir a seguimiento',
       bullets: ['Rastreo en tiempo real con GPS', 'Historial de hitos por embarque', 'Trazabilidad documental completa'],
     },
     proceso: {
@@ -281,23 +282,36 @@ export const ui = {
       titulo: 'Tu carga, visible',
       tituloItalica: 'en todo momento y lugar',
       bajada:
-        'Rastreo 24/7 y cobertura total. Ingresa al panel de seguimiento con las credenciales que te entregó tu ejecutivo comercial y consulta el estado de cada embarque.',
-      accesoEyebrow: 'Acceso al panel',
+        'Rastreo 24/7 y cobertura total. Consulta cualquier embarque con su número de orden o HBL, o entra a la Zona Cliente para ver toda tu operación.',
+      accesoEyebrow: 'Accesos',
       accesoTitulo: 'Consulta el estado de tu embarque',
       accesoTexto:
-        'El panel de seguimiento te muestra los hitos de tu operación: recojo en origen, embarque, tránsito, arribo, despacho aduanero y entrega final.',
+        'Tienes dos formas de entrar: el seguimiento público, para consultar un embarque con su número de orden o HBL, y la Zona Cliente, con acceso a toda tu operación. Ambos muestran los hitos: recojo en origen, embarque, tránsito, arribo, despacho aduanero y entrega final.',
       bullets: [
         'Rastreo en tiempo real con posicionamiento GPS.',
         'Trazabilidad documental de inicio a fin.',
         'Historial de hitos por embarque.',
         'Disponible las 24 horas, los 7 días de la semana.',
       ],
-      abrirPanel: 'Abrir el panel de tracking',
-      nuevaVentana: 'Se abre en una ventana nueva. El panel es operado por nuestro sistema de gestión de embarques.',
+      accesos: [
+        {
+          titulo: 'Seguimiento de carga',
+          texto: 'Consulta el estado de un embarque con tu número de orden o HBL. No necesitas credenciales.',
+          cta: 'Rastrear un embarque',
+          icono: 'gps',
+        },
+        {
+          titulo: 'Zona Cliente',
+          texto: 'Entra con tu usuario y contraseña para ver toda tu operación, documentos e historial. El RUC ya viene precargado.',
+          cta: 'Entrar a Zona Cliente',
+          icono: 'search',
+        },
+      ],
+      nuevaVentana: 'Ambos accesos se abren en una ventana nueva. Son parte de nuestro sistema de gestión de embarques.',
       sinCredencialesTitulo: '¿No tienes credenciales?',
       sinCredencialesTexto:
         'Si aún no cuentas con acceso al panel, escríbenos con tu número de booking, BL o AWB y te enviamos el estado actualizado de tu carga.',
-      mensajeWa: 'Hola WOLI, quisiera consultar el estado de mi carga. Mi número de booking/BL/AWB es: ',
+      mensajeWa: 'Hola WOLI, quisiera consultar el estado de mi carga. Mi número de orden/HBL/AWB es: ',
       ventajas: [
         { titulo: 'Rastreo 24/7', texto: 'Seguimiento continuo del embarque, con actualización de hitos y alertas ante cualquier desvío.' },
         { titulo: 'Trazabilidad asegurada', texto: 'Cada documento y cada movimiento queda registrado y disponible para tu revisión.' },
@@ -484,7 +498,8 @@ export const ui = {
       correo: 'Email',
       whatsapp: 'WhatsApp',
       reclamaciones: 'Complaints Book',
-      portal: 'Customer portal',
+      seguimiento: 'Tracking',
+      portal: 'Client Area',
     },
     comun: {
       cotizar: 'Get a quote',
@@ -615,7 +630,7 @@ export const ui = {
       tituloItalica: 'at all times',
       texto:
         '24/7 tracking and end-to-end document traceability. Log in to the tracking portal and check the real status of every shipment, with no calls or emails in between.',
-      cta: 'Open the portal',
+      cta: 'Go to tracking',
       bullets: ['Real-time GPS tracking', 'Milestone history per shipment', 'Complete document traceability'],
     },
     proceso: {
@@ -740,23 +755,36 @@ export const ui = {
       titulo: 'Your cargo, visible',
       tituloItalica: 'anytime, anywhere',
       bajada:
-        '24/7 tracking and full coverage. Log in to the tracking portal with the credentials your account executive gave you and check the status of every shipment.',
-      accesoEyebrow: 'Portal access',
+        '24/7 tracking and full coverage. Check any shipment with its order or HBL number, or log in to the Client Area for your full operation.',
+      accesoEyebrow: 'Access',
       accesoTitulo: 'Check your shipment status',
       accesoTexto:
-        'The tracking portal shows the milestones of your operation: pickup at origin, loading, transit, arrival, customs clearance and final delivery.',
+        'There are two ways in: public tracking, to check a shipment with its order or HBL number, and the Client Area, with access to your whole operation. Both show the milestones: pickup at origin, loading, transit, arrival, customs clearance and final delivery.',
       bullets: [
         'Real-time tracking with GPS positioning.',
         'End-to-end document traceability.',
         'Milestone history per shipment.',
         'Available 24 hours a day, 7 days a week.',
       ],
-      abrirPanel: 'Open the tracking portal',
-      nuevaVentana: 'Opens in a new window. The portal is run by our shipment management system.',
+      accesos: [
+        {
+          titulo: 'Cargo tracking',
+          texto: 'Check the status of a shipment with your order or HBL number. No credentials needed.',
+          cta: 'Track a shipment',
+          icono: 'gps',
+        },
+        {
+          titulo: 'Client Area',
+          texto: 'Log in with your username and password to see your full operation, documents and history. The tax ID comes pre-filled.',
+          cta: 'Enter the Client Area',
+          icono: 'search',
+        },
+      ],
+      nuevaVentana: 'Both open in a new window. They are part of our shipment management system.',
       sinCredencialesTitulo: 'No credentials yet?',
       sinCredencialesTexto:
         'If you do not have portal access yet, write to us with your booking, BL or AWB number and we will send you the updated status of your cargo.',
-      mensajeWa: 'Hello WOLI, I would like to check the status of my cargo. My booking/BL/AWB number is: ',
+      mensajeWa: 'Hello WOLI, I would like to check the status of my cargo. My order/HBL/AWB number is: ',
       ventajas: [
         { titulo: '24/7 tracking', texto: 'Continuous shipment monitoring, with milestone updates and alerts on any deviation.' },
         { titulo: 'Guaranteed traceability', texto: 'Every document and every movement is recorded and available for your review.' },

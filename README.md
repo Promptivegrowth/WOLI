@@ -128,9 +128,20 @@ respaldo. Las recomendaciones de formato están en `public/video/LEEME.txt`.
 
 ### Pendiente de completar
 
-- `site.ruc` está vacío en `src/data/site.js`. Al llenarlo, el RUC aparece automáticamente en la
-  cabecera del Libro de Reclamaciones, como exige la normativa.
+- `site.ruc` está puesto como `20608160061`, tomado del parámetro `ruc` de las URL del sistema de
+  embarques. **Conviene confirmarlo**: se muestra en la cabecera del Libro de Reclamaciones.
 - Los enlaces de redes sociales apuntan a los dominios genéricos: reemplázalos por los perfiles reales.
+
+### Accesos al sistema de embarques
+
+Son dos, y viven en `src/data/site.js`:
+
+| Campo | Qué es | Necesita credenciales |
+|---|---|---|
+| `site.seguimiento` | Búsqueda pública por Nro. de Orden o HBL | No |
+| `site.zonaCliente` | Área privada con toda la operación | Sí (el RUC va precargado en la URL) |
+
+Ambos aparecen en la barra de utilidad y en `/tracking`.
 
 ---
 

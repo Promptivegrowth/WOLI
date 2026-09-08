@@ -10,6 +10,9 @@ const { lang = 'es' } = Astro.props;
 const d = t(lang);
 const p = d.tracking;
 const iconos = ['gps', 'shield', 'globe'];
+
+// Los dos accesos, en el mismo orden que los textos del diccionario
+const enlaces = [site.seguimiento, site.zonaCliente];
 ---
 
 <Base lang={lang} clave="tracking" title={d.nav.tracking} description={p.bajada}>
@@ -24,35 +27,36 @@ const iconos = ['gps', 'shield', 'globe'];
   />
 
   <section class="section section--tight">
-    <div class="wrap split">
+    <div class="wrap split" style="align-items:start">
       <div data-reveal>
         <p class="eyebrow">{p.accesoEyebrow}</p>
         <h2 class="h2">{p.accesoTitulo}</h2>
         <p class="lead" style="margin-bottom:1.8rem">{p.accesoTexto}</p>
-        <ul class="checks" style="margin-bottom:2.2rem">
+        <ul class="checks">
           {p.bullets.map((b) => <li>{b}</li>)}
         </ul>
-        <a class="btn" href={site.tracking} target="_blank" rel="noopener noreferrer">
-          {p.abrirPanel}
-          <span class="btn__ico"><Icon name="arrowUpRight" /></span>
-        </a>
-        <p style="font-size:.86rem;color:var(--ink-mute);margin-top:1rem">{p.nuevaVentana}</p>
+        <p style="font-size:.86rem;color:var(--ink-mute);margin-top:1.8rem">{p.nuevaVentana}</p>
       </div>
 
-      <div class="panel panel--dark" data-reveal style="--d:120ms">
-        <div class="card__icon" style="background:rgba(255,255,255,.1);color:#fff;margin-bottom:1.3rem">
-          <Icon name="search" />
-        </div>
-        <h3 class="h3" style="margin-bottom:.8rem">{p.sinCredencialesTitulo}</h3>
-        <p style="color:rgba(255,255,255,.76);margin-bottom:1.6rem">{p.sinCredencialesTexto}</p>
-        <div class="btn-row">
-          <a class="btn btn--wa btn--block btn--plain" href={waLink(p.mensajeWa)} target="_blank" rel="noopener noreferrer">
-            <Icon name="whatsapp" />{d.comun.consultarWhatsapp}
-          </a>
-          <a class="btn btn--light btn--block btn--plain" href={`mailto:${site.email}`}>
-            <Icon name="mail" />{d.comun.escribirCorreo}
-          </a>
-        </div>
+      <div class="grid" style="gap:1.2rem" data-reveal>
+        {
+          p.accesos.map((a, i) => (
+            <article class="card">
+              <div class="card__icon"><Icon name={a.icono} /></div>
+              <h3>{a.titulo}</h3>
+              <p style="margin-bottom:1.4rem">{a.texto}</p>
+              <a
+                class={i === 0 ? 'btn' : 'btn btn--ghost'}
+                href={enlaces[i]}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {a.cta}
+                <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+              </a>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -69,6 +73,30 @@ const iconos = ['gps', 'shield', 'globe'];
             </article>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="panel panel--dark" data-reveal>
+        <div class="split" style="gap:2rem">
+          <div>
+            <div class="card__icon" style="background:rgba(255,255,255,.1);color:#fff;margin-bottom:1.3rem">
+              <Icon name="search" />
+            </div>
+            <h2 class="h3" style="margin-bottom:.8rem">{p.sinCredencialesTitulo}</h2>
+            <p style="color:rgba(255,255,255,.76)">{p.sinCredencialesTexto}</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn--wa btn--plain" href={waLink(p.mensajeWa)} target="_blank" rel="noopener noreferrer">
+              <Icon name="whatsapp" />{d.comun.consultarWhatsapp}
+            </a>
+            <a class="btn btn--light btn--plain" href={`mailto:${site.email}`}>
+              <Icon name="mail" />{d.comun.escribirCorreo}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>

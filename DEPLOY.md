@@ -14,7 +14,9 @@ no traducción por JavaScript, así que ambas versiones se indexan por separado.
 
 1. **Sube el vídeo de portada** a `public/video/hero.mp4` (ver `public/video/LEEME.txt`).
    No hay que tocar código: si el archivo está, el hero lo usa; si no, muestra la imagen de respaldo.
-2. **Completa el RUC** en `src/data/site.js` (`site.ruc`). Aparece en el Libro de Reclamaciones.
+2. **Confirma el RUC** en `src/data/site.js` (`site.ruc`). Está puesto como `20608160061`,
+   tomado del parámetro `ruc` de las URL del sistema de embarques. Aparece en la cabecera del
+   Libro de Reclamaciones, así que conviene verificarlo antes de publicar.
 3. **Reemplaza los enlaces de redes sociales** en `src/data/site.js` por los perfiles reales.
 
 ---
@@ -124,7 +126,8 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 - [ ] Comprobar que el vídeo de portada carga y se reproduce en silencio.
 - [ ] Enviar `https://wlicargo.com/sitemap-index.xml` a Google Search Console, y declarar allí las
       dos versiones de idioma.
-- [ ] Revisar que el panel de tracking abra correctamente desde `/tracking`.
+- [ ] Revisar que los dos accesos abran correctamente desde `/tracking`:
+      **Seguimiento** (búsqueda pública por Nro. de Orden o HBL) y **Zona Cliente** (login).
 
 ---
 

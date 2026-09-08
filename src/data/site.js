@@ -3,8 +3,9 @@ export const site = {
   nombre: 'WOLI',
   nombreLargo: 'World Logistics International',
   legal: 'World Logistics International S.A.C.',
-  // Completar con el RUC real de la empresa: se muestra en el Libro de Reclamaciones.
-  ruc: '',
+  // Tomado de las URL del sistema de embarques (parámetro ruc). Confirmar antes
+  // de publicar: se muestra en la cabecera del Libro de Reclamaciones.
+  ruc: '20608160061',
   dominio: 'https://wlicargo.com',
   direccion: 'Cal. Germán Schreiber Nro. 276, San Isidro — Lima, Perú',
   email: 'gerencia@wlicargo.com',
@@ -19,7 +20,11 @@ export const site = {
   mapa:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2758.5904301880196!2d-77.02532943264664!3d-12.095989718965916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c86567bc14ab%3A0xa45eb32ad7d1aef1!2sSchreiber%20Coworking%20%26%20Offices%20-%20Sede%20San%20Isidro!5e0!3m2!1ses-419!2spe!4v1740165568032!5m2!1ses-419!2spe',
   mapaLink: 'https://maps.google.com/?q=Germán+Schreiber+276+San+Isidro+Lima+Perú',
-  tracking: 'https://miranda-soft.com.pe/tools/206wli19375261/panel/login.html',
+  // Dos accesos distintos al sistema de embarques:
+  //  · seguimiento  — consulta pública por número de orden, sin credenciales
+  //  · zonaCliente  — área privada, requiere usuario y contraseña
+  seguimiento: 'https://www.crm.miranda-soft.com.pe/tools/tracking/?order=&origen=&servicio=&ruc=20608160061',
+  zonaCliente: 'https://miranda-soft.com/zonacliente/#/login?ruc=20608160061',
   // Vídeo de portada. Sube tu archivo a public/video/ con estos nombres.
   // Si no existe, el hero usa la imagen de respaldo automáticamente.
   video: { mp4: '/video/hero.mp4', webm: '/video/hero.webm', poster: '/img/cr-ship-dusk.jpg' },

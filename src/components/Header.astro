@@ -17,7 +17,8 @@ const activo = (k) => k === clave;
       <a href={waLink()} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{site.telefonoDisplay}</a>
     </nav>
     <nav aria-label={lang === 'en' ? 'Secondary links' : 'Enlaces secundarios'}>
-      <a href={site.tracking} target="_blank" rel="noopener noreferrer"><Icon name="search" />{d.utilidad.portal}</a>
+      <a href={site.seguimiento} target="_blank" rel="noopener noreferrer"><Icon name="gps" />{d.utilidad.seguimiento}</a>
+      <a href={site.zonaCliente} target="_blank" rel="noopener noreferrer"><Icon name="search" />{d.utilidad.portal}</a>
       <a href={ruta('reclamaciones', lang)}><Icon name="book" />{d.utilidad.reclamaciones}</a>
     </nav>
   </div>
