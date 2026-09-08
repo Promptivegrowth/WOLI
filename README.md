@@ -95,10 +95,12 @@ Resumen:
 
 ## Preloader
 
-Pantalla de carga temática de la industria: el isotipo WOLI se revela de abajo hacia arriba, una
-ruta de embarque se traza con un buque que la recorre, y un contador muestra el progreso real de
-carga de la página mientras rotan códigos de terminal.
+La pantalla de carga **es el seguimiento de un envío**. Un contenedor recorre una ruta ascendente
+—el mismo gesto de la flecha del isotipo— mientras se encienden los cuatro hitos de la operación:
+**Recojo → Embarque → Tránsito → Entrega**. La posición del contenedor, el tramo naranja de la ruta,
+el porcentaje y el rótulo de estado están atados al progreso real de carga de la página.
 
+- Versión clara sobre fondo blanco, para que el concepto se lea de inmediato.
 - Se muestra completo solo en la primera visita de cada sesión (`sessionStorage`).
 - Respeta `prefers-reduced-motion`.
 - Salvaguarda de 6 segundos: nunca deja el contenido bloqueado.
@@ -111,5 +113,7 @@ carga de la página mientras rotan códigos de terminal.
 - Navegación por teclado, `:focus-visible` visible y enlace de salto al contenido.
 - Todas las animaciones se desactivan con `prefers-reduced-motion`.
 - Imágenes optimizadas y con carga diferida; tipografías con `display=swap`.
+- Responsive verificado de 320 px a 1920 px: sin desborde horizontal en ninguna página y áreas
+  táctiles de al menos 34 px en los controles interactivos.
 - Datos estructurados JSON-LD (`LogisticsBusiness`, `Service`, `ItemList`, `ContactPage`) y
   `sitemap-index.xml` generado en cada compilación.
