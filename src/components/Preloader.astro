@@ -1,0 +1,102 @@
+---
+// Preloader temático de la industria logística:
+// isotipo WOLI que se revela, ruta de embarque animada, códigos de terminal
+// y barra de progreso real basada en la carga de la página.
+const puertos = ['Callao · PEC LL', 'Chancay · PECHY', 'Paita · PEPAI', 'Lima · LIM', 'Matarani · PEMRI', 'Callao · PECLL'];
+---
+
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Cargando el sitio de WOLI">
+  <div class="preloader__grid" aria-hidden="true"></div>
+  <div class="preloader__glow" aria-hidden="true"></div>
+
+  <div class="preloader__core">
+    <div class="preloader__mark">
+      <span class="preloader__ring" aria-hidden="true"></span>
+      <img src="/brand/isotipo-woli-blanco.png" alt="" width="118" height="108" fetchpriority="high" />
+    </div>
+
+    <div class="preloader__route" aria-hidden="true">
+      <svg viewBox="0 0 420 42" preserveAspectRatio="none">
+        <path class="route-path" d="M4,34 C90,34 130,10 210,10 C290,10 330,26 416,6"></path>
+        <path class="route-progress" d="M4,34 C90,34 130,10 210,10 C290,10 330,26 416,6"></path>
+        <circle class="route-node" cx="4" cy="34" r="3"></circle>
+        <circle class="route-node" cx="210" cy="10" r="3"></circle>
+        <circle class="route-node" cx="416" cy="6" r="3"></circle>
+        <g class="route-ship">
+          <path d="M-7,2 h14 l-2,4 h-10 z M-1,-4 h2 v6 h-2 z" />
+        </g>
+      </svg>
+    </div>
+
+    <p class="preloader__label">World Logistics International</p>
+
+    <div class="preloader__ports" aria-hidden="true">
+      <span>
+        {puertos.map((p) => <em>{p}</em>)}
+      </span>
+    </div>
+
+    <div class="preloader__bar"><i id="pre-bar"></i></div>
+    <p class="preloader__pct"><span id="pre-pct">0</span>% · EN TRÁNSITO</p>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var el = document.getElementById('preloader');
+    if (!el) return;
+
+    var bar = document.getElementById('pre-bar');
+    var pct = document.getElementById('pre-pct');
+    var body = document.body;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Solo la primera visita de la sesión ve la animación completa.
+    var repeat = sessionStorage.getItem('woli_preloaded') === '1';
+    var minTime = reduce ? 260 : repeat ? 700 : 2600;
+
+    body.classList.add('is-locked');
+
+    var value = 0;
+    var start = Date.now();
+    var done = false;
+
+    function paint(v) {
+      value = Math.max(value, Math.min(100, v));
+      if (bar) bar.style.width = value + '%';
+      if (pct) pct.textContent = Math.round(value);
+    }
+
+    var tick = setInterval(function () {
+      var elapsed = Date.now() - start;
+      paint(Math.min(92, (elapsed / minTime) * 100));
+    }, 60);
+
+    function finish() {
+      if (done) return;
+      done = true;
+      clearInterval(tick);
+      paint(100);
+      sessionStorage.setItem('woli_preloaded', '1');
+      setTimeout(function () {
+        el.classList.add('is-done');
+        body.classList.remove('is-locked');
+        document.dispatchEvent(new CustomEvent('woli:ready'));
+        setTimeout(function () {
+          el.setAttribute('hidden', '');
+        }, 900);
+      }, 180);
+    }
+
+    function ready() {
+      var wait = Math.max(0, minTime - (Date.now() - start));
+      setTimeout(finish, wait);
+    }
+
+    if (document.readyState === 'complete') ready();
+    else window.addEventListener('load', ready);
+
+    // Salvaguarda: nunca bloquear el contenido más de 6 segundos.
+    setTimeout(finish, 6000);
+  })();
+</script>

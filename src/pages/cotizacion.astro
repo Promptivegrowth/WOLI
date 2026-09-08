@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { servicios } from '../data/servicios.js';
+import { site, waLink } from '../data/site.js';
+---
+
+<Base
+  title="Solicitar cotización"
+  description="Solicita tu cotización logística a WOLI. Respuesta comercial en un plazo máximo de 48 horas para carga marítima, aérea, consolidada, aduanas y logística médica."
+>
+  <PageHead
+    eyebrow="Cotización"
+    title="Cuéntanos qué necesitas mover"
+    lead="Completa el formulario con los datos de tu operación y recibirás una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 48 horas."
+    image="/img/cr-ship-front.jpg"
+    crumbs={[{ label: 'Cotización' }]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="split split--form">
+        <div class="panel" data-reveal>
+          <h2 class="h3" style="margin-bottom:0.6rem">Datos de tu operación</h2>
+          <p style="color:var(--ink-soft);font-size:0.94rem;margin-bottom:1.9rem">
+            Los campos marcados con <span class="req" style="color:var(--wo-orange)">*</span> son obligatorios. Mientras
+            más detalle nos des, más precisa será la propuesta.
+          </p>
+
+          <form class="form" data-woli-form="cotizacion" data-wa-title="Solicitud de cotización" novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website">No completar</label>
+              <input id="hp_website" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="nombre">Nombre completo <span class="req">*</span></label>
+                <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="empresa">Empresa</label>
+                <input id="empresa" name="empresa" type="text" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="email">Correo electrónico <span class="req">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="telefono">Teléfono o WhatsApp</label>
+                <input id="telefono" name="telefono" type="tel" autocomplete="tel" placeholder="+51 999 999 999" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="servicio">Servicio de interés <span class="req">*</span></label>
+              <select id="servicio" name="servicio" required>
+                <option value="">Selecciona un servicio</option>
+                {servicios.map((s) => <option value={s.nombre} data-slug={s.slug}>{s.nombre}</option>)}
+                <option value="Otro / No estoy seguro">Otro / No estoy seguro</option>
+              </select>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="modalidad">Modalidad</label>
+                <select id="modalidad" name="modalidad">
+                  <option value="">Selecciona</option>
+                  <option>Importación</option>
+                  <option>Exportación</option>
+                  <option>Tránsito / reexpedición</option>
+                  <option>Transporte nacional</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="incoterm">Incoterm</label>
+                <select id="incoterm" name="incoterm">
+                  <option value="">No lo sé</option>
+                  <option>EXW</option>
+                  <option>FCA</option>
+                  <option>FOB</option>
+                  <option>CFR</option>
+                  <option>CIF</option>
+                  <option>DAP</option>
+                  <option>DDP</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="origen">Origen</label>
+                <input id="origen" name="origen" type="text" placeholder="Ciudad, puerto o aeropuerto" />
+              </div>
+              <div class="field">
+                <label for="destino">Destino</label>
+                <input id="destino" name="destino" type="text" placeholder="Ciudad, puerto o aeropuerto" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="carga">Tipo de carga</label>
+                <input id="carga" name="carga" type="text" placeholder="Ej.: equipos médicos, repuestos, textiles" />
+              </div>
+              <div class="field">
+                <label for="peso">Peso y volumen aproximados</label>
+                <input id="peso" name="peso" type="text" placeholder="Ej.: 1 200 kg / 8 m³ / 1x40 HC" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mensaje">Detalles adicionales</label>
+              <textarea id="mensaje" name="mensaje" placeholder="Fechas estimadas, condiciones especiales de manipulación, documentación disponible, etc."></textarea>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="consentimiento" required />
+              <span>
+                Autorizo a {site.nombreLargo} a tratar mis datos personales con la finalidad de atender esta solicitud,
+                conforme a la <a href="/privacidad">política de privacidad</a>. <span class="req">*</span>
+              </span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                Enviar solicitud<Icon name="arrowUpRight" />
+              </button>
+              <button class="btn btn--wa" type="button" data-wa-submit>
+                <Icon name="whatsapp" />Enviar por WhatsApp
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <h3 class="h4" style="margin-bottom:1.4rem">Qué pasa después</h3>
+            <ul class="checks">
+              <li>Revisamos tu requerimiento y validamos la información faltante.</li>
+              <li>Comparamos alternativas de ruta, modalidad y consolidación.</li>
+              <li>Te enviamos la propuesta con costos, tiempos y condiciones.</li>
+              <li>Si la apruebas, reservamos el espacio y coordinamos el recojo.</li>
+            </ul>
+            <p style="color:rgba(255,255,255,.6);font-size:0.85rem;margin-top:1.5rem">
+              Tiempo de atención comprometido: <strong style="color:#fff">{site.tiempoRespuesta}</strong>.
+            </p>
+          </div>
+
+          <div class="panel">
+            <h3 class="h4" style="margin-bottom:1.2rem">¿Prefieres hablar directamente?</h3>
+            <ul class="info-list">
+              <li>
+                <span class="info-list__ico"><Icon name="whatsapp" /></span>
+                <span>
+                  <b>WhatsApp</b>
+                  <a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a>
+                </span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="mail" /></span>
+                <span>
+                  <b>Correo</b>
+                  <a href={`mailto:${site.email}`}>{site.email}</a>
+                </span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="clock" /></span>
+                <span>
+                  <b>Horario</b>
+                  <p>{site.horario}</p>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="note">
+            <h4>¿Buscas precios de referencia?</h4>
+            <p>
+              Revisa nuestros <a href="/tarifarios" style="color:var(--wo-blue);text-decoration:underline">tarifarios publicados</a>
+              por terminal antes de solicitar la cotización.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+  <script is:inline>
+    // Preselecciona el servicio si se llega desde /servicios/[slug] con ?servicio=
+    (function () {
+      var slug = new URLSearchParams(window.location.search).get('servicio');
+      if (!slug) return;
+      var select = document.getElementById('servicio');
+      if (!select) return;
+      var opt = select.querySelector('option[data-slug="' + slug.replace(/"/g, '') + '"]');
+      if (opt) select.value = opt.value;
+    })();
+  </script>
+</Base>

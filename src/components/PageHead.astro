@@ -1,0 +1,28 @@
+---
+const { eyebrow, title, lead, image = '/img/cr-port-cranes.jpg', crumbs = [] } = Astro.props;
+---
+
+<section class="pagehead">
+  <div class="pagehead__bg" aria-hidden="true">
+    <img src={image} alt="" loading="eager" fetchpriority="high" />
+  </div>
+  <div class="wrap pagehead__inner">
+    {
+      crumbs.length > 0 && (
+        <nav class="crumbs" aria-label="Ruta de navegación">
+          <a href="/">Inicio</a>
+          {crumbs.map((c) => (
+            <>
+              <span>/</span>
+              {c.href ? <a href={c.href}>{c.label}</a> : <em style="font-style:normal;color:#fff">{c.label}</em>}
+            </>
+          ))}
+        </nav>
+      )
+    }
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>

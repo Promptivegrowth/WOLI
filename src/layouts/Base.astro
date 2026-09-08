@@ -1,0 +1,144 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Preloader from '../components/Preloader.astro';
+import { site } from '../data/site.js';
+
+const {
+  title,
+  description = site.descripcion,
+  image = '/brand/icon-512.png',
+  noindex = false,
+  schema = null,
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${site.nombre} — ${site.nombreLargo}` : `${site.nombre} — ${site.nombreLargo}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', site.dominio).href;
+const ogImage = new URL(image, site.dominio).href;
+
+const organizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'LogisticsBusiness',
+  name: site.nombreLargo,
+  alternateName: site.nombre,
+  url: site.dominio,
+  logo: new URL('/brand/icon-512.png', site.dominio).href,
+  image: ogImage,
+  description: site.descripcion,
+  email: site.email,
+  telephone: '+' + site.whatsapp,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Cal. Germán Schreiber 276',
+    addressLocality: 'San Isidro',
+    addressRegion: 'Lima',
+    addressCountry: 'PE',
+  },
+  areaServed: 'Worldwide',
+  openingHours: 'Mo-Fr 09:00-18:00',
+  sameAs: site.redes.map((r) => r.url),
+};
+---
+
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#0B2637" />
+    <meta name="author" content={site.nombreLargo} />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" />
+    <link rel="icon" href="/brand/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.nombreLargo} />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+
+  <body>
+    <Preloader />
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      // Revelado progresivo al hacer scroll (respeta prefers-reduced-motion vía CSS).
+      (function () {
+        var items = document.querySelectorAll('[data-reveal]');
+        if (!items.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+          items.forEach(function (el) {
+            el.classList.add('is-in');
+          });
+          return;
+        }
+
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+        );
+
+        items.forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+
+      // Acordeones accesibles con altura animada.
+      (function () {
+        document.querySelectorAll('.acc__btn').forEach(function (btn) {
+          var panel = document.getElementById(btn.getAttribute('aria-controls'));
+          if (!panel) return;
+          btn.addEventListener('click', function () {
+            var open = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', String(!open));
+            panel.style.height = open ? '0px' : panel.scrollHeight + 'px';
+          });
+        });
+        window.addEventListener('resize', function () {
+          document.querySelectorAll('.acc__btn[aria-expanded="true"]').forEach(function (btn) {
+            var panel = document.getElementById(btn.getAttribute('aria-controls'));
+            if (panel) panel.style.height = panel.scrollHeight + 'px';
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

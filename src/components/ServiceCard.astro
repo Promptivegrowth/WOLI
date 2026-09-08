@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+
+const { servicio, wide = false, eager = false } = Astro.props;
+---
+
+<article class={`svc${wide ? ' svc--wide' : ''}`} data-reveal>
+  <div class="svc__img">
+    <img src={servicio.imagen} alt={servicio.nombre} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  </div>
+  <div class="svc__body">
+    <p class="svc__tag">{servicio.corto}</p>
+    <h3>{servicio.nombre}</h3>
+    <p class="svc__desc">{servicio.resumen}</p>
+    <span class="svc__go">Ver servicio <Icon name="arrowUpRight" /></span>
+  </div>
+  <a class="svc__link" href={`/servicios/${servicio.slug}`} aria-label={`Ver el servicio de ${servicio.nombre}`}></a>
+</article>

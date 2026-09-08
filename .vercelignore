@@ -1,0 +1,6 @@
+node_modules
+.astro
+dist
+Woli - Web
+public/api/enviar.php
+DEPLOY.md

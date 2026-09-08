@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { servicios } from '../data/servicios.js';
+import { site, waLink } from '../data/site.js';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contacto — World Logistics International',
+  url: `${site.dominio}/contacto`,
+};
+---
+
+<Base
+  title="Contacto"
+  description="Contáctate con WOLI — World Logistics International. Oficina en San Isidro, Lima. Escríbenos por correo o WhatsApp y te respondemos en un máximo de 48 horas."
+  schema={schema}
+>
+  <PageHead
+    eyebrow="Contacto"
+    title="¡Ponte en contacto con nosotros!"
+    lead="Envíanos tu mensaje y elige cómo deseas contactarte: por correo o por WhatsApp. Nuestro equipo comercial te responderá en un plazo máximo de 48 horas."
+    image="/img/cr-ship-dusk.jpg"
+    crumbs={[{ label: 'Contacto' }]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="split split--form">
+        <div class="panel" data-reveal>
+          <h2 class="h3" style="margin-bottom:1.6rem">Escríbenos</h2>
+
+          <form class="form" data-woli-form="contacto" data-wa-title="Nueva consulta desde la web" novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website_c">No completar</label>
+              <input id="hp_website_c" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="nombre">Nombre completo <span class="req">*</span></label>
+                <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="empresa">Empresa</label>
+                <input id="empresa" name="empresa" type="text" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="email">Correo electrónico <span class="req">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="telefono">Teléfono o WhatsApp</label>
+                <input id="telefono" name="telefono" type="tel" autocomplete="tel" placeholder="+51 999 999 999" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="servicio">Servicio de interés</label>
+              <select id="servicio" name="servicio">
+                <option value="">Selecciona un servicio</option>
+                {servicios.map((s) => <option value={s.nombre}>{s.nombre}</option>)}
+                <option value="Consulta general">Consulta general</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="mensaje">Mensaje <span class="req">*</span></label>
+              <textarea id="mensaje" name="mensaje" data-minlength="15" required placeholder="Cuéntanos qué necesitas y en qué te podemos ayudar."></textarea>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="consentimiento" required />
+              <span>
+                Autorizo a {site.nombreLargo} a tratar mis datos personales con la finalidad de atender esta consulta,
+                conforme a la <a href="/privacidad">política de privacidad</a>. <span class="req">*</span>
+              </span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                Enviar por correo<Icon name="mail" />
+              </button>
+              <button class="btn btn--wa" type="button" data-wa-submit>
+                <Icon name="whatsapp" />Enviar por WhatsApp
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <h2 class="h4" style="margin-bottom:1.6rem">Información de contacto</h2>
+            <ul class="info-list">
+              <li>
+                <span class="info-list__ico"><Icon name="pin" /></span>
+                <span>
+                  <b>Oficina</b>
+                  <a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a>
+                </span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="mail" /></span>
+                <span>
+                  <b>Correo</b>
+                  <a href={`mailto:${site.email}`}>{site.email}</a>
+                </span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="whatsapp" /></span>
+                <span>
+                  <b>WhatsApp</b>
+                  <a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a>
+                </span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="clock" /></span>
+                <span>
+                  <b>Horario de atención</b>
+                  <p>{site.horario}</p>
+                </span>
+              </li>
+            </ul>
+
+            <div class="social">
+              {
+                site.redes.map((r) => (
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre}>
+                    <Icon name={r.icono} />
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="note">
+            <h4>¿Tienes un reclamo o una queja?</h4>
+            <p>
+              Regístralo en nuestro
+              <a href="/libro-de-reclamaciones" style="color:var(--wo-blue);text-decoration:underline">Libro de Reclamaciones</a>
+              y recibirás una constancia con el código de tu registro.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= MAPA ============================= -->
+  <section class="section section--tight section--mist">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Cómo llegar</p>
+        <h2 class="h2">Encuéntranos en San Isidro</h2>
+      </div>
+      <div class="figure" style="aspect-ratio:16/7;min-height:320px" data-reveal>
+        <iframe
+          src={site.mapa}
+          title="Ubicación de World Logistics International en San Isidro, Lima"
+          style="width:100%;height:100%;border:0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+</Base>

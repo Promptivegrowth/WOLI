@@ -1,0 +1,260 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site.js';
+
+const hoy = new Date().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+---
+
+<Base
+  title="Libro de Reclamaciones"
+  description="Libro de Reclamaciones virtual de World Logistics International. Registra tu reclamo o queja conforme al Código de Protección y Defensa del Consumidor (Ley 29571)."
+>
+  <PageHead
+    eyebrow="Libro de Reclamaciones Virtual"
+    title="Tu opinión nos ayuda a mejorar"
+    lead="World Logistics International está comprometida con la calidad del servicio y la satisfacción de sus clientes. Registra aquí tu reclamo o queja y recibirás una constancia con el código de tu solicitud."
+    image="/img/cr-port-cranes.jpg"
+    crumbs={[{ label: 'Libro de Reclamaciones' }]}
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <!-- ===================== DATOS DEL PROVEEDOR ===================== -->
+      <div class="panel" style="margin-bottom:2rem" data-reveal>
+        <div class="split" style="gap:2rem;align-items:center">
+          <div>
+            <p class="eyebrow">Datos del proveedor</p>
+            <h2 class="h3" style="margin-bottom:0.9rem">{site.legal}</h2>
+            <p style="color:var(--ink-soft);font-size:0.95rem">
+              {site.direccion}{site.ruc ? ` · RUC ${site.ruc}` : ''}<br />
+              {site.email} · {site.telefonoDisplay}
+            </p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-family:var(--font-head);font-size:0.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)">
+              Fecha del registro
+            </p>
+            <p style="font-family:var(--font-head);font-size:1.4rem;font-weight:800;letter-spacing:-.02em">{hoy}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="split split--form">
+        <!-- ========================= FORMULARIO ========================= -->
+        <div class="panel" data-reveal>
+          <form class="form" data-woli-form="reclamacion" data-wa-title="Libro de Reclamaciones — nuevo registro" novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website_r">No completar</label>
+              <input id="hp_website_r" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <!-- 1. Tipo de registro -->
+            <fieldset style="border:0;padding:0;margin:0">
+              <legend class="h4" style="margin-bottom:0.5rem">1. ¿Qué deseas registrar? <span class="req" style="color:var(--wo-orange)">*</span></legend>
+              <p style="color:var(--ink-soft);font-size:0.9rem;margin-bottom:1.1rem">
+                Elige la opción que corresponda a tu caso.
+              </p>
+              <div class="radio-cards">
+                <label class="radio-card">
+                  <input type="radio" name="tipo_registro" value="Reclamo" required />
+                  <b>Reclamo</b>
+                  <span>Disconformidad relacionada con el servicio contratado: por ejemplo, carga dañada o un error en la entrega.</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="tipo_registro" value="Queja" required />
+                  <b>Queja</b>
+                  <span>Malestar o descontento respecto a la atención al público, no relacionado directamente con el servicio.</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- 2. Identificación del consumidor -->
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">2. Identificación del consumidor reclamante</legend>
+
+              <div class="form__row">
+                <div class="field">
+                  <label for="nombre">Nombre completo o razón social <span class="req">*</span></label>
+                  <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+                </div>
+                <div class="field">
+                  <label for="tipo_documento">Tipo de documento <span class="req">*</span></label>
+                  <select id="tipo_documento" name="tipo_documento" required>
+                    <option value="DNI">DNI</option>
+                    <option value="Carné de extranjería">Carné de extranjería</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                    <option value="RUC">RUC</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="field">
+                  <label for="documento">Número de documento <span class="req">*</span></label>
+                  <input id="documento" name="documento" type="text" inputmode="numeric" required />
+                </div>
+                <div class="field">
+                  <label for="telefono">Teléfono <span class="req">*</span></label>
+                  <input id="telefono" name="telefono" type="tel" autocomplete="tel" required placeholder="+51 999 999 999" />
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="field">
+                  <label for="email">Correo electrónico <span class="req">*</span></label>
+                  <input id="email" name="email" type="email" autocomplete="email" required />
+                  <small>Enviaremos la constancia de tu registro a esta dirección.</small>
+                </div>
+                <div class="field">
+                  <label for="direccion">Domicilio <span class="req">*</span></label>
+                  <input id="direccion" name="direccion" type="text" autocomplete="street-address" required />
+                </div>
+              </div>
+
+              <label class="check-inline" style="margin-top:0.4rem">
+                <input type="checkbox" id="menor" name="menor_edad" value="Sí" />
+                <span>El consumidor reclamante es menor de edad.</span>
+              </label>
+
+              <div class="field" id="campo-apoderado" hidden style="margin-top:0.9rem">
+                <label for="apoderado">Nombre del padre, madre o apoderado</label>
+                <input id="apoderado" name="apoderado" type="text" />
+              </div>
+            </fieldset>
+
+            <!-- 3. Identificación del bien contratado -->
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">3. Identificación del bien o servicio contratado</legend>
+
+              <div class="form__row">
+                <div class="field">
+                  <label for="tipo_bien">Tipo <span class="req">*</span></label>
+                  <select id="tipo_bien" name="tipo_bien" required>
+                    <option value="Servicio">Servicio</option>
+                    <option value="Producto">Producto</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="monto">Monto reclamado</label>
+                  <input id="monto" name="monto" type="text" placeholder="Ej.: S/ 1 250.00 o USD 400.00" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="descripcion_bien">Descripción del bien o servicio <span class="req">*</span></label>
+                <textarea
+                  id="descripcion_bien"
+                  name="descripcion_bien"
+                  required
+                  style="min-height:100px"
+                  placeholder="Indica el servicio contratado y, de tenerlos, el número de booking, BL, AWB o factura."></textarea>
+              </div>
+            </fieldset>
+
+            <!-- 4. Detalle -->
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">4. Detalle de la reclamación y pedido del consumidor</legend>
+
+              <div class="field">
+                <label for="detalle">Detalle del reclamo o queja <span class="req">*</span></label>
+                <textarea id="detalle" name="detalle" data-minlength="20" required placeholder="Describe con el mayor detalle posible lo ocurrido, indicando fechas y personas involucradas."></textarea>
+              </div>
+
+              <div class="field">
+                <label for="pedido">Pedido del consumidor <span class="req">*</span></label>
+                <textarea id="pedido" name="pedido" data-minlength="10" required style="min-height:100px" placeholder="Indica qué solución esperas de nuestra parte."></textarea>
+              </div>
+            </fieldset>
+
+            <div class="note" style="margin-top:0.4rem">
+              <p>
+                La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito
+                previo para interponer una denuncia ante el <strong>INDECOPI</strong>. El proveedor debe dar respuesta al
+                reclamo en un plazo no mayor a <strong>treinta (30) días calendario</strong>, pudiendo ampliarlo hasta
+                por treinta (30) días adicionales previa comunicación al consumidor.
+              </p>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="declaracion" required />
+              <span>
+                Declaro que la información consignada es verdadera y autorizo el tratamiento de mis datos personales
+                para la atención de este registro, conforme a la <a href="/privacidad">política de privacidad</a>.
+                <span class="req">*</span>
+              </span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                Registrar en el Libro<Icon name="book" />
+              </button>
+              <button class="btn btn--ghost" type="button" data-wa-submit>
+                <Icon name="whatsapp" />Enviar por WhatsApp
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ========================== AYUDA =========================== -->
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <div class="card__icon" style="background:rgba(255,255,255,.1);color:#fff;margin-bottom:1.3rem">
+              <Icon name="scale" />
+            </div>
+            <h2 class="h4" style="margin-bottom:1rem">Reclamo o queja: cuál corresponde</h2>
+            <p style="color:rgba(255,255,255,.75);font-size:0.93rem;margin-bottom:1rem">
+              <strong style="color:#fff">Reclamo:</strong> disconformidad relacionada con el servicio o producto
+              contratado. Por ejemplo, si tu carga llegó dañada o hubo un error en la entrega.
+            </p>
+            <p style="color:rgba(255,255,255,.75);font-size:0.93rem">
+              <strong style="color:#fff">Queja:</strong> disconformidad no relacionada con el servicio, o malestar
+              respecto de la atención recibida.
+            </p>
+          </div>
+
+          <div class="panel">
+            <h2 class="h4" style="margin-bottom:1.2rem">Plazos y seguimiento</h2>
+            <ul class="checks">
+              <li>Recibirás una constancia con el código de tu registro en tu correo.</li>
+              <li>Respondemos dentro de los 30 días calendario que establece la ley.</li>
+              <li>Conservamos el registro por el plazo legal correspondiente.</li>
+              <li>Puedes escribirnos citando tu código para consultar el avance.</li>
+            </ul>
+          </div>
+
+          <div class="note">
+            <h4>¿Tu consulta no es un reclamo?</h4>
+            <p>
+              Si necesitas cotizar o resolver una duda comercial, usa el
+              <a href="/contacto" style="color:var(--wo-blue);text-decoration:underline">formulario de contacto</a>.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+  <script is:inline>
+    // Muestra el campo del apoderado solo cuando el consumidor es menor de edad.
+    (function () {
+      var check = document.getElementById('menor');
+      var campo = document.getElementById('campo-apoderado');
+      var input = document.getElementById('apoderado');
+      if (!check || !campo) return;
+      check.addEventListener('change', function () {
+        campo.hidden = !check.checked;
+        if (input) {
+          input.required = check.checked;
+          if (check.checked) input.focus();
+          else input.value = '';
+        }
+      });
+    })();
+  </script>
+</Base>

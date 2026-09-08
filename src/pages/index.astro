@@ -1,0 +1,474 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site, waLink, cifras, diferenciales, testimonios, proceso } from '../data/site.js';
+import { servicios } from '../data/servicios.js';
+
+const slides = [
+  {
+    img: '/img/cr-ship-dusk.jpg',
+    eyebrow: 'Carga marítima · aérea · terrestre',
+    titulo: ['Eficiencia que impulsa tu negocio,', 'logística que marca la diferencia'],
+    sub: 'Más de 20 años moviendo carga entre el Perú y el mundo, con booking garantizado, trazabilidad en tiempo real y un solo responsable de principio a fin.',
+  },
+  {
+    img: '/img/cr-port-cranes.jpg',
+    eyebrow: 'Optimización de la cadena de suministro',
+    titulo: ['Optimizamos tu cadena de suministro,', 'maximizamos tu rentabilidad'],
+    sub: 'Analizamos ruta, modalidad y consolidación para reducir el costo total de tu operación sin sacrificar tiempos ni control.',
+  },
+  {
+    img: '/img/cr-air-cargo.jpg',
+    eyebrow: 'Soluciones a medida',
+    titulo: ['Soluciones logísticas inteligentes', 'para un crecimiento sin límites'],
+    sub: 'Desde una carga SPOT puntual hasta la operación completa de comercio exterior de tu empresa, incluyendo logística médica especializada.',
+  },
+];
+
+const puertos = [
+  'Callao', 'Chancay', 'Paita', 'Pisco', 'Ilo', 'Matarani', 'Chimbote',
+  'Shanghái', 'Ningbó', 'Busan', 'Miami', 'Houston', 'Rotterdam', 'Amberes',
+  'Valparaíso', 'Santos', 'Manzanillo', 'Cartagena',
+];
+
+const destacados = servicios.filter((s) => ['carga-maritima', 'carga-aerea', 'carga-consolidada', 'logistica-integral'].includes(s.slug));
+const especiales = servicios.filter((s) => s.destacado);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.nombreLargo,
+  url: site.dominio,
+  inLanguage: 'es-PE',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${site.dominio}/servicios`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+---
+
+<Base
+  title="Operador logístico en Perú"
+  description="WOLI — World Logistics International: carga marítima, aérea y consolidada, agenciamiento de aduana, almacenaje, última milla y logística médica internacional. Más de 20 años conectando al Perú con el mundo."
+  schema={schema}
+>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero" id="inicio">
+    <div class="hero__media" aria-hidden="true">
+      {
+        slides.map((s, i) => (
+          <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
+            <img src={s.img} alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'low'} decoding="async" />
+          </div>
+        ))
+      }
+    </div>
+    <div class="hero__grid" aria-hidden="true"></div>
+
+    <div class="wrap hero__inner">
+      <p class="hero__badge"><b>+20 años</b> Operador logístico peruano · Lima, Perú</p>
+
+      <div id="hero-text">
+        {
+          slides.map((s, i) => (
+            <div data-slide-text={i} hidden={i !== 0}>
+              <p class="eyebrow">{s.eyebrow}</p>
+              {
+                /* Un solo H1 por página: los mensajes rotatorios siguientes se marcan como párrafo */
+                i === 0 ? (
+                  <h1>
+                    {s.titulo[0]} <em>{s.titulo[1]}</em>
+                  </h1>
+                ) : (
+                  <p class="h1" style="font-family:var(--font-head);font-weight:800;line-height:1.08;letter-spacing:-.025em;max-width:17ch;margin-bottom:1.5rem">
+                    {s.titulo[0]} <em style="font-style:normal;color:var(--wo-orange)">{s.titulo[1]}</em>
+                  </p>
+                )
+              }
+              <p class="hero__sub">{s.sub}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="btn-row">
+        <a class="btn" href="/cotizacion">Solicitar cotización<Icon name="arrowUpRight" /></a>
+        <a class="btn btn--light" href="/tracking"><Icon name="gps" />Rastrear mi carga</a>
+      </div>
+
+      <div class="hero__foot">
+        <div class="hero__dots" role="tablist" aria-label="Cambiar mensaje del banner">
+          {
+            slides.map((s, i) => (
+              <button
+                class={`hero__dot${i === 0 ? ' is-active' : ''}`}
+                type="button"
+                role="tab"
+                data-dot={i}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={`Mensaje ${i + 1}`}
+              />
+            ))
+          }
+        </div>
+        <div class="hero__modes">
+          <span class="hero__mode"><Icon name="ship" />Marítimo</span>
+          <span class="hero__mode"><Icon name="plane" />Aéreo</span>
+          <span class="hero__mode"><Icon name="truck" />Terrestre</span>
+          <span class="hero__mode"><Icon name="stamp" />Aduanas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= MARQUESINA ========================= -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[...puertos, ...puertos].map((p) => <span class="marquee__item">{p}</span>)}
+    </div>
+  </div>
+  <p class="sr-only">Operamos con los principales puertos y terminales del Perú y del mundo.</p>
+
+  <!-- ========================== SERVICIOS ========================= -->
+  <section class="section" id="servicios">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Lo que hacemos</p>
+        <h2 class="h2">Conectamos tu negocio con el mundo por tierra, mar y aire</h2>
+        <p class="lead">
+          Ofrecemos gestión logística y de cadena de suministro hacia y desde cualquier parte del mundo. Nos ajustamos a
+          cada desafío creando soluciones que se adaptan a las necesidades reales de cada cliente.
+        </p>
+      </div>
+
+      <div class="grid grid--4">
+        {destacados.map((s, i) => <ServiceCard servicio={s} eager={i < 2} />)}
+      </div>
+
+      <div class="grid grid--2" style="margin-top:1.6rem">
+        {especiales.map((s) => <ServiceCard servicio={s} />)}
+      </div>
+
+      <div class="btn-row" style="margin-top:2.4rem" data-reveal>
+        <a class="btn btn--ghost" href="/servicios">Ver los 10 servicios<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== NOSOTROS ========================= -->
+  <section class="section section--mist">
+    <div class="wrap split">
+      <div data-reveal>
+        <p class="eyebrow">Sobre nosotros</p>
+        <h2 class="h2">Más de 20 años conectando al Perú con el mundo</h2>
+        <p class="lead" style="margin-bottom:1.6rem">
+          En WOLI llevamos la logística y el transporte de carga a otro nivel. Conectamos tu negocio con el mundo a
+          través de soluciones integrales y eficientes, asegurando que cada envío llegue a su destino con puntualidad y
+          seguridad.
+        </p>
+        <p style="color:var(--ink-soft);margin-bottom:1.9rem">
+          Nuestro equipo de expertos gestiona cada detalle con precisión, optimizando tiempos y recursos para que tu
+          carga se transporte sin contratiempos. Contamos con un sistema avanzado de seguimiento que te da control total
+          en cada etapa, garantizando la trazabilidad y el cumplimiento de los más altos estándares de seguridad.
+        </p>
+        <ul class="checks" style="margin-bottom:2.2rem">
+          <li>Equipo con más de 20 años en operaciones logísticas y aduaneras.</li>
+          <li>Flota propia de 15 y 7 toneladas con cobertura nacional.</li>
+          <li>Conexión directa con agentes corresponsales en origen y destino.</li>
+          <li>Especialistas en carga médica, sensible y de alto valor.</li>
+        </ul>
+        <a class="btn btn--ghost" href="/nosotros">Conoce la empresa<Icon name="arrowRight" /></a>
+      </div>
+
+      <div class="media-stack" data-reveal style="--d:120ms">
+        <div class="figure figure--tall">
+          <img src="/img/cr-20-years.jpg" alt="Contenedores apilados formando el número 20, por los 20 años de WOLI" loading="lazy" decoding="async" />
+        </div>
+        <div class="media-stack__badge">
+          <b>20+</b>
+          <span>años de experiencia conectando al Perú con el mundo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CIFRAS ========================== -->
+  <section class="section section--tight section--dark">
+    <div class="wrap">
+      <div class="stats" data-reveal>
+        {
+          cifras.map((c) => (
+            <div class="stat">
+              <p class="stat__num" data-count={c.valor}>
+                0<span>{c.sufijo}</span>
+              </p>
+              <p class="stat__label">{c.label}</p>
+              <p class="stat__detail">{c.detalle}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= DIFERENCIALES ====================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Por qué WOLI</p>
+        <h2 class="h2">Más que un proveedor: tu socio en cada envío</h2>
+        <p class="lead">
+          Trabajamos con transparencia en procesos y costos, menos complicaciones y una optimización estratégica que se
+          nota en tu margen.
+        </p>
+      </div>
+
+      <div class="grid grid--3">
+        {
+          diferenciales.map((d, i) => (
+            <article class="card" data-reveal style={`--d:${(i % 3) * 90}ms`}>
+              <div class="card__icon"><Icon name={d.icono} /></div>
+              <h3>{d.titulo}</h3>
+              <p>{d.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== PROCESO ========================== -->
+  <section class="section section--mist">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Cómo trabajamos</p>
+        <h2 class="h2">Cuatro etapas, un solo responsable</h2>
+        <p class="lead">Un proceso claro, con hitos definidos y comunicación proactiva en cada paso del embarque.</p>
+      </div>
+
+      <div class="steps" data-reveal>
+        {
+          proceso.map((p) => (
+            <article class="step">
+              <p class="step__n">PASO {p.paso}</p>
+              <h3>{p.titulo}</h3>
+              <p>{p.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= LOGÍSTICA MÉDICA ===================== -->
+  <section class="section section--dark">
+    <div class="wrap split">
+      <div class="figure figure--wide" data-reveal>
+        <img src="/img/cr-fragile.jpg" alt="Contenedores marcados como frágiles y de manipulación cuidadosa a bordo de una aeronave" loading="lazy" decoding="async" />
+      </div>
+      <div data-reveal style="--d:120ms">
+        <p class="eyebrow">Especialización</p>
+        <h2 class="h2">Expertos en logística médica internacional</h2>
+        <p class="lead" style="margin-bottom:1.7rem">
+          Equipos de diagnóstico, dispositivos, insumos y carga regulada requieren un tratamiento distinto. Contamos con
+          personal profesional especializado que cuida la integridad física de la carga y la trazabilidad documental que
+          exigen las entidades reguladoras.
+        </p>
+        <ul class="checks" style="margin-bottom:2.2rem">
+          <li>Personal profesional y especializado en carga médica.</li>
+          <li>Optimización de tiempos y costos sin comprometer la integridad.</li>
+          <li>Eficiencia en toda la operación logística, de origen a destino.</li>
+        </ul>
+        <a class="btn" href="/servicios/logistica-medica">Ver el servicio<Icon name="arrowUpRight" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= OPERACIONES ======================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">En operación</p>
+        <h2 class="h2">Así trabajamos cada día</h2>
+        <p class="lead">
+          Carga y descarga, consolidación y despacho: operaciones reales ejecutadas por nuestro equipo y nuestra flota.
+        </p>
+      </div>
+      <div class="gallery" data-reveal>
+        <figure>
+          <img src="/img/op-02.jpg" alt="Operario de WOLI cargando mercancía en un contenedor con montacargas" loading="lazy" decoding="async" />
+          <figcaption>Consolidación de carga en almacén</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/op-01.jpg" alt="Montacargas y camión con contenedor durante una operación de despacho" loading="lazy" decoding="async" />
+          <figcaption>Despacho y transporte terrestre</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/cr-team.jpg" alt="Equipo de coordinadores logísticos revisando una operación en patio de contenedores" loading="lazy" decoding="async" />
+          <figcaption>Coordinación en patio de contenedores</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= TESTIMONIOS ======================== -->
+  <section class="section section--mist">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Clientes</p>
+        <h2 class="h2">Lo que dicen quienes confían en nosotros</h2>
+      </div>
+      <div class="grid grid--3">
+        {
+          testimonios.map((t, i) => (
+            <figure class="quote" data-reveal style={`--d:${i * 100}ms`}>
+              <span class="quote__mark" aria-hidden="true">“</span>
+              <blockquote><p>{t.texto}</p></blockquote>
+              <figcaption class="quote__who">
+                <span class="quote__av" aria-hidden="true">
+                  {t.nombre.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                </span>
+                <span>
+                  <b>{t.nombre}</b>
+                  <span>{t.cargo}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== TARIFARIOS ======================== -->
+  <section class="section">
+    <div class="wrap split">
+      <div data-reveal>
+        <p class="eyebrow">Transparencia</p>
+        <h2 class="h2">Nuestros tarifarios, publicados y descargables</h2>
+        <p class="lead" style="margin-bottom:1.8rem">
+          Publicamos los tarifarios aéreos y marítimos de importación y exportación de los principales terminales del
+          Perú. Descárgalos, revísalos y consúltanos cualquier detalle.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="/tarifarios"><Icon name="download" />Ver tarifarios</a>
+          <a class="btn btn--ghost" href={waLink('Hola WOLI, tengo una consulta sobre el tarifario.')} target="_blank" rel="noopener noreferrer">
+            Consultar por WhatsApp<Icon name="arrowRight" />
+          </a>
+        </div>
+      </div>
+      <div class="grid" style="gap:0.9rem;--d:120ms" data-reveal>
+        <a class="dl" href="/docs/tarifario-aereo-callao.pdf" target="_blank" rel="noopener" download>
+          <span class="dl__code">LIM</span>
+          <span class="dl__body"><b>Tarifario Aéreo</b><span>Importación y exportación · Callao</span></span>
+          <span class="dl__go"><Icon name="download" /></span>
+        </a>
+        <a class="dl" href="/docs/tarifario-maritimo-callao.pdf" target="_blank" rel="noopener" download>
+          <span class="dl__code">CLL</span>
+          <span class="dl__body"><b>Tarifario Marítimo</b><span>Importación y exportación · Callao</span></span>
+          <span class="dl__go"><Icon name="download" /></span>
+        </a>
+        <a class="dl" href="/docs/tarifario-maritimo-chancay.pdf" target="_blank" rel="noopener" download>
+          <span class="dl__code">CHY</span>
+          <span class="dl__body"><b>Tarifario Marítimo</b><span>Importación y exportación · Chancay</span></span>
+          <span class="dl__go"><Icon name="download" /></span>
+        </a>
+        <p style="font-size:0.85rem;color:var(--ink-mute)">Y 5 terminales más: Paita, Pisco, Ilo, Matarani y Chimbote.</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+
+  <script is:inline>
+    // Carrusel del hero: imagen + texto sincronizados, con pausa al perder el foco.
+    (function () {
+      var slides = document.querySelectorAll('[data-slide]');
+      var texts = document.querySelectorAll('[data-slide-text]');
+      var dots = document.querySelectorAll('[data-dot]');
+      if (slides.length < 2) return;
+
+      var i = 0;
+      var timer = null;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function go(n) {
+        i = (n + slides.length) % slides.length;
+        slides.forEach(function (s, k) {
+          s.classList.toggle('is-active', k === i);
+        });
+        texts.forEach(function (t, k) {
+          t.hidden = k !== i;
+        });
+        dots.forEach(function (d, k) {
+          d.classList.toggle('is-active', k === i);
+          d.setAttribute('aria-selected', String(k === i));
+        });
+      }
+
+      function play() {
+        if (reduce) return;
+        stop();
+        timer = setInterval(function () {
+          go(i + 1);
+        }, 7000);
+      }
+      function stop() {
+        if (timer) clearInterval(timer);
+      }
+
+      dots.forEach(function (d, k) {
+        d.addEventListener('click', function () {
+          go(k);
+          play();
+        });
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        document.hidden ? stop() : play();
+      });
+
+      play();
+    })();
+
+    // Contadores animados de la banda de cifras.
+    (function () {
+      var nums = document.querySelectorAll('[data-count]');
+      if (!nums.length || !('IntersectionObserver' in window)) {
+        nums.forEach(function (n) {
+          n.childNodes[0].nodeValue = n.dataset.count;
+        });
+        return;
+      }
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            io.unobserve(e.target);
+            var el = e.target;
+            var end = Number(el.dataset.count);
+            if (reduce) {
+              el.childNodes[0].nodeValue = end;
+              return;
+            }
+            var t0 = performance.now();
+            (function step(now) {
+              var p = Math.min(1, (now - t0) / 1400);
+              var eased = 1 - Math.pow(1 - p, 3);
+              el.childNodes[0].nodeValue = Math.round(end * eased);
+              if (p < 1) requestAnimationFrame(step);
+            })(t0);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      nums.forEach(function (n) {
+        io.observe(n);
+      });
+    })();
+  </script>
+</Base>

@@ -1,0 +1,104 @@
+---
+import Icon from './Icon.astro';
+import { site, waLink } from '../data/site.js';
+import { servicios } from '../data/servicios.js';
+
+const year = new Date().getFullYear();
+const principales = servicios.slice(0, 6);
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img class="footer__logo" src="/brand/logo-woli.png" alt="WOLI — World Logistics International" width="900" height="312" />
+        <p style="max-width:34ch">
+          Operador logístico peruano con más de 20 años conectando empresas con el mundo por tierra, mar y aire.
+        </p>
+        <div class="social">
+          {
+            site.redes.map((r) => (
+              <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre} title={r.nombre}>
+                <Icon name={r.icono} />
+              </a>
+            ))
+          }
+          <a href={waLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+            <Icon name="whatsapp" />
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Servicios</h4>
+        <ul>
+          {principales.map((s) => <li><a href={`/servicios/${s.slug}`}>{s.nombre}</a></li>)}
+          <li><a href="/servicios">Ver todos</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="/nosotros">Nosotros</a></li>
+          <li><a href="/tarifarios">Tarifarios</a></li>
+          <li><a href="/tracking">Rastrea tu carga</a></li>
+          <li><a href="/cotizacion">Cotización</a></li>
+          <li><a href="/contacto">Contacto</a></li>
+          <li><a href="/privacidad">Política de privacidad</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></li>
+          <li>{site.horario}</li>
+        </ul>
+        <a class="book-link" href="/libro-de-reclamaciones" style="margin-top:1.4rem">
+          <Icon name="book" />
+          Libro de<br />Reclamaciones
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__legal">
+      <p>© {year} {site.nombreLargo}. Todos los derechos reservados.</p>
+      <nav aria-label="Enlaces legales">
+        <a href="/nosotros">Sobre nosotros</a>
+        <a href="/servicios">Servicios</a>
+        <a href="/contacto">Contacto</a>
+        <a href="/privacidad">Privacidad</a>
+        <a href="/libro-de-reclamaciones">Libro de Reclamaciones</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<div class="floaters">
+  <button class="float-btn float-btn--top" id="to-top" type="button" aria-label="Volver arriba">
+    <Icon name="arrowUp" />
+  </button>
+  <a class="float-btn float-btn--wa" href={waLink()} target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp">
+    <Icon name="whatsapp" />
+  </a>
+</div>
+
+<script is:inline>
+  (function () {
+    var top = document.getElementById('to-top');
+    if (!top) return;
+    window.addEventListener(
+      'scroll',
+      function () {
+        top.classList.toggle('is-on', window.scrollY > 620);
+      },
+      { passive: true }
+    );
+    top.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
