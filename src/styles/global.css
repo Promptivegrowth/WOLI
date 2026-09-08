@@ -824,6 +824,8 @@ h1 .ital, .h1 .ital { -webkit-text-stroke-width: 2px; }
   overflow: hidden;
 }
 .preloader[hidden] { display: none !important; }
+/* El preloader solo se muestra en la primera carga de la sesión */
+html.sin-preloader .preloader { display: none !important; }
 .preloader__grid {
   position: absolute; inset: -10%;
   background-image: linear-gradient(rgba(17, 93, 140, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 93, 140, 0.08) 1px, transparent 1px);

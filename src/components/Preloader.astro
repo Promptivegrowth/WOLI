@@ -61,8 +61,18 @@ const hitos = d.preloader.hitos;
     var body = document.body;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    var repeat = sessionStorage.getItem('woli_preloaded') === '1';
-    var minTime = reduce ? 260 : repeat ? 800 : 2900;
+    // Solo en la primera carga de la sesión. Al navegar entre páginas no aparece.
+    var yaVisto = false;
+    try {
+      yaVisto = sessionStorage.getItem('woli_preloaded') === '1';
+    } catch (e) {}
+    if (yaVisto) {
+      el.setAttribute('hidden', '');
+      document.dispatchEvent(new CustomEvent('woli:ready'));
+      return;
+    }
+
+    var minTime = reduce ? 260 : 2900;
 
     body.classList.add('is-locked');
 
@@ -117,7 +127,11 @@ const hitos = d.preloader.hitos;
       listo = true;
       clearInterval(tick);
       pintar(100);
-      sessionStorage.setItem('woli_preloaded', '1');
+      // En modo privado o con el almacenamiento bloqueado esto lanza:
+      // si fallara sin capturar, el body se quedaría bloqueado.
+      try {
+        sessionStorage.setItem('woli_preloaded', '1');
+      } catch (e) {}
       setTimeout(function () {
         el.classList.add('is-done');
         body.classList.remove('is-locked');

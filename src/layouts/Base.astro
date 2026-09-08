@@ -93,6 +93,16 @@ const organizacion = {
       href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
     />
 
+    <!-- Se ejecuta antes de pintar: si el preloader ya se vio en esta sesión,
+         la marca en <html> lo oculta por CSS y no llega a parpadear al navegar. -->
+    <script is:inline>
+      try {
+        if (sessionStorage.getItem('woli_preloaded') === '1') {
+          document.documentElement.classList.add('sin-preloader');
+        }
+      } catch (e) {}
+    </script>
+
     <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
