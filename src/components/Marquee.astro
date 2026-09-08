@@ -1,0 +1,25 @@
+---
+/**
+ * Marquesina continua. `items` se duplica para que el bucle sea invisible.
+ * `variante`: 'grande' (titulares con bloque de contenedor) o 'ticker' (banda estrecha).
+ */
+const { items = [], variante = 'grande', reversa = false, dur = '44s', ghost = false } = Astro.props;
+const dobles = [...items, ...items];
+---
+
+<div
+  class={`marquee${variante === 'ticker' ? ' ticker' : ''}${reversa ? ' marquee--rev' : ''}`}
+  style={`--dur:${dur}`}
+  aria-hidden="true"
+>
+  <div class="marquee__track">
+    {
+      dobles.map((item, i) => (
+        <span class={`marquee__item${ghost && i % 2 === 1 ? ' marquee__item--ghost' : ''}`}>
+          <i></i>
+          {item}
+        </span>
+      ))
+    }
+  </div>
+</div>

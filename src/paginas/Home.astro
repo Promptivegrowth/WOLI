@@ -1,0 +1,337 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import Marquee from '../components/Marquee.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site, c, terminalesPeru, puertosMundo } from '../data/site.js';
+import { serviciosDe } from '../data/servicios.js';
+import { t } from '../i18n/ui.js';
+import { ruta, rutaServicio } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const cont = c(lang);
+const servicios = serviciosDe(lang);
+const destacados = servicios.filter((s) => ['carga-maritima', 'carga-aerea', 'carga-consolidada', 'logistica-integral'].includes(s.id));
+const especiales = servicios.filter((s) => s.destacado);
+const medica = servicios.find((s) => s.id === 'logistica-medica');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.nombreLargo,
+  url: site.dominio,
+  inLanguage: lang === 'en' ? 'en' : 'es-PE',
+};
+---
+
+<Base lang={lang} clave="inicio" title={lang === 'en' ? 'Freight forwarder in Peru' : 'Operador logístico en Perú'} schema={schema}>
+  <Hero lang={lang} />
+
+  <!-- Banda continua de modos y promesas -->
+  <Marquee
+    variante="ticker"
+    dur="52s"
+    items={[
+      ...d.hero.modos,
+      lang === 'en' ? 'Guaranteed booking' : 'Booking garantizado',
+      lang === 'en' ? '24/7 tracking' : 'Rastreo 24/7',
+      lang === 'en' ? 'Own fleet' : 'Flota propia',
+      lang === 'en' ? 'Medical cargo' : 'Carga médica',
+      lang === 'en' ? 'SPOT shipments' : 'Cargas SPOT',
+    ]}
+  />
+
+  <!-- ===================== SOMOS DISTINTOS PORQUE ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="slab slab--blue slab--tl-br" style="padding: clamp(2rem,5vw,4.5rem)" data-reveal>
+        <div class="grid-lines" aria-hidden="true"></div>
+        <div class="usp">
+          <div>
+            <p class="eyebrow">{d.usp.eyebrow}</p>
+            <h2 class="h2" style="color:#fff">
+              {d.usp.titulo}<br /><span class="ital">{d.usp.tituloItalica}</span>
+            </h2>
+            <div class="usp__media" style="margin-top:2rem">
+              <img src="/img/cr-team.jpg" alt={lang === 'en' ? 'WOLI coordinators reviewing an operation' : 'Coordinadores de WOLI revisando una operación'} loading="lazy" decoding="async" />
+            </div>
+          </div>
+
+          <div>
+            <div class="acc" data-single="true">
+              {
+                d.usp.items.map((item, i) => (
+                  <div class="acc__item">
+                    <h3>
+                      <button class="acc__btn" type="button" aria-expanded={i === 1 ? 'true' : 'false'} aria-controls={`usp-${i}`}>
+                        {item.titulo}
+                        <span class="acc__ico"><Icon name="plus" /></span>
+                      </button>
+                    </h3>
+                    <div class="acc__panel" id={`usp-${i}`}>
+                      <div><p>{item.texto}</p></div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="btn-row" style="margin-top:2.4rem">
+              <a class="btn" href={ruta('contacto', lang)}>
+                {d.usp.cta1}
+                <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+              </a>
+              <a class="btn btn--light btn--plain" href={ruta('servicios', lang)}>{d.usp.cta2}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ SERVICIOS =========================== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.servicios.eyebrow}</p>
+        <h2 class="h2">{d.servicios.titulo} <span class="ital">{d.servicios.tituloItalica}</span></h2>
+        <p class="lead">{d.servicios.bajada}</p>
+      </div>
+
+      <div class="grid grid--4">
+        {destacados.map((s, i) => <ServiceCard servicio={s} lang={lang} eager={i < 2} />)}
+      </div>
+      <div class="grid grid--2" style="margin-top:1.5rem">
+        {especiales.map((s) => <ServiceCard servicio={s} lang={lang} />)}
+      </div>
+
+      <div class="btn-row" style="margin-top:2.4rem" data-reveal>
+        <a class="btn btn--ghost" href={ruta('servicios', lang)}>
+          {d.comun.verTodos}
+          <span class="btn__ico"><Icon name="arrowRight" /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== CÓMO MOVEMOS ========================== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="feature" data-reveal>
+        <div class="feature__slab slab bleed-r">
+          <div class="grid-lines" aria-hidden="true"></div>
+        </div>
+        <div class="feature__img">
+          <img src="/img/cr-air-sea.jpg" alt={lang === 'en' ? 'Cargo plane and container ship' : 'Avión de carga y buque portacontenedores'} loading="lazy" decoding="async" />
+        </div>
+        <div class="feature__body">
+          <p class="eyebrow">{d.comoMovemos.eyebrow}</p>
+          <h2 class="h3">{d.comoMovemos.titulo}</h2>
+          <p style="color:rgba(255,255,255,.78);margin-bottom:2rem">{d.comoMovemos.texto}</p>
+          <a class="btn btn--white" href={ruta('servicios', lang)}>
+            {d.comoMovemos.cta}
+            <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ COBERTURA =========================== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.cobertura.eyebrow}</p>
+        <h2 class="h2">{d.cobertura.titulo}</h2>
+        <p class="lead">{d.cobertura.texto}</p>
+      </div>
+    </div>
+    <div data-reveal>
+      <p class="wrap" style="font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.4rem">
+        {d.cobertura.peru}
+      </p>
+      <Marquee items={terminalesPeru} dur="34s" ghost={true} />
+      <p class="wrap" style="font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin:1.6rem 0 .4rem">
+        {d.cobertura.mundo}
+      </p>
+      <Marquee items={puertosMundo} dur="62s" reversa={true} ghost={true} />
+    </div>
+    <div class="wrap" style="margin-top:2.6rem" data-reveal>
+      <a class="btn btn--ghost" href={ruta('tarifarios', lang)}>
+        {d.cobertura.cta}
+        <span class="btn__ico"><Icon name="download" /></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================= CIFRAS ============================= -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="stats" data-reveal>
+        {
+          cont.cifras.map((cf) => (
+            <div class="stat">
+              <p class="stat__num" data-count={cf.valor}>0<span>{cf.sufijo}</span></p>
+              <p class="stat__label">{cf.label}</p>
+              <p class="stat__detail">{cf.detalle}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= LOGÍSTICA MÉDICA ========================= -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="feature feature--left" data-reveal>
+        <div class="feature__slab slab slab--blue bleed-l">
+          <div class="grid-lines" aria-hidden="true"></div>
+        </div>
+        <div class="feature__img">
+          <img src="/img/cr-fragile.jpg" alt={medica.nombre} loading="lazy" decoding="async" />
+        </div>
+        <div class="feature__body">
+          <p class="eyebrow">{lang === 'en' ? 'Specialisation' : 'Especialización'}</p>
+          <h2 class="h3">{medica.nombre}</h2>
+          <p style="color:rgba(255,255,255,.78);margin-bottom:1.6rem">{medica.resumen}</p>
+          <ul class="checks" style="margin-bottom:2rem">
+            {medica.beneficios.slice(0, 3).map((b) => <li>{b}</li>)}
+          </ul>
+          <a class="btn btn--white" href={rutaServicio(medica, lang)}>
+            {d.comun.verServicio}
+            <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= DIGITAL ============================ -->
+  <section class="section section--tight">
+    <div class="wrap split">
+      <div data-reveal>
+        <p class="eyebrow">{d.digital.eyebrow}</p>
+        <h2 class="h2">{d.digital.titulo} <span class="ital">{d.digital.tituloItalica}</span></h2>
+        <p class="lead" style="margin-bottom:1.8rem">{d.digital.texto}</p>
+        <ul class="checks" style="margin-bottom:2.2rem">
+          {d.digital.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+        <a class="btn" href={ruta('tracking', lang)}>
+          {d.digital.cta}
+          <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+        </a>
+      </div>
+      <div class="figure figure--wide" data-reveal style="--d:120ms">
+        <img src="/img/cr-containers-aerial.jpg" alt={lang === 'en' ? 'Aerial view of a container ship' : 'Vista aérea de un buque portacontenedores'} loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PROCESO ============================ -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.proceso.eyebrow}</p>
+        <h2 class="h2">{d.proceso.titulo} <span class="ital">{d.proceso.tituloItalica}</span></h2>
+        <p class="lead">{d.proceso.texto}</p>
+      </div>
+      <div class="steps" data-reveal>
+        {
+          cont.proceso.map((p) => (
+            <article class="step">
+              <p class="step__n">{lang === 'en' ? 'STEP' : 'PASO'} {p.paso}</p>
+              <h3>{p.titulo}</h3>
+              <p>{p.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== OPERACIONES ========================= -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.operaciones.eyebrow}</p>
+        <h2 class="h2">{d.operaciones.titulo}</h2>
+        <p class="lead">{d.operaciones.texto}</p>
+      </div>
+      <div class="gallery" data-reveal>
+        <figure>
+          <img src="/img/op-02.jpg" alt={d.operaciones.pies[0]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[0]}</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/op-01.jpg" alt={d.operaciones.pies[1]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[1]}</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/cr-team.jpg" alt={d.operaciones.pies[2]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[2]}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== TESTIMONIOS ========================== -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">{d.testimonios.eyebrow}</p>
+        <h2 class="h2">{d.testimonios.titulo} <span class="ital">{d.testimonios.tituloItalica}</span></h2>
+      </div>
+      <div class="grid grid--3">
+        {
+          cont.testimonios.map((tm, i) => (
+            <figure class="quote" data-reveal style={`--d:${i * 100}ms`}>
+              <span class="quote__mark" aria-hidden="true">“</span>
+              <blockquote><p>{tm.texto}</p></blockquote>
+              <figcaption class="quote__who">
+                <span class="quote__av" aria-hidden="true">{tm.nombre.split(' ').map((n) => n[0]).join('').slice(0, 2)}</span>
+                <span>
+                  <b>{tm.nombre}</b>
+                  <span>{tm.cargo}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+
+  <script is:inline>
+    // Contadores animados de la banda de cifras.
+    (function () {
+      var nums = document.querySelectorAll('[data-count]');
+      if (!nums.length) return;
+      if (!('IntersectionObserver' in window)) {
+        nums.forEach(function (n) { n.childNodes[0].nodeValue = n.dataset.count; });
+        return;
+      }
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          var el = e.target, end = Number(el.dataset.count);
+          if (reduce) { el.childNodes[0].nodeValue = end; return; }
+          var t0 = performance.now();
+          (function step(now) {
+            var p = Math.min(1, (now - t0) / 1400);
+            el.childNodes[0].nodeValue = Math.round(end * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(step);
+          })(t0);
+        });
+      }, { threshold: 0.4 });
+      nums.forEach(function (n) { io.observe(n); });
+    })();
+  </script>
+</Base>

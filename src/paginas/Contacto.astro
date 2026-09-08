@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { serviciosDe } from '../data/servicios.js';
+import { site, waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const f = d.form;
+const p = d.contacto;
+const servicios = serviciosDe(lang);
+const consent = f.consentimiento.replace('{empresa}', site.nombreLargo);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: `${d.nav.contacto} — ${site.nombreLargo}`,
+  url: site.dominio + ruta('contacto', lang),
+};
+---
+
+<Base lang={lang} clave="contacto" title={d.nav.contacto} description={p.bajada} schema={schema}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-ship-dusk.jpg"
+    crumbs={[{ label: d.nav.contacto }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="split split--form">
+        <div class="panel" data-reveal>
+          <h2 class="h3" style="margin-bottom:1.6rem">{p.escribenos}</h2>
+
+          <form class="form" data-woli-form="contacto" data-wa-title={p.escribenos} novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website_c">{f.noCompletar}</label>
+              <input id="hp_website_c" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="nombre">{f.nombre} <span class="req">*</span></label>
+                <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="empresa">{f.empresa}</label>
+                <input id="empresa" name="empresa" type="text" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="email">{f.email} <span class="req">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="telefono">{f.telefono}</label>
+                <input id="telefono" name="telefono" type="tel" autocomplete="tel" placeholder="+51 999 999 999" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="servicio">{f.servicio}</label>
+              <select id="servicio" name="servicio">
+                <option value="">{f.seleccionaServicio}</option>
+                {servicios.map((s) => <option value={s.nombre}>{s.nombre}</option>)}
+                <option value={f.consultaGeneral}>{f.consultaGeneral}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="mensaje">{f.mensaje} <span class="req">*</span></label>
+              <textarea id="mensaje" name="mensaje" data-minlength="15" required placeholder={f.mensajeEj}></textarea>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="consentimiento" required />
+              <span>{consent} <a href={ruta('privacidad', lang)}>{f.politica}</a>. <span class="req">*</span></span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                {f.enviarCorreo}
+                <span class="btn__ico"><Icon name="mail" /></span>
+              </button>
+              <button class="btn btn--wa btn--plain" type="button" data-wa-submit>
+                <Icon name="whatsapp" />{f.enviarWhatsapp}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <h2 class="h4" style="margin-bottom:1.6rem">{p.infoTitulo}</h2>
+            <ul class="info-list">
+              <li>
+                <span class="info-list__ico"><Icon name="pin" /></span>
+                <span><b>{p.oficina}</b><a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="mail" /></span>
+                <span><b>{p.correo}</b><a href={`mailto:${site.email}`}>{site.email}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="whatsapp" /></span>
+                <span><b>WhatsApp</b><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="clock" /></span>
+                <span><b>{p.horario}</b><p>{site.horario[lang]}</p></span>
+              </li>
+            </ul>
+            <div class="social">
+              {
+                site.redes.map((r) => (
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre}>
+                    <Icon name={r.icono} />
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="note">
+            <h4>{p.reclamoTitulo}</h4>
+            <p>{p.reclamoTexto} <a href={ruta('reclamaciones', lang)}>{d.nav.reclamaciones}</a>.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{p.mapaEyebrow}</p>
+        <h2 class="h2">{p.mapaTitulo}</h2>
+      </div>
+      <div class="figure figure--map" data-reveal>
+        <iframe src={site.mapa} title={p.mapaTitle} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+</Base>

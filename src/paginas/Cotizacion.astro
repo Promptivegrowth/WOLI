@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { serviciosDe } from '../data/servicios.js';
+import { site, waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const f = d.form;
+const p = d.cotizacion;
+const servicios = serviciosDe(lang);
+const consent = f.consentimiento.replace('{empresa}', site.nombreLargo);
+---
+
+<Base lang={lang} clave="cotizacion" title={d.nav.cotizacion} description={p.bajada}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-ship-front.jpg"
+    crumbs={[{ label: d.nav.cotizacion }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="split split--form">
+        <div class="panel" data-reveal>
+          <h2 class="h3" style="margin-bottom:.6rem">{p.datosTitulo}</h2>
+          <p style="color:var(--ink-soft);font-size:.94rem;margin-bottom:1.8rem">{f.obligatorios}</p>
+
+          <form class="form" data-woli-form="cotizacion" data-wa-title={p.datosTitulo} novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website">{f.noCompletar}</label>
+              <input id="hp_website" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="nombre">{f.nombre} <span class="req">*</span></label>
+                <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="empresa">{f.empresa}</label>
+                <input id="empresa" name="empresa" type="text" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="email">{f.email} <span class="req">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="telefono">{f.telefono}</label>
+                <input id="telefono" name="telefono" type="tel" autocomplete="tel" placeholder="+51 999 999 999" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="servicio">{f.servicio} <span class="req">*</span></label>
+              <select id="servicio" name="servicio" required>
+                <option value="">{f.seleccionaServicio}</option>
+                {servicios.map((s) => <option value={s.nombre} data-slug={s.id}>{s.nombre}</option>)}
+                <option value={f.otroServicio}>{f.otroServicio}</option>
+              </select>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="modalidad">{f.modalidad}</label>
+                <select id="modalidad" name="modalidad">
+                  <option value="">{f.selecciona}</option>
+                  {f.modalidades.map((m) => <option>{m}</option>)}
+                </select>
+              </div>
+              <div class="field">
+                <label for="incoterm">{f.incoterm}</label>
+                <select id="incoterm" name="incoterm">
+                  <option value="">{f.noLoSe}</option>
+                  <option>EXW</option><option>FCA</option><option>FOB</option>
+                  <option>CFR</option><option>CIF</option><option>DAP</option><option>DDP</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="origen">{f.origen}</label>
+                <input id="origen" name="origen" type="text" placeholder={f.ciudadPuerto} />
+              </div>
+              <div class="field">
+                <label for="destino">{f.destino}</label>
+                <input id="destino" name="destino" type="text" placeholder={f.ciudadPuerto} />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="carga">{f.carga}</label>
+                <input id="carga" name="carga" type="text" placeholder={f.cargaEj} />
+              </div>
+              <div class="field">
+                <label for="peso">{f.peso}</label>
+                <input id="peso" name="peso" type="text" placeholder={f.pesoEj} />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mensaje">{f.detalles}</label>
+              <textarea id="mensaje" name="mensaje" placeholder={f.detallesEj}></textarea>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="consentimiento" required />
+              <span>{consent} <a href={ruta('privacidad', lang)}>{f.politica}</a>. <span class="req">*</span></span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                {f.enviar}
+                <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+              </button>
+              <button class="btn btn--wa btn--plain" type="button" data-wa-submit>
+                <Icon name="whatsapp" />{f.enviarWhatsapp}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <h3 class="h4" style="margin-bottom:1.3rem">{p.despuesTitulo}</h3>
+            <ul class="checks">
+              {p.despues.map((x) => <li>{x}</li>)}
+            </ul>
+            <p style="color:rgba(255,255,255,.6);font-size:.85rem;margin-top:1.5rem">
+              {p.compromiso} <strong style="color:#fff">{site.tiempoRespuesta[lang]}</strong>.
+            </p>
+          </div>
+
+          <div class="panel">
+            <h3 class="h4" style="margin-bottom:1.2rem">{p.hablarTitulo}</h3>
+            <ul class="info-list">
+              <li>
+                <span class="info-list__ico"><Icon name="whatsapp" /></span>
+                <span><b>WhatsApp</b><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="mail" /></span>
+                <span><b>{d.contacto.correo}</b><a href={`mailto:${site.email}`}>{site.email}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="clock" /></span>
+                <span><b>{d.contacto.horario}</b><p>{site.horario[lang]}</p></span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="note">
+            <h4>{p.referenciaTitulo}</h4>
+            <p>{p.referenciaTexto} <a href={ruta('tarifarios', lang)}>{d.nav.tarifarios}</a>.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+  <script is:inline>
+    // Preselecciona el servicio si se llega desde su ficha con ?servicio=
+    (function () {
+      var slug = new URLSearchParams(window.location.search).get('servicio');
+      if (!slug) return;
+      var select = document.getElementById('servicio');
+      if (!select) return;
+      var opt = select.querySelector('option[data-slug="' + slug.replace(/"/g, '') + '"]');
+      if (opt) select.value = opt.value;
+    })();
+  </script>
+</Base>

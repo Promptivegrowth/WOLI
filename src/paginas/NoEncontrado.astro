@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { t } from '../i18n/ui.js';
+import { ruta, menu } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const p = d.error404;
+---
+
+<Base lang={lang} clave="inicio" title={p.titulo} description={p.texto} noindex={true}>
+  <section class="pagehead">
+    <div class="pagehead__slab" style="min-height:58svh;display:flex;align-items:center">
+      <div class="pagehead__bg" aria-hidden="true">
+        <img src="/img/cr-ship-map.jpg" alt="" loading="eager" />
+      </div>
+      <div class="wrap">
+        <p class="eyebrow">{p.eyebrow}</p>
+        <h1>{p.titulo} <span class="ital">{p.tituloItalica}</span></h1>
+        <p class="lead" style="margin-bottom:2.2rem">{p.texto}</p>
+        <div class="btn-row">
+          <a class="btn" href={ruta('inicio', lang)}>
+            {p.volver}
+            <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+          </a>
+          <a class="btn btn--light btn--plain" href={ruta('contacto', lang)}>{p.contactar}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="grid grid--3">
+        {
+          menu.filter((k) => k !== 'inicio').map((k) => (
+            <a class="card" href={ruta(k, lang)}>
+              <h3>{d.nav[k]}</h3>
+              <span class="arrow-link">{d.comun.irSeccion}<Icon name="arrowUpRight" /></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

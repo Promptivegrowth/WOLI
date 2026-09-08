@@ -1,10 +1,13 @@
 ---
 import Icon from './Icon.astro';
+import { rutaServicio } from '../i18n/config.js';
+import { t } from '../i18n/ui.js';
 
-const { servicio, wide = false, eager = false } = Astro.props;
+const { servicio, lang = 'es', eager = false } = Astro.props;
+const d = t(lang);
 ---
 
-<article class={`svc${wide ? ' svc--wide' : ''}`} data-reveal>
+<article class="svc" data-reveal>
   <div class="svc__img">
     <img src={servicio.imagen} alt={servicio.nombre} loading={eager ? 'eager' : 'lazy'} decoding="async" />
   </div>
@@ -12,7 +15,7 @@ const { servicio, wide = false, eager = false } = Astro.props;
     <p class="svc__tag">{servicio.corto}</p>
     <h3>{servicio.nombre}</h3>
     <p class="svc__desc">{servicio.resumen}</p>
-    <span class="svc__go">Ver servicio <Icon name="arrowUpRight" /></span>
+    <span class="svc__go">{d.comun.verServicio} <Icon name="arrowUpRight" /></span>
   </div>
-  <a class="svc__link" href={`/servicios/${servicio.slug}`} aria-label={`Ver el servicio de ${servicio.nombre}`}></a>
+  <a class="svc__link" href={rutaServicio(servicio, lang)} aria-label={servicio.nombre}></a>
 </article>

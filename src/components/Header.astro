@@ -1,33 +1,67 @@
 ---
 import Icon from './Icon.astro';
-import { nav, site, waLink } from '../data/site.js';
+import { site, waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta, menu, idiomas, etiquetasIdioma } from '../i18n/config.js';
 
-const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const isActive = (href) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
+const { lang = 'es', clave = 'inicio', slugExtra = '' } = Astro.props;
+const d = t(lang);
+const activo = (k) => k === clave;
 ---
+
+<!-- Barra de utilidad -->
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <nav aria-label={lang === 'en' ? 'Utility links' : 'Enlaces de utilidad'}>
+      <a href={`mailto:${site.email}`}><Icon name="mail" />{site.email}</a>
+      <a href={waLink()} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{site.telefonoDisplay}</a>
+    </nav>
+    <nav aria-label={lang === 'en' ? 'Secondary links' : 'Enlaces secundarios'}>
+      <a href={site.tracking} target="_blank" rel="noopener noreferrer"><Icon name="search" />{d.utilidad.portal}</a>
+      <a href={ruta('reclamaciones', lang)}><Icon name="book" />{d.utilidad.reclamaciones}</a>
+    </nav>
+  </div>
+</div>
 
 <header class="header" id="header">
   <div class="wrap header__inner">
-    <a href="/" class="brand" aria-label="WOLI — World Logistics International, ir al inicio">
-      <img src="/brand/logo-woli.png" alt="WOLI — World Logistics International" width="900" height="312" />
+    <a href={ruta('inicio', lang)} class="brand" aria-label="WOLI — World Logistics International">
+      <img src="/brand/logo-woli-dark.png" alt="WOLI — World Logistics International" width="900" height="312" />
     </a>
 
-    <nav class="nav" aria-label="Navegación principal">
+    <nav class="nav" aria-label={lang === 'en' ? 'Main navigation' : 'Navegación principal'}>
       {
-        nav.map((item) => (
-          <a class="nav__link" href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            {item.label}
+        menu.map((k) => (
+          <a class="nav__link" href={ruta(k, lang)} aria-current={activo(k) ? 'page' : undefined}>
+            {d.nav[k]}
           </a>
         ))
       }
     </nav>
 
     <div class="header__actions">
-      <a class="btn btn--sm" href="/cotizacion">
-        Cotiza ahora
-        <Icon name="arrowUpRight" />
+      <div class="lang" role="group" aria-label={d.comun.cambiarIdioma}>
+        {
+          idiomas.map((l) => (
+            <a
+              href={ruta(clave, l) + slugExtra}
+              aria-current={l === lang ? 'true' : undefined}
+              hreflang={l}
+              lang={l}
+              title={etiquetasIdioma[l].largo}
+            >
+              {etiquetasIdioma[l].corto}
+            </a>
+          ))
+        }
+      </div>
+
+      <a class="btn btn--sm" href={ruta('cotizacion', lang)}>
+        {d.comun.cotizar}
+        <span class="btn__ico"><Icon name="arrowUpRight" /></span>
       </a>
-      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir el menú">
+
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={d.comun.menuAbrir}>
         <span></span>
       </button>
     </div>
@@ -35,25 +69,28 @@ const isActive = (href) => (href === '/' ? path === '/' : path === href || path.
 </header>
 
 <div class="mobile-nav" id="mobile-nav" hidden>
-  <nav class="mobile-nav__list" aria-label="Navegación móvil">
+  <nav class="mobile-nav__list" aria-label={lang === 'en' ? 'Mobile navigation' : 'Navegación móvil'}>
     {
-      nav.map((item, i) => (
-        <a class="mobile-nav__link" href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-          {item.label}
+      menu.map((k, i) => (
+        <a class="mobile-nav__link" href={ruta(k, lang)} aria-current={activo(k) ? 'page' : undefined}>
+          {d.nav[k]}
           <span>{String(i + 1).padStart(2, '0')}</span>
         </a>
       ))
     }
-    <a class="mobile-nav__link" href="/libro-de-reclamaciones">
-      Libro de Reclamaciones
-      <span>{String(nav.length + 1).padStart(2, '0')}</span>
+    <a class="mobile-nav__link" href={ruta('reclamaciones', lang)}>
+      {d.nav.reclamaciones}
+      <span>{String(menu.length + 1).padStart(2, '0')}</span>
     </a>
   </nav>
 
   <div class="mobile-nav__foot">
-    <a class="btn btn--block" href="/cotizacion">Solicitar cotización<Icon name="arrowUpRight" /></a>
-    <a class="btn btn--wa btn--block" href={waLink()} target="_blank" rel="noopener">
-      <Icon name="whatsapp" />Escríbenos por WhatsApp
+    <a class="btn btn--block" href={ruta('cotizacion', lang)}>
+      {d.comun.cotizarLargo}
+      <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+    </a>
+    <a class="btn btn--wa btn--block btn--plain" href={waLink()} target="_blank" rel="noopener noreferrer">
+      <Icon name="whatsapp" />{d.comun.hablarWhatsapp}
     </a>
     <p class="mobile-nav__meta">{site.direccion}<br />{site.email}</p>
   </div>
@@ -64,28 +101,23 @@ const isActive = (href) => (href === '/' ? path === '/' : path === href || path.
     var header = document.getElementById('header');
     var burger = document.getElementById('burger');
     var menu = document.getElementById('mobile-nav');
-    var last = 0;
+    if (!header || !burger || !menu) return;
+
+    var abrirTxt = burger.getAttribute('aria-label');
+    var cerrarTxt = menu.dataset.close || abrirTxt;
 
     function onScroll() {
-      var y = window.scrollY;
-      header.classList.toggle('is-solid', y > 40);
-      // Oculta la cabecera al bajar, la muestra al subir (nunca con el menú abierto).
-      if (!document.body.classList.contains('is-locked')) {
-        header.classList.toggle('is-hidden', y > 320 && y > last);
-      }
-      last = y;
+      header.classList.toggle('is-solid', window.scrollY > 12);
     }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 
     function setMenu(open) {
       burger.setAttribute('aria-expanded', String(open));
-      burger.setAttribute('aria-label', open ? 'Cerrar el menú' : 'Abrir el menú');
+      burger.setAttribute('aria-label', open ? cerrarTxt : abrirTxt);
       if (open) {
         menu.hidden = false;
-        requestAnimationFrame(function () {
-          menu.classList.add('is-open');
-        });
+        requestAnimationFrame(function () { menu.classList.add('is-open'); });
       } else {
         menu.classList.remove('is-open');
         setTimeout(function () {
@@ -93,23 +125,19 @@ const isActive = (href) => (href === '/' ? path === '/' : path === href || path.
         }, 380);
       }
       document.body.classList.toggle('is-locked', open);
-      header.classList.remove('is-hidden');
     }
 
     burger.addEventListener('click', function () {
       setMenu(burger.getAttribute('aria-expanded') !== 'true');
     });
-
     menu.addEventListener('click', function (e) {
       if (e.target.closest('a')) setMenu(false);
     });
-
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') setMenu(false);
     });
-
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 1080 && burger.getAttribute('aria-expanded') === 'true') setMenu(false);
+      if (window.innerWidth > 1120 && burger.getAttribute('aria-expanded') === 'true') setMenu(false);
     });
   })();
 </script>

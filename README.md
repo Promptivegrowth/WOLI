@@ -4,8 +4,8 @@ Sitio web corporativo de **World Logistics International (WOLI)**, operador log�
 con más de 20 años de experiencia en carga marítima, aérea, consolidada, agenciamiento de aduana
 y logística médica internacional.
 
-> Reemplaza al sitio anterior de una sola página (`wlicargo.com`) por un sitio multipágina,
-> estático y de carga rápida, preparado para desplegarse **tanto en Vercel como en cPanel**.
+> Sitio **bilingüe** (español / inglés), estático y de carga rápida, preparado para desplegarse
+> **tanto en Vercel como en cPanel** sin cambiar una línea de código.
 
 ---
 
@@ -16,10 +16,37 @@ y logística médica internacional.
 | Framework | **Astro 5** con `output: 'static'` | Genera HTML plano: se sirve igual en Vercel que en un Apache de cPanel. |
 | Estilos | CSS propio con *design tokens* (`src/styles/global.css`) | Sin dependencias ni build de CSS; identidad visual a medida y sin plantilla. |
 | JavaScript | *Vanilla*, en línea y mínimo | Sin framework de cliente; la web funciona incluso si el JS falla. |
+| Idiomas | Rutas separadas y diccionario propio (`src/i18n/`) | Español en `/`, inglés en `/en/`, con slugs traducidos y `hreflang`. |
 | Formularios | PHP (cPanel) + función serverless (Vercel), con salida por WhatsApp siempre disponible | Un mismo formulario funciona en los dos hostings. |
-| Tipografías | Manrope + Inter (Google Fonts) | Geométrica moderna, afín al logotipo. |
+| Tipografías | Exo 2 (display) + Schibsted Grotesk (texto) | Geométrica técnica para titulares; grotesca neutra para lectura. |
 
 Paleta corporativa: `#F2561D` · `#115D8C` · `#153F59` · blanco · negro.
+
+---
+
+## Lenguaje visual: la geometría del contenedor
+
+Toda la maqueta sale de una idea: **losas de color que sangran hasta el borde de la página con
+una sola esquina muy redondeada**, como la esquina de un contenedor visto de canto.
+
+```css
+--rc: clamp(30px, 6.4vw, 96px);   /* radio grande, el gesto principal */
+--rc-sm: clamp(20px, 3.4vw, 48px); /* el mismo gesto en tarjetas */
+```
+
+Clases disponibles: `.slab` más `.slab--tr`, `.slab--tl`, `.slab--left`, `.slab--right`,
+`.slab--top`, `.slab--tl-br`. Para sangrar hasta el borde de la ventana desde dentro de `.wrap`,
+`.bleed-l` y `.bleed-r`.
+
+Otros recursos del sistema:
+
+- **`.ital`** — la palabra enfatizada del titular, en itálica contorneada. El color del trazo se
+  controla con la variable `--ital` (blanco sobre fondos oscuros, tinta sobre claros,
+  `.ital--orange` para el acento).
+- **`.feature`** — losa de color con una imagen que se sale de ella.
+- **`.marquee`** — marquesinas continuas; `variante="ticker"` para la banda estrecha.
+- **`.acc`** — acordeón; con `data-single="true"` solo queda uno abierto.
+- **`.sticker`** — sello circular giratorio del hero.
 
 ---
 
@@ -29,26 +56,41 @@ Paleta corporativa: `#F2561D` · `#115D8C` · `#153F59` · blanco · negro.
 ├── api/enviar.js                 Función serverless de formularios (solo Vercel)
 ├── astro.config.mjs
 ├── public/
-│   ├── .htaccess                 Reglas de Apache para cPanel (URLs limpias, caché, seguridad)
+│   ├── .htaccess                 Reglas de Apache para cPanel
 │   ├── api/enviar.php            Endpoint de formularios (solo cPanel)
 │   ├── brand/                    Logotipos, isotipos y favicons
 │   ├── docs/                     Tarifarios en PDF
 │   ├── img/                      Fotografía curada y optimizada
 │   ├── js/woli-forms.js          Validación y envío de formularios
-│   ├── robots.txt, site.webmanifest
+│   └── video/                    Vídeo de portada (ver LEEME.txt)
 ├── src/
-│   ├── components/               Header, Footer, Preloader, ServiceCard, Icon, CtaBand, PageHead
-│   ├── data/                     site.js · servicios.js · tarifarios.js  ← contenido editable
-│   ├── layouts/Base.astro        SEO, datos estructurados, scripts globales
-│   ├── pages/                    Rutas del sitio
+│   ├── components/               Header, Footer, Hero, Preloader, Marquee, ServiceCard…
+│   ├── data/                     site.js · servicios.js · tarifarios.js
+│   ├── i18n/                     config.js (rutas) · ui.js (textos) · privacidad.js
+│   ├── layouts/Base.astro        SEO, hreflang, datos estructurados, scripts globales
+│   ├── paginas/                  El cuerpo de cada página, compartido por los dos idiomas
+│   ├── pages/                    Rutas: raíz en español, /en en inglés
 │   └── styles/global.css         Sistema de diseño completo
 └── vercel.json
 ```
 
-### Páginas
+### Rutas
 
-`/` · `/nosotros` · `/servicios` · `/servicios/[10 servicios]` · `/tarifarios` · `/tracking`
-`/cotizacion` · `/contacto` · `/libro-de-reclamaciones` · `/privacidad` · `404`
+| Página | Español | Inglés |
+|---|---|---|
+| Inicio | `/` | `/en` |
+| Nosotros | `/nosotros` | `/en/about` |
+| Servicios | `/servicios` | `/en/services` |
+| Ficha de servicio | `/servicios/carga-maritima` | `/en/services/ocean-freight` |
+| Tarifarios | `/tarifarios` | `/en/rates` |
+| Tracking | `/tracking` | `/en/tracking` |
+| Cotización | `/cotizacion` | `/en/quote` |
+| Contacto | `/contacto` | `/en/contact` |
+| Libro de Reclamaciones | `/libro-de-reclamaciones` | `/en/complaints-book` |
+| Privacidad | `/privacidad` | `/en/privacy` |
+
+39 páginas en total. El selector de idioma de la cabecera lleva siempre a **la misma página** en
+el otro idioma, no al inicio.
 
 ---
 
@@ -67,28 +109,36 @@ Requiere Node 18 o superior.
 
 ## Editar el contenido
 
-Casi todo el texto vive en tres archivos, sin tocar el maquetado:
+Nada de texto vive en el maquetado. Todo está en cuatro archivos:
 
-- **`src/data/site.js`** — dirección, correo, WhatsApp, horario, redes sociales, cifras,
-  diferenciales, valores, testimonios, pasos del proceso y enlace del panel de tracking.
-- **`src/data/servicios.js`** — los 10 servicios: nombre, resumen, introducción, beneficios,
-  qué incluye e imagen. Añadir un objeto aquí crea automáticamente su página en `/servicios/<slug>`.
-- **`src/data/tarifarios.js`** — los PDF por terminal. Sube el archivo a `public/docs/` y añade la entrada.
+- **`src/i18n/ui.js`** — todos los textos de interfaz y de página, en `es` y `en`. Es el archivo
+  que más se toca.
+- **`src/i18n/config.js`** — la tabla de rutas por idioma y el menú principal.
+- **`src/data/site.js`** — dirección, correo, WhatsApp, horario, redes, cifras, valores,
+  testimonios y pasos del proceso.
+- **`src/data/servicios.js`** — los 10 servicios, con sus textos y su slug en cada idioma.
+  Añadir un objeto aquí crea automáticamente sus dos fichas.
+- **`src/data/tarifarios.js`** — los PDF por terminal.
+
+### Vídeo de portada
+
+Deja `hero.mp4` (y opcionalmente `hero.webm`) en `public/video/`. **No hay que tocar código**:
+al compilar, el hero comprueba si el archivo existe y lo usa; si no está, muestra la imagen de
+respaldo. Las recomendaciones de formato están en `public/video/LEEME.txt`.
 
 ### Pendiente de completar
 
-`site.ruc` está vacío en `src/data/site.js`. Al llenarlo, el RUC aparece automáticamente en la
-cabecera del Libro de Reclamaciones, como exige la normativa.
+- `site.ruc` está vacío en `src/data/site.js`. Al llenarlo, el RUC aparece automáticamente en la
+  cabecera del Libro de Reclamaciones, como exige la normativa.
+- Los enlaces de redes sociales apuntan a los dominios genéricos: reemplázalos por los perfiles reales.
 
 ---
 
 ## Despliegue
 
-Ver **[DEPLOY.md](DEPLOY.md)** para las instrucciones detalladas de Vercel y de cPanel.
+Ver **[DEPLOY.md](DEPLOY.md)**. Resumen:
 
-Resumen:
-
-- **Vercel** — conectar el repositorio; Astro se detecta solo. Sin configuración adicional.
+- **Vercel** — conectar el repositorio; Astro se detecta solo.
 - **cPanel** — `npm run build` y subir **el contenido de `dist/`** a `public_html/`.
 
 ---
@@ -97,10 +147,10 @@ Resumen:
 
 La pantalla de carga **es el seguimiento de un envío**. Un contenedor recorre una ruta ascendente
 —el mismo gesto de la flecha del isotipo— mientras se encienden los cuatro hitos de la operación:
-**Recojo → Embarque → Tránsito → Entrega**. La posición del contenedor, el tramo naranja de la ruta,
-el porcentaje y el rótulo de estado están atados al progreso real de carga de la página.
+**Recojo → Embarque → Tránsito → Entrega**. La posición del contenedor, el tramo naranja de la
+ruta, el porcentaje y el rótulo de estado están atados al progreso real de carga de la página.
 
-- Versión clara sobre fondo blanco, para que el concepto se lea de inmediato.
+- Traducido a los dos idiomas.
 - Se muestra completo solo en la primera visita de cada sesión (`sessionStorage`).
 - Respeta `prefers-reduced-motion`.
 - Salvaguarda de 6 segundos: nunca deja el contenido bloqueado.
@@ -111,9 +161,8 @@ el porcentaje y el rótulo de estado están atados al progreso real de carga de 
 
 - HTML semántico, un único `<h1>` por página y textos alternativos en todas las imágenes.
 - Navegación por teclado, `:focus-visible` visible y enlace de salto al contenido.
-- Todas las animaciones se desactivan con `prefers-reduced-motion`.
+- El acordeón usa `aria-expanded` y `aria-controls`; el menú móvil se cierra con `Escape`.
+- Todas las animaciones se desactivan con `prefers-reduced-motion`, incluidas las marquesinas.
 - Imágenes optimizadas y con carga diferida; tipografías con `display=swap`.
-- Responsive verificado de 320 px a 1920 px: sin desborde horizontal en ninguna página y áreas
-  táctiles de al menos 34 px en los controles interactivos.
-- Datos estructurados JSON-LD (`LogisticsBusiness`, `Service`, `ItemList`, `ContactPage`) y
-  `sitemap-index.xml` generado en cada compilación.
+- Responsive verificado de 320 px a 1920 px en las 21 rutas: sin desborde horizontal.
+- `hreflang` recíproco entre idiomas, datos estructurados JSON-LD y `sitemap-index.xml`.

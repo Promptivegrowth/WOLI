@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { site } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { politica } from '../i18n/privacidad.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const p = d.privacidad;
+const doc = politica[lang] ?? politica.es;
+
+// Sustituye los marcadores por los datos reales de la empresa
+const rellenar = (s) =>
+  s
+    .replaceAll('{legal}', site.legal)
+    .replaceAll('{marca}', site.nombre)
+    .replaceAll('{direccion}', site.direccion)
+    .replaceAll('{email}', site.email);
+---
+
+<Base lang={lang} clave="privacidad" title={p.titulo} description={`${p.titulo} — ${site.nombreLargo}`}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={`${p.actualizado} ${p.fecha}`}
+    image="/img/cr-ship-map.jpg"
+    crumbs={[{ label: d.nav.privacidad }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap wrap-narrow prose" data-reveal>
+      <p>{rellenar(doc.intro)}</p>
+      {
+        doc.secciones.map((s) => (
+          <>
+            <h2>{s.titulo}</h2>
+            {(s.parrafos ?? []).map((x) => <p>{rellenar(x)}</p>)}
+            {s.lista && <ul>{s.lista.map((x) => <li>{rellenar(x)}</li>)}</ul>}
+          </>
+        ))
+      }
+    </div>
+  </section>
+</Base>

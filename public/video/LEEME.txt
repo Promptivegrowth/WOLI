@@ -1,0 +1,24 @@
+VÍDEO DE PORTADA — WOLI
+=======================
+
+Deja aquí tu vídeo y el hero lo usará automáticamente. No hay que tocar código:
+al compilar, el sitio comprueba si el archivo existe.
+
+  hero.mp4    (obligatorio)  H.264 / AAC. Es el que verán casi todos.
+  hero.webm   (opcional)     VP9. Pesa menos en Chrome y Firefox.
+
+Recomendaciones
+---------------
+- Duración: 8 a 15 segundos en bucle. Se reproduce en silencio y en bucle.
+- Resolución: 1920x1080. El hero recorta a lo alto, así que deja el motivo
+  principal centrado.
+- Peso: por debajo de 4 MB el mp4. Un vídeo pesado retrasa la portada.
+- Sin texto incrustado: encima va el titular del sitio.
+- Zona segura: la mitad izquierda queda cubierta por el texto. Pon la acción
+  del vídeo hacia la derecha.
+
+Imagen de respaldo
+------------------
+Mientras no haya vídeo, y como póster mientras carga, se usa la imagen
+indicada en `site.video.poster` (src/data/site.js). Ahora mismo es
+/img/cr-ship-dusk.jpg. Puedes cambiarla por un fotograma de tu propio vídeo.

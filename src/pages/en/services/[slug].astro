@@ -1,0 +1,15 @@
+---
+import Pagina from '../../../paginas/ServicioDetalle.astro';
+import { servicios, localizar } from '../../../data/servicios.js';
+
+export function getStaticPaths() {
+  return servicios.map((s) => ({
+    params: { slug: s.slug.en },
+    props: { servicio: localizar(s, 'en') },
+  }));
+}
+
+const { servicio } = Astro.props;
+---
+
+<Pagina lang="en" servicio={servicio} />

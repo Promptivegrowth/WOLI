@@ -1,44 +1,31 @@
 ---
-// Preloader temático: la pantalla de carga es el seguimiento de un envío.
-// Un contenedor recorre la ruta de origen a destino y los cuatro hitos
-// (recojo, embarque, tránsito, entrega) se encienden conforme avanza la carga
-// real de la página. Versión clara, sobre fondo blanco.
-const hitos = [
-  { label: 'Recojo', estado: 'Recojo en origen' },
-  { label: 'Embarque', estado: 'Embarque confirmado' },
-  { label: 'Tránsito', estado: 'Carga en tránsito' },
-  { label: 'Entrega', estado: 'Entrega en destino' },
-];
+// La pantalla de carga es el seguimiento de un envío: un contenedor recorre la
+// ruta y los cuatro hitos se encienden conforme avanza la carga real de la página.
+import { t } from '../i18n/ui.js';
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const hitos = d.preloader.hitos;
 ---
 
-<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Cargando el sitio de WOLI">
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label={d.comun.cargando}>
   <div class="preloader__grid" aria-hidden="true"></div>
   <div class="preloader__glow" aria-hidden="true"></div>
 
   <div class="preloader__core">
     <img class="preloader__mark" src="/brand/isotipo-woli.png" alt="" width="86" height="79" fetchpriority="high" />
     <p class="preloader__brand">World Logistics International</p>
-    <p class="preloader__title">Preparando tu envío</p>
+    <p class="preloader__title">{d.comun.cargando}</p>
 
     <div class="preloader__route" aria-hidden="true">
-      <svg id="pre-svg" viewBox="0 0 660 132" preserveAspectRatio="xMidYMid meet">
-        <!-- Ruta completa -->
-        <path
-          class="pre-track"
-          d="M75,106 C132,106 190,94 245,86 C302,78 360,70 415,58 C472,46 530,40 585,24"></path>
-        <!-- Tramo recorrido -->
-        <path
-          id="pre-progress"
-          class="pre-progress"
-          d="M75,106 C132,106 190,94 245,86 C302,78 360,70 415,58 C472,46 530,40 585,24"></path>
+      <svg viewBox="0 0 660 132" preserveAspectRatio="xMidYMid meet">
+        <path class="pre-track" d="M75,106 C132,106 190,94 245,86 C302,78 360,70 415,58 C472,46 530,40 585,24"></path>
+        <path id="pre-progress" class="pre-progress" d="M75,106 C132,106 190,94 245,86 C302,78 360,70 415,58 C472,46 530,40 585,24"></path>
 
-        <!-- Hitos -->
-        <circle class="pre-node" data-node="0" cx="75" cy="106" r="8"></circle>
-        <circle class="pre-node" data-node="1" cx="245" cy="86" r="8"></circle>
-        <circle class="pre-node" data-node="2" cx="415" cy="58" r="8"></circle>
-        <circle class="pre-node" data-node="3" cx="585" cy="24" r="8"></circle>
+        <circle class="pre-node" cx="75" cy="106" r="8"></circle>
+        <circle class="pre-node" cx="245" cy="86" r="8"></circle>
+        <circle class="pre-node" cx="415" cy="58" r="8"></circle>
+        <circle class="pre-node" cx="585" cy="24" r="8"></circle>
 
-        <!-- Contenedor en movimiento -->
         <g id="pre-cargo" class="pre-cargo" transform="translate(75,88)">
           <path class="pre-cargo__trail" d="M-37,-5 h10 M-42,2 h14 M-34,9 h8"></path>
           <rect class="pre-cargo__box" x="-17" y="-11" width="34" height="23" rx="3"></rect>
@@ -48,13 +35,13 @@ const hitos = [
       </svg>
 
       <ol class="preloader__steps">
-        {hitos.map((h, i) => <li data-step={i}>{h.label}</li>)}
+        {hitos.map((h) => <li>{h.label}</li>)}
       </ol>
     </div>
 
     <div class="preloader__bar"><i id="pre-bar"></i></div>
     <p class="preloader__status">
-      <span id="pre-pct">0</span>% · <span id="pre-estado">Recojo en origen</span>
+      <span id="pre-pct">0</span>% · <span id="pre-estado">{hitos[0].estado}</span>
     </p>
   </div>
 </div>
@@ -74,69 +61,53 @@ const hitos = [
     var body = document.body;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Solo la primera visita de la sesión ve la animación completa.
     var repeat = sessionStorage.getItem('woli_preloaded') === '1';
     var minTime = reduce ? 260 : repeat ? 800 : 2900;
 
     body.classList.add('is-locked');
 
-    // Geometría de la ruta: dónde cae cada hito a lo largo del trazo.
     var largo = progreso.getTotalLength();
     progreso.style.strokeDasharray = largo;
     progreso.style.strokeDashoffset = largo;
 
     var fracciones = [0, 0.34, 0.67, 1];
     try {
-      var objetivos = [75, 245, 415, 585];
-      fracciones = objetivos.map(function (x) {
-        var mejor = 0;
-        var dif = Infinity;
+      fracciones = [75, 245, 415, 585].map(function (x) {
+        var mejor = 0, dif = Infinity;
         for (var i = 0; i <= 240; i++) {
           var l = (largo * i) / 240;
-          var d = Math.abs(progreso.getPointAtLength(l).x - x);
-          if (d < dif) {
-            dif = d;
-            mejor = l / largo;
-          }
+          var dd = Math.abs(progreso.getPointAtLength(l).x - x);
+          if (dd < dif) { dif = dd; mejor = l / largo; }
         }
         return mejor;
       });
     } catch (e) {
-      /* navegador sin getPointAtLength: se usan las fracciones aproximadas */
+      /* navegador sin getPointAtLength */
     }
 
-    var valor = 0;
-    var inicio = Date.now();
-    var listo = false;
+    var valor = 0, inicio = Date.now(), listo = false;
 
     function pintar(v) {
       valor = Math.max(valor, Math.min(100, v));
       var p = valor / 100;
-
       if (bar) bar.style.width = valor + '%';
       if (pct) pct.textContent = Math.round(valor);
-
       progreso.style.strokeDashoffset = largo * (1 - p);
-
       try {
         var punto = progreso.getPointAtLength(largo * p);
         cargo.setAttribute('transform', 'translate(' + punto.x.toFixed(1) + ',' + (punto.y - 18).toFixed(1) + ')');
-      } catch (e) {
-        /* sin soporte: el contenedor se queda en el origen */
-      }
-
+      } catch (e) {}
       var activo = 0;
       for (var i = 0; i < nodos.length; i++) {
-        var alcanzado = p >= fracciones[i] - 0.004;
-        nodos[i].classList.toggle('is-on', alcanzado);
-        if (pasos[i]) pasos[i].classList.toggle('is-on', alcanzado);
-        if (alcanzado) activo = i;
+        var ok = p >= fracciones[i] - 0.004;
+        nodos[i].classList.toggle('is-on', ok);
+        if (pasos[i]) pasos[i].classList.toggle('is-on', ok);
+        if (ok) activo = i;
       }
       if (estado && hitos[activo]) estado.textContent = hitos[activo].estado;
     }
 
     pintar(0);
-
     var tick = setInterval(function () {
       pintar(Math.min(92, ((Date.now() - inicio) / minTime) * 100));
     }, 60);
@@ -151,16 +122,13 @@ const hitos = [
         el.classList.add('is-done');
         body.classList.remove('is-locked');
         document.dispatchEvent(new CustomEvent('woli:ready'));
-        setTimeout(function () {
-          el.setAttribute('hidden', '');
-        }, 900);
+        setTimeout(function () { el.setAttribute('hidden', ''); }, 900);
       }, reduce ? 60 : 420);
     }
 
     function alCargar() {
       setTimeout(terminar, Math.max(0, minTime - (Date.now() - inicio)));
     }
-
     if (document.readyState === 'complete') alCargar();
     else window.addEventListener('load', alCargar);
 

@@ -35,11 +35,16 @@ const paths = {
   instagram:
     '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.1" cy="6.9" r="1.1" fill="currentColor" stroke="none"/>',
   pdf: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13.5h1.4a1.2 1.2 0 0 1 0 2.4H9zm0 0V18"/><path d="M13.5 13.5V18h.8a1.6 1.6 0 0 0 1.6-1.6v-1.3a1.6 1.6 0 0 0-1.6-1.6z"/>',
+  play: '<path d="M8 5.4v13.2L19 12z"/>',
+  pause: '<path d="M9 5.5v13M15 5.5v13"/>',
+  sound: '<path d="M11 5 6.5 8.8H3.5v6.4h3L11 19z"/><path d="M15 9.2a4 4 0 0 1 0 5.6"/><path d="M17.8 6.4a8 8 0 0 1 0 11.2"/>',
+  mute: '<path d="M11 5 6.5 8.8H3.5v6.4h3L11 19z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/>',
+  chevron: '<polyline points="6 9 12 15 18 9"/>',
   scale: '<path d="M12 3.5v17"/><path d="M6.5 6.5h11"/><path d="m4 15 2.8-6.5L9.6 15a2.8 2.8 0 0 1-5.6 0Z"/><path d="m14.4 13 2.8-6.5L20 13a2.8 2.8 0 0 1-5.6 0Z"/><path d="M8 20.5h8"/>',
 };
 
 // Iconos que se dibujan con relleno en lugar de trazo
-const solid = new Set(['whatsapp', 'linkedin', 'facebook', 'quote']);
+const solid = new Set(['whatsapp', 'linkedin', 'facebook', 'quote', 'play']);
 const isSolid = solid.has(name);
 const d = paths[name] || '';
 ---

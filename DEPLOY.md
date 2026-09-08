@@ -5,6 +5,18 @@ hosting cPanel sin cambios. Lo único que difiere es el endpoint que procesa los
 se resuelve solo: el navegador intenta primero `/api/enviar.php` (cPanel) y, si no existe, usa
 `/api/enviar` (Vercel).
 
+El sitio es bilingüe: **español en la raíz** e **inglés bajo `/en/`**. Son páginas HTML reales,
+no traducción por JavaScript, así que ambas versiones se indexan por separado.
+
+---
+
+## Antes de publicar
+
+1. **Sube el vídeo de portada** a `public/video/hero.mp4` (ver `public/video/LEEME.txt`).
+   No hay que tocar código: si el archivo está, el hero lo usa; si no, muestra la imagen de respaldo.
+2. **Completa el RUC** en `src/data/site.js` (`site.ruc`). Aparece en el Libro de Reclamaciones.
+3. **Reemplaza los enlaces de redes sociales** en `src/data/site.js` por los perfiles reales.
+
 ---
 
 ## Opción A — Vercel (a través de GitHub)
@@ -53,7 +65,7 @@ npm install
 npm run build
 ```
 
-Se genera la carpeta **`dist/`** con todo el sitio ya resuelto.
+Se genera la carpeta **`dist/`** con todo el sitio ya resuelto, incluidas las dos versiones de idioma.
 
 ### 2. Subir
 
@@ -64,6 +76,8 @@ Se genera la carpeta **`dist/`** con todo el sitio ya resuelto.
 4. Sube el `.zip` a `public_html` y usa **Extraer**.
 5. Verifica que `.htaccess` haya quedado en `public_html`. El Administrador de archivos oculta los
    archivos que empiezan con punto: activa **Configuración → Mostrar archivos ocultos**.
+
+El `.htaccess` incluido ya sirve las URLs limpias de los dos idiomas (`/servicios` y `/en/services`).
 
 ### 3. Configurar el correo
 
@@ -101,15 +115,15 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 ---
 
-## Después de publicar (en cualquiera de las dos opciones)
+## Después de publicar
 
 - [ ] Probar el formulario de **contacto** y confirmar que llega el correo.
 - [ ] Probar el formulario de **cotización**.
 - [ ] Probar el **Libro de Reclamaciones** y verificar que llegue la constancia al correo del usuario.
-- [ ] Completar `site.ruc` en `src/data/site.js` con el RUC de la empresa y volver a publicar.
-- [ ] Reemplazar los enlaces genéricos de redes sociales en `src/data/site.js` por los perfiles reales
-      (hoy apuntan a `facebook.com`, `instagram.com` y `linkedin.com` sin usuario).
-- [ ] Enviar `https://wlicargo.com/sitemap-index.xml` a Google Search Console.
+- [ ] Revisar la versión en inglés: `/en` y el cambio de idioma desde cualquier página interior.
+- [ ] Comprobar que el vídeo de portada carga y se reproduce en silencio.
+- [ ] Enviar `https://wlicargo.com/sitemap-index.xml` a Google Search Console, y declarar allí las
+      dos versiones de idioma.
 - [ ] Revisar que el panel de tracking abra correctamente desde `/tracking`.
 
 ---
@@ -119,5 +133,5 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 **En Vercel:** edita, `git commit`, `git push`. Se publica solo.
 
 **En cPanel:** edita, `npm run build`, y vuelve a subir el contenido de `dist/`.
-Si solo cambiaste un PDF o una imagen, basta con reemplazar ese archivo dentro de
-`public_html/docs/` o `public_html/img/`.
+Si solo cambiaste un PDF, una imagen o el vídeo, basta con reemplazar ese archivo dentro de
+`public_html/docs/`, `public_html/img/` o `public_html/video/`.

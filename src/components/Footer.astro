@@ -1,10 +1,14 @@
 ---
 import Icon from './Icon.astro';
 import { site, waLink } from '../data/site.js';
-import { servicios } from '../data/servicios.js';
+import { serviciosDe } from '../data/servicios.js';
+import { t } from '../i18n/ui.js';
+import { ruta, rutaServicio } from '../i18n/config.js';
 
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
 const year = new Date().getFullYear();
-const principales = servicios.slice(0, 6);
+const principales = serviciosDe(lang).slice(0, 6);
 ---
 
 <footer class="footer">
@@ -12,9 +16,7 @@ const principales = servicios.slice(0, 6);
     <div class="footer__grid">
       <div>
         <img class="footer__logo" src="/brand/logo-woli.png" alt="WOLI — World Logistics International" width="900" height="312" />
-        <p style="max-width:34ch">
-          Operador logístico peruano con más de 20 años conectando empresas con el mundo por tierra, mar y aire.
-        </p>
+        <p style="max-width:34ch">{d.footer.descripcion}</p>
         <div class="social">
           {
             site.redes.map((r) => (
@@ -30,58 +32,58 @@ const principales = servicios.slice(0, 6);
       </div>
 
       <div>
-        <h4>Servicios</h4>
+        <h4>{d.footer.servicios}</h4>
         <ul>
-          {principales.map((s) => <li><a href={`/servicios/${s.slug}`}>{s.nombre}</a></li>)}
-          <li><a href="/servicios">Ver todos</a></li>
+          {principales.map((s) => <li><a href={rutaServicio(s, lang)}>{s.nombre}</a></li>)}
+          <li><a href={ruta('servicios', lang)}>{d.comun.verTodos}</a></li>
         </ul>
       </div>
 
       <div>
-        <h4>Empresa</h4>
+        <h4>{d.footer.empresa}</h4>
         <ul>
-          <li><a href="/nosotros">Nosotros</a></li>
-          <li><a href="/tarifarios">Tarifarios</a></li>
-          <li><a href="/tracking">Rastrea tu carga</a></li>
-          <li><a href="/cotizacion">Cotización</a></li>
-          <li><a href="/contacto">Contacto</a></li>
-          <li><a href="/privacidad">Política de privacidad</a></li>
+          <li><a href={ruta('nosotros', lang)}>{d.nav.nosotros}</a></li>
+          <li><a href={ruta('tarifarios', lang)}>{d.nav.tarifarios}</a></li>
+          <li><a href={ruta('tracking', lang)}>{d.footer.rastrea}</a></li>
+          <li><a href={ruta('cotizacion', lang)}>{d.nav.cotizacion}</a></li>
+          <li><a href={ruta('contacto', lang)}>{d.nav.contacto}</a></li>
+          <li><a href={ruta('privacidad', lang)}>{d.nav.privacidad}</a></li>
         </ul>
       </div>
 
       <div>
-        <h4>Contacto</h4>
+        <h4>{d.footer.contacto}</h4>
         <ul>
           <li><a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a></li>
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></li>
-          <li>{site.horario}</li>
+          <li>{site.horario[lang]}</li>
         </ul>
-        <a class="book-link" href="/libro-de-reclamaciones" style="margin-top:1.4rem">
+        <a class="book-link" href={ruta('reclamaciones', lang)} style="margin-top:1.4rem">
           <Icon name="book" />
-          Libro de<br />Reclamaciones
+          <span set:html={d.footer.libro} />
         </a>
       </div>
     </div>
 
     <div class="footer__legal">
-      <p>© {year} {site.nombreLargo}. Todos los derechos reservados.</p>
-      <nav aria-label="Enlaces legales">
-        <a href="/nosotros">Sobre nosotros</a>
-        <a href="/servicios">Servicios</a>
-        <a href="/contacto">Contacto</a>
-        <a href="/privacidad">Privacidad</a>
-        <a href="/libro-de-reclamaciones">Libro de Reclamaciones</a>
+      <p>© {year} {site.nombreLargo}. {d.footer.derechos}</p>
+      <nav aria-label={lang === 'en' ? 'Legal links' : 'Enlaces legales'}>
+        <a href={ruta('nosotros', lang)}>{d.nav.nosotros}</a>
+        <a href={ruta('servicios', lang)}>{d.nav.servicios}</a>
+        <a href={ruta('contacto', lang)}>{d.nav.contacto}</a>
+        <a href={ruta('privacidad', lang)}>{d.nav.privacidad}</a>
+        <a href={ruta('reclamaciones', lang)}>{d.nav.reclamaciones}</a>
       </nav>
     </div>
   </div>
 </footer>
 
 <div class="floaters">
-  <button class="float-btn float-btn--top" id="to-top" type="button" aria-label="Volver arriba">
+  <button class="float-btn float-btn--top" id="to-top" type="button" aria-label={d.comun.volverArriba}>
     <Icon name="arrowUp" />
   </button>
-  <a class="float-btn float-btn--wa" href={waLink()} target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp">
+  <a class="float-btn float-btn--wa" href={waLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
     <Icon name="whatsapp" />
   </a>
 </div>
@@ -90,15 +92,7 @@ const principales = servicios.slice(0, 6);
   (function () {
     var top = document.getElementById('to-top');
     if (!top) return;
-    window.addEventListener(
-      'scroll',
-      function () {
-        top.classList.toggle('is-on', window.scrollY > 620);
-      },
-      { passive: true }
-    );
-    top.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    window.addEventListener('scroll', function () { top.classList.toggle('is-on', window.scrollY > 620); }, { passive: true });
+    top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
   })();
 </script>

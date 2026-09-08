@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site, waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const p = d.tracking;
+const iconos = ['gps', 'shield', 'globe'];
+---
+
+<Base lang={lang} clave="tracking" title={d.nav.tracking} description={p.bajada}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-plane-over.jpg"
+    crumbs={[{ label: d.nav.tracking }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap split">
+      <div data-reveal>
+        <p class="eyebrow">{p.accesoEyebrow}</p>
+        <h2 class="h2">{p.accesoTitulo}</h2>
+        <p class="lead" style="margin-bottom:1.8rem">{p.accesoTexto}</p>
+        <ul class="checks" style="margin-bottom:2.2rem">
+          {p.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+        <a class="btn" href={site.tracking} target="_blank" rel="noopener noreferrer">
+          {p.abrirPanel}
+          <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+        </a>
+        <p style="font-size:.86rem;color:var(--ink-mute);margin-top:1rem">{p.nuevaVentana}</p>
+      </div>
+
+      <div class="panel panel--dark" data-reveal style="--d:120ms">
+        <div class="card__icon" style="background:rgba(255,255,255,.1);color:#fff;margin-bottom:1.3rem">
+          <Icon name="search" />
+        </div>
+        <h3 class="h3" style="margin-bottom:.8rem">{p.sinCredencialesTitulo}</h3>
+        <p style="color:rgba(255,255,255,.76);margin-bottom:1.6rem">{p.sinCredencialesTexto}</p>
+        <div class="btn-row">
+          <a class="btn btn--wa btn--block btn--plain" href={waLink(p.mensajeWa)} target="_blank" rel="noopener noreferrer">
+            <Icon name="whatsapp" />{d.comun.consultarWhatsapp}
+          </a>
+          <a class="btn btn--light btn--block btn--plain" href={`mailto:${site.email}`}>
+            <Icon name="mail" />{d.comun.escribirCorreo}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="grid grid--3">
+        {
+          p.ventajas.map((v, i) => (
+            <article class="card" data-reveal style={`--d:${i * 90}ms`}>
+              <div class="card__icon"><Icon name={iconos[i]} /></div>
+              <h3>{v.titulo}</h3>
+              <p>{v.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} titulo={p.ctaTitulo} texto={p.ctaTexto} />
+</Base>

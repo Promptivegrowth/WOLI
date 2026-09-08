@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { tarifarios } from '../data/tarifarios.js';
+import { waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const p = d.tarifarios;
+---
+
+<Base lang={lang} clave="tarifarios" title={d.nav.tarifarios} description={p.bajada}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-port-cranes.jpg"
+    crumbs={[{ label: d.nav.tarifarios }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="split" style="align-items:start">
+        <div data-reveal>
+          <p class="eyebrow">{p.infoEyebrow}</p>
+          <h2 class="h2" style="margin-bottom:1.2rem">{p.infoTitulo}</h2>
+          <ul class="checks">
+            {p.datos.map((x) => <li>{x}</li>)}
+          </ul>
+        </div>
+        <div class="grid" style="gap:1.1rem" data-reveal>
+          {
+            p.notas.map((nt) => (
+              <div class="note">
+                <h4>{nt.titulo}</h4>
+                <p>{nt.texto}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{p.aereosEyebrow}</p>
+        <h2 class="h2">{p.aereosTitulo}</h2>
+      </div>
+      <div class="grid grid--2">
+        {
+          tarifarios.aereos.map((tf) => (
+            <a class="dl" href={tf.archivo} target="_blank" rel="noopener" download data-reveal>
+              <span class="dl__code">{tf.codigo}</span>
+              <span class="dl__body">
+                <b>{tf.terminal}</b>
+                <span>{p.impoExpo} · {d.comun.pdf}</span>
+              </span>
+              <span class="dl__go"><Icon name="download" /></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{p.maritimosEyebrow}</p>
+        <h2 class="h2">{p.maritimosTitulo}</h2>
+        <p class="lead">{p.maritimosBajada}</p>
+      </div>
+      <div class="grid grid--2">
+        {
+          tarifarios.maritimos.map((tf, i) => (
+            <a class="dl" href={tf.archivo} target="_blank" rel="noopener" download data-reveal style={`--d:${(i % 2) * 80}ms`}>
+              <span class="dl__code">{tf.codigo}</span>
+              <span class="dl__body">
+                <b>{tf.terminal}</b>
+                <span>{p.impoExpo} · {d.comun.pdf}</span>
+              </span>
+              <span class="dl__go"><Icon name="download" /></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="slab slab--tl-br" style="padding:clamp(2rem,5vw,4rem)" data-reveal>
+        <div class="grid-lines" aria-hidden="true"></div>
+        <div class="split">
+          <div>
+            <p class="eyebrow">{p.otroEyebrow}</p>
+            <h2 class="h2" style="color:#fff">{p.otroTitulo}</h2>
+            <p class="lead">{p.otroTexto}</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn" href={ruta('cotizacion', lang)}>
+              {d.comun.cotizarLargo}
+              <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+            </a>
+            <a class="btn btn--light btn--plain" href={waLink()} target="_blank" rel="noopener noreferrer">
+              <Icon name="whatsapp" />{d.comun.consultarWhatsapp}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

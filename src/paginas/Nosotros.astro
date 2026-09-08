@@ -1,0 +1,149 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { c } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const cont = c(lang);
+const n = d.nosotros;
+---
+
+<Base lang={lang} clave="nosotros" title={d.nav.nosotros} description={n.bajada}>
+  <PageHead
+    lang={lang}
+    eyebrow={n.eyebrow}
+    titulo={n.titulo}
+    tituloItalica={n.tituloItalica}
+    lead={n.bajada}
+    image="/img/cr-ship-map.jpg"
+    crumbs={[{ label: d.nav.nosotros }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap split">
+      <div data-reveal>
+        <p class="eyebrow">{lang === 'en' ? 'Who we are' : 'Quiénes somos'}</p>
+        <h2 class="h2">{n.relatoTitulo}</h2>
+        <p class="lead" style="margin-bottom:1.4rem">{n.relato1}</p>
+        <p style="color:var(--ink-soft);margin-bottom:1.4rem">{n.relato2}</p>
+        <p style="color:var(--ink-soft)">{n.relato3}</p>
+      </div>
+      <div class="media-stack" data-reveal style="--d:120ms">
+        <div class="figure figure--tall">
+          <img src="/img/cr-team.jpg" alt={n.relatoTitulo} loading="lazy" decoding="async" />
+        </div>
+        <div class="media-stack__badge">
+          <b>20+</b>
+          <span>{cont.cifras[0].detalle}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Misión y visión -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="grid grid--2">
+        <article class="panel" data-reveal>
+          <div class="card__icon" style="margin-bottom:1.3rem"><Icon name="bolt" /></div>
+          <h2 class="h3">{n.misionTitulo}</h2>
+          <p style="color:var(--ink-soft)">{n.mision}</p>
+        </article>
+        <article class="panel" data-reveal style="--d:120ms">
+          <div class="card__icon" style="margin-bottom:1.3rem"><Icon name="globe" /></div>
+          <h2 class="h3">{n.visionTitulo}</h2>
+          <p style="color:var(--ink-soft)">{n.vision}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cifras -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="stats" data-reveal>
+        {
+          cont.cifras.map((cf) => (
+            <div class="stat">
+              <p class="stat__num">{cf.valor}<span>{cf.sufijo}</span></p>
+              <p class="stat__label">{cf.label}</p>
+              <p class="stat__detail">{cf.detalle}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">{n.valoresEyebrow}</p>
+        <h2 class="h2">{n.valoresTitulo}</h2>
+        <p class="lead">{n.valoresBajada}</p>
+      </div>
+      <div class="grid grid--4">
+        {
+          cont.valores.map((v, i) => (
+            <article class="card" data-reveal style={`--d:${i * 80}ms`}>
+              <h3>{v.titulo}</h3>
+              <p>{v.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Capacidades -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{n.capacidadesEyebrow}</p>
+        <h2 class="h2">{n.capacidadesTitulo}</h2>
+      </div>
+      <div class="grid grid--3">
+        {
+          cont.diferenciales.map((df, i) => (
+            <article class="card" data-reveal style={`--d:${(i % 3) * 90}ms`}>
+              <div class="card__icon"><Icon name={df.icono} /></div>
+              <h3>{df.titulo}</h3>
+              <p>{df.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Operaciones -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.operaciones.eyebrow}</p>
+        <h2 class="h2">{d.operaciones.titulo}</h2>
+      </div>
+      <div class="gallery" data-reveal>
+        <figure>
+          <img src="/img/op-01.jpg" alt={d.operaciones.pies[1]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[1]}</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/op-02.jpg" alt={d.operaciones.pies[0]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[0]}</figcaption>
+        </figure>
+        <figure>
+          <img src="/img/op-03.jpg" alt={d.operaciones.pies[2]} loading="lazy" decoding="async" />
+          <figcaption>{d.operaciones.pies[2]}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} titulo={n.ctaTitulo} texto={n.ctaTexto} />
+</Base>

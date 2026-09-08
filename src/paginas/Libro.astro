@@ -1,0 +1,214 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const p = d.libro;
+const f = d.form;
+const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+---
+
+<Base lang={lang} clave="reclamaciones" title={d.nav.reclamaciones} description={p.bajada}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-port-cranes.jpg"
+    crumbs={[{ label: d.nav.reclamaciones }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="panel" style="margin-bottom:1.8rem" data-reveal>
+        <div class="split" style="gap:2rem;align-items:center">
+          <div>
+            <p class="eyebrow">{p.proveedor}</p>
+            <h2 class="h3" style="margin-bottom:.8rem">{site.legal}</h2>
+            <p style="color:var(--ink-soft);font-size:.95rem">
+              {site.direccion}{site.ruc ? ` · RUC ${site.ruc}` : ''}<br />
+              {site.email} · {site.telefonoDisplay}
+            </p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)">{p.fecha}</p>
+            <p style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;letter-spacing:-.02em">{hoy}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="split split--form">
+        <div class="panel" data-reveal>
+          <form class="form" data-woli-form="reclamacion" data-wa-title={d.nav.reclamaciones} novalidate>
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website_r">{f.noCompletar}</label>
+              <input id="hp_website_r" name="hp_website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <fieldset style="border:0;padding:0;margin:0">
+              <legend class="h4" style="margin-bottom:.5rem">{p.paso1} <span class="req" style="color:var(--wo-orange)">*</span></legend>
+              <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:1.1rem">{p.paso1Texto}</p>
+              <div class="radio-cards">
+                <label class="radio-card">
+                  <input type="radio" name="tipo_registro" value={p.reclamo} required />
+                  <b>{p.reclamo}</b>
+                  <span>{p.reclamoTexto}</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="tipo_registro" value={p.queja} required />
+                  <b>{p.queja}</b>
+                  <span>{p.quejaTexto}</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">{p.paso2}</legend>
+              <div class="form__row">
+                <div class="field">
+                  <label for="nombre">{p.nombreRazon} <span class="req">*</span></label>
+                  <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+                </div>
+                <div class="field">
+                  <label for="tipo_documento">{p.tipoDocumento} <span class="req">*</span></label>
+                  <select id="tipo_documento" name="tipo_documento" required>
+                    {p.tiposDocumento.map((x) => <option>{x}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div class="form__row">
+                <div class="field">
+                  <label for="documento">{p.numeroDocumento} <span class="req">*</span></label>
+                  <input id="documento" name="documento" type="text" inputmode="numeric" required />
+                </div>
+                <div class="field">
+                  <label for="telefono">{p.telefono} <span class="req">*</span></label>
+                  <input id="telefono" name="telefono" type="tel" autocomplete="tel" required placeholder="+51 999 999 999" />
+                </div>
+              </div>
+              <div class="form__row">
+                <div class="field">
+                  <label for="email">{f.email} <span class="req">*</span></label>
+                  <input id="email" name="email" type="email" autocomplete="email" required />
+                  <small>{p.constanciaCorreo}</small>
+                </div>
+                <div class="field">
+                  <label for="direccion">{p.domicilio} <span class="req">*</span></label>
+                  <input id="direccion" name="direccion" type="text" autocomplete="street-address" required />
+                </div>
+              </div>
+              <label class="check-inline" style="margin-top:.4rem">
+                <input type="checkbox" id="menor" name="menor_edad" value={lang === 'en' ? 'Yes' : 'Sí'} />
+                <span>{p.menorEdad}</span>
+              </label>
+              <div class="field" id="campo-apoderado" hidden style="margin-top:.9rem">
+                <label for="apoderado">{p.apoderado}</label>
+                <input id="apoderado" name="apoderado" type="text" />
+              </div>
+            </fieldset>
+
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">{p.paso3}</legend>
+              <div class="form__row">
+                <div class="field">
+                  <label for="tipo_bien">{p.tipo} <span class="req">*</span></label>
+                  <select id="tipo_bien" name="tipo_bien" required>
+                    {p.tipos.map((x) => <option>{x}</option>)}
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="monto">{p.monto}</label>
+                  <input id="monto" name="monto" type="text" placeholder={p.montoEj} />
+                </div>
+              </div>
+              <div class="field">
+                <label for="descripcion_bien">{p.descripcionBien} <span class="req">*</span></label>
+                <textarea id="descripcion_bien" name="descripcion_bien" required style="min-height:100px" placeholder={p.descripcionBienEj}></textarea>
+              </div>
+            </fieldset>
+
+            <fieldset style="border:0;padding:0;margin:1.6rem 0 0">
+              <legend class="h4" style="margin-bottom:1.1rem">{p.paso4}</legend>
+              <div class="field">
+                <label for="detalle">{p.detalle} <span class="req">*</span></label>
+                <textarea id="detalle" name="detalle" data-minlength="20" required placeholder={p.detalleEj}></textarea>
+              </div>
+              <div class="field">
+                <label for="pedido">{p.pedido} <span class="req">*</span></label>
+                <textarea id="pedido" name="pedido" data-minlength="10" required style="min-height:100px" placeholder={p.pedidoEj}></textarea>
+              </div>
+            </fieldset>
+
+            <div class="note" style="margin-top:.4rem">
+              <p>{p.aviso}</p>
+            </div>
+
+            <label class="check-inline">
+              <input type="checkbox" name="declaracion" required />
+              <span>{p.declaracion} <a href={ruta('privacidad', lang)}>{f.politica}</a>. <span class="req">*</span></span>
+            </label>
+
+            <p class="form__msg" aria-live="polite"></p>
+
+            <div class="btn-row">
+              <button class="btn" type="submit">
+                <span class="btn__spin" aria-hidden="true"></span>
+                {p.registrar}
+                <span class="btn__ico"><Icon name="book" /></span>
+              </button>
+              <button class="btn btn--ghost btn--plain" type="button" data-wa-submit>
+                <Icon name="whatsapp" />{f.enviarWhatsapp}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="grid" style="gap:1.4rem" data-reveal>
+          <div class="panel panel--dark">
+            <div class="card__icon" style="background:rgba(255,255,255,.1);color:#fff;margin-bottom:1.2rem"><Icon name="scale" /></div>
+            <h2 class="h4" style="margin-bottom:1rem">{p.cualTitulo}</h2>
+            <p style="color:rgba(255,255,255,.76);font-size:.93rem;margin-bottom:1rem">{p.cualReclamo}</p>
+            <p style="color:rgba(255,255,255,.76);font-size:.93rem">{p.cualQueja}</p>
+          </div>
+
+          <div class="panel">
+            <h2 class="h4" style="margin-bottom:1.2rem">{p.plazosTitulo}</h2>
+            <ul class="checks">
+              {p.plazos.map((x) => <li>{x}</li>)}
+            </ul>
+          </div>
+
+          <div class="note">
+            <h4>{p.noReclamoTitulo}</h4>
+            <p>{p.noReclamoTexto} <a href={ruta('contacto', lang)}>{d.nav.contacto}</a>.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/woli-forms.js" defer></script>
+  <script is:inline>
+    // El campo del apoderado solo aparece cuando el consumidor es menor de edad.
+    (function () {
+      var check = document.getElementById('menor');
+      var campo = document.getElementById('campo-apoderado');
+      var input = document.getElementById('apoderado');
+      if (!check || !campo) return;
+      check.addEventListener('change', function () {
+        campo.hidden = !check.checked;
+        if (input) {
+          input.required = check.checked;
+          if (check.checked) input.focus();
+          else input.value = '';
+        }
+      });
+    })();
+  </script>
+</Base>

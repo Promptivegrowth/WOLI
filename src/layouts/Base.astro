@@ -4,18 +4,31 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Preloader from '../components/Preloader.astro';
 import { site } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta, idiomas } from '../i18n/config.js';
 
 const {
+  lang = 'es',
+  clave = 'inicio',
+  slugExtra = '',
   title,
-  description = site.descripcion,
+  description,
   image = '/brand/icon-512.png',
   noindex = false,
   schema = null,
 } = Astro.props;
 
+const d = t(lang);
+const desc = description ?? site.descripcion[lang];
 const fullTitle = title ? `${title} | ${site.nombre} — ${site.nombreLargo}` : `${site.nombre} — ${site.nombreLargo}`;
-const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', site.dominio).href;
+const canonical = new URL((ruta(clave, lang) + slugExtra).replace(/\/+$/, '') || '/', site.dominio).href;
 const ogImage = new URL(image, site.dominio).href;
+
+// Alternativas de idioma para los buscadores
+const alternos = idiomas.map((l) => ({
+  lang: l,
+  href: new URL((ruta(clave, l) + slugExtra).replace(/\/+$/, '') || '/', site.dominio).href,
+}));
 
 const organizacion = {
   '@context': 'https://schema.org',
@@ -25,7 +38,7 @@ const organizacion = {
   url: site.dominio,
   logo: new URL('/brand/icon-512.png', site.dominio).href,
   image: ogImage,
-  description: site.descripcion,
+  description: site.descripcion[lang],
   email: site.email,
   telephone: '+' + site.whatsapp,
   address: {
@@ -42,15 +55,17 @@ const organizacion = {
 ---
 
 <!doctype html>
-<html lang="es-PE">
+<html lang={lang === 'en' ? 'en' : 'es-PE'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
+    {alternos.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternos.find((a) => a.lang === 'es').href} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#0B2637" />
+    <meta name="theme-color" content="#F3F7FB" />
     <meta name="author" content={site.nombreLargo} />
     <meta name="generator" content={Astro.generator} />
 
@@ -61,21 +76,21 @@ const organizacion = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.nombreLargo} />
-    <meta property="og:locale" content="es_PE" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_PE'} />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={desc} />
     <meta name="twitter:image" content={ogImage} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />
@@ -83,27 +98,23 @@ const organizacion = {
   </head>
 
   <body>
-    <Preloader />
-    <a class="skip-link" href="#main">Saltar al contenido</a>
-    <Header />
+    <Preloader lang={lang} />
+    <a class="skip-link" href="#main">{d.comun.saltar}</a>
+    <Header lang={lang} clave={clave} slugExtra={slugExtra} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
 
     <script is:inline>
-      // Revelado progresivo al hacer scroll (respeta prefers-reduced-motion vía CSS).
+      // Revelado progresivo al hacer scroll (el CSS lo desactiva con prefers-reduced-motion).
       (function () {
         var items = document.querySelectorAll('[data-reveal]');
         if (!items.length) return;
-
         if (!('IntersectionObserver' in window)) {
-          items.forEach(function (el) {
-            el.classList.add('is-in');
-          });
+          items.forEach(function (el) { el.classList.add('is-in'); });
           return;
         }
-
         var io = new IntersectionObserver(
           function (entries) {
             entries.forEach(function (entry) {
@@ -115,21 +126,35 @@ const organizacion = {
           },
           { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
         );
-
-        items.forEach(function (el) {
-          io.observe(el);
-        });
+        items.forEach(function (el) { io.observe(el); });
       })();
 
       // Acordeones accesibles con altura animada.
       (function () {
-        document.querySelectorAll('.acc__btn').forEach(function (btn) {
-          var panel = document.getElementById(btn.getAttribute('aria-controls'));
-          if (!panel) return;
-          btn.addEventListener('click', function () {
-            var open = btn.getAttribute('aria-expanded') === 'true';
-            btn.setAttribute('aria-expanded', String(!open));
-            panel.style.height = open ? '0px' : panel.scrollHeight + 'px';
+        function abrir(btn, panel, open) {
+          btn.setAttribute('aria-expanded', String(open));
+          panel.style.height = open ? panel.scrollHeight + 'px' : '0px';
+        }
+        document.querySelectorAll('.acc').forEach(function (acc) {
+          var solo = acc.dataset.single === 'true';
+          var botones = [].slice.call(acc.querySelectorAll('.acc__btn'));
+          botones.forEach(function (btn) {
+            var panel = document.getElementById(btn.getAttribute('aria-controls'));
+            if (!panel) return;
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              requestAnimationFrame(function () { panel.style.height = panel.scrollHeight + 'px'; });
+            }
+            btn.addEventListener('click', function () {
+              var abierto = btn.getAttribute('aria-expanded') === 'true';
+              if (solo) {
+                botones.forEach(function (otro) {
+                  if (otro === btn) return;
+                  var p = document.getElementById(otro.getAttribute('aria-controls'));
+                  if (p) abrir(otro, p, false);
+                });
+              }
+              abrir(btn, panel, !abierto);
+            });
           });
         });
         window.addEventListener('resize', function () {

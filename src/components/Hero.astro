@@ -1,0 +1,136 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+
+// El vídeo se activa solo: basta con dejar el archivo en public/video/.
+// Si no existe, el hero usa la imagen de respaldo y no pide un archivo que falta.
+const existe = (rel) => {
+  try {
+    return fs.existsSync(path.join(process.cwd(), 'public', rel.replace(/^\//, '')));
+  } catch {
+    return false;
+  }
+};
+const hayMp4 = existe(site.video.mp4);
+const hayWebm = existe(site.video.webm);
+const usarVideo = Astro.props.usarVideo ?? (hayMp4 || hayWebm);
+const modos = ['ship', 'plane', 'truck', 'stamp'];
+---
+
+<section class="hero" id="inicio">
+  <div class="hero__slab">
+      <div class="grid-lines" aria-hidden="true"></div>
+
+      <div class="hero__media" aria-hidden="true">
+        {
+          usarVideo ? (
+            <video
+              id="hero-video"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster={site.video.poster}
+            >
+              {hayWebm && <source src={site.video.webm} type="video/webm" />}
+              {hayMp4 && <source src={site.video.mp4} type="video/mp4" />}
+            </video>
+          ) : (
+            <img src={site.video.poster} alt="" fetchpriority="high" decoding="async" />
+          )
+        }
+      </div>
+
+      {
+        usarVideo && (
+          <button class="hero__vctrl" id="hero-vctrl" type="button" aria-label={d.hero.pausar} data-pausar={d.hero.pausar} data-reproducir={d.hero.reproducir}>
+            <Icon name="pause" />
+          </button>
+        )
+      }
+
+      <div class="wrap hero__inner">
+        <p class="hero__badge"><b>{d.hero.badge}</b> {d.hero.badgeTexto}</p>
+
+        <h1>
+          {d.hero.titulo1} <span class="ital">{d.hero.titulo2}</span><br />
+          {d.hero.titulo3} <span class="ital ital--orange">{d.hero.titulo4}</span>
+        </h1>
+
+        <p class="hero__sub">{d.hero.bajada}</p>
+
+        <div class="btn-row">
+          <a class="btn" href={ruta('cotizacion', lang)}>
+            {d.comun.cotizarLargo}
+            <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+          </a>
+          <a class="btn btn--light btn--plain" href={ruta('tracking', lang)}>
+            <Icon name="gps" />{d.comun.rastrear}
+          </a>
+        </div>
+
+        <div class="hero__foot">
+          <div class="hero__modes">
+            {d.hero.modos.map((m, i) => (
+              <span class="hero__mode"><Icon name={modos[i]} />{m}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Sello giratorio -->
+      <div class="sticker" aria-hidden="true">
+        <svg class="sticker__ring" viewBox="0 0 100 100">
+          <defs>
+            <path id="sello" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" />
+          </defs>
+          <text>
+            <textPath href="#sello" startOffset="0">
+              World Logistics International · 
+            </textPath>
+          </text>
+        </svg>
+        <img src="/brand/isotipo-woli-blanco.png" alt="" width="50" height="46" />
+      </div>
+  </div>
+</section>
+
+{
+  usarVideo && (
+    <script is:inline>
+      (function () {
+        var v = document.getElementById('hero-video');
+        var b = document.getElementById('hero-vctrl');
+        if (!v || !b) return;
+        // Respeta a quien pide menos movimiento
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          v.removeAttribute('autoplay');
+          v.pause();
+        }
+        function pintar() {
+          var pausado = v.paused;
+          b.setAttribute('aria-label', pausado ? b.dataset.reproducir : b.dataset.pausar);
+          b.innerHTML = pausado
+            ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.4v13.2L19 12z"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M9 5.5v13M15 5.5v13"/></svg>';
+        }
+        b.addEventListener('click', function () {
+          if (v.paused) v.play();
+          else v.pause();
+          pintar();
+        });
+        v.addEventListener('play', pintar);
+        v.addEventListener('pause', pintar);
+        pintar();
+      })();
+    </script>
+  )
+}

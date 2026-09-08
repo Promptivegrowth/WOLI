@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { serviciosDe } from '../data/servicios.js';
+import { site, c } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta, rutaServicio } from '../i18n/config.js';
+
+const { lang = 'es' } = Astro.props;
+const d = t(lang);
+const cont = c(lang);
+const servicios = serviciosDe(lang);
+const p = d.paginaServicios;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: p.titulo,
+  itemListElement: servicios.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.nombre,
+    url: site.dominio + rutaServicio(s, lang),
+  })),
+};
+---
+
+<Base lang={lang} clave="servicios" title={d.nav.servicios} description={p.bajada} schema={schema}>
+  <PageHead
+    lang={lang}
+    eyebrow={p.eyebrow}
+    titulo={p.titulo}
+    tituloItalica={p.tituloItalica}
+    lead={p.bajada}
+    image="/img/cr-air-sea.jpg"
+    crumbs={[{ label: d.nav.servicios }]}
+  />
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="grid grid--3">
+        {servicios.map((s, i) => <ServiceCard servicio={s} lang={lang} eager={i < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">{d.proceso.eyebrow}</p>
+        <h2 class="h2">{p.ejecutamosTitulo}</h2>
+        <p class="lead">{d.proceso.texto}</p>
+      </div>
+      <div class="steps" data-reveal>
+        {
+          cont.proceso.map((st) => (
+            <article class="step">
+              <p class="step__n">{lang === 'en' ? 'STEP' : 'PASO'} {st.paso}</p>
+              <h3>{st.titulo}</h3>
+              <p>{st.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="feature" data-reveal>
+        <div class="feature__slab slab bleed-r"><div class="grid-lines" aria-hidden="true"></div></div>
+        <div class="feature__img">
+          <img src="/img/cr-ship-map.jpg" alt={p.ayudaTitulo} loading="lazy" decoding="async" />
+        </div>
+        <div class="feature__body">
+          <p class="eyebrow">{p.ayudaEyebrow}</p>
+          <h2 class="h3">{p.ayudaTitulo}</h2>
+          <p style="color:rgba(255,255,255,.78);margin-bottom:2rem">{p.ayudaTexto}</p>
+          <div class="btn-row">
+            <a class="btn btn--white" href={ruta('cotizacion', lang)}>
+              {p.ayudaCta}
+              <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+            </a>
+            <a class="btn btn--light btn--plain" href={ruta('tarifarios', lang)}>
+              <Icon name="download" />{d.nav.tarifarios}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

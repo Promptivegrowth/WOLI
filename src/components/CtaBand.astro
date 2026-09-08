@@ -1,24 +1,26 @@
 ---
 import Icon from './Icon.astro';
 import { waLink } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+import { ruta } from '../i18n/config.js';
 
-const {
-  titulo = 'Cuéntanos qué necesitas mover y nosotros diseñamos la ruta',
-  texto = 'Envíanos tu requerimiento y recibe una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 48 horas.',
-  mensaje = 'Hola WOLI, quisiera cotizar un servicio logístico.',
-} = Astro.props;
+const { lang = 'es', titulo, texto, mensaje } = Astro.props;
+const d = t(lang);
 ---
 
 <section class="section section--tight">
   <div class="wrap">
     <div class="cta" data-reveal>
-      <p class="eyebrow">Siguiente paso</p>
-      <h2>{titulo}</h2>
-      <p>{texto}</p>
+      <p class="eyebrow">{d.ctaFinal.eyebrow}</p>
+      <h2>{titulo ?? d.ctaFinal.titulo}</h2>
+      <p>{texto ?? d.ctaFinal.texto}</p>
       <div class="btn-row">
-        <a class="btn" href="/cotizacion">Solicitar cotización<Icon name="arrowUpRight" /></a>
-        <a class="btn btn--light" href={waLink(mensaje)} target="_blank" rel="noopener noreferrer">
-          <Icon name="whatsapp" />Hablar por WhatsApp
+        <a class="btn" href={ruta('cotizacion', lang)}>
+          {d.comun.cotizarLargo}
+          <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+        </a>
+        <a class="btn btn--light btn--plain" href={waLink(mensaje)} target="_blank" rel="noopener noreferrer">
+          <Icon name="whatsapp" />{d.comun.hablarWhatsapp}
         </a>
       </div>
     </div>
