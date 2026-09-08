@@ -26,80 +26,88 @@ const modos = ['ship', 'plane', 'truck', 'stamp'];
 
 <section class="hero" id="inicio">
   <div class="hero__slab">
-      <div class="grid-lines" aria-hidden="true"></div>
+    <div class="grid-lines" aria-hidden="true"></div>
 
-      <div class="hero__media" aria-hidden="true">
-        {
-          usarVideo ? (
-            <video
-              id="hero-video"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              poster={site.video.poster}
-            >
-              {hayWebm && <source src={site.video.webm} type="video/webm" />}
-              {hayMp4 && <source src={site.video.mp4} type="video/mp4" />}
-            </video>
-          ) : (
-            <img src={site.video.poster} alt="" fetchpriority="high" decoding="async" />
-          )
-        }
-      </div>
-
+    <div class="hero__media" aria-hidden="true">
       {
-        usarVideo && (
-          <button class="hero__vctrl" id="hero-vctrl" type="button" aria-label={d.hero.pausar} data-pausar={d.hero.pausar} data-reproducir={d.hero.reproducir}>
-            <Icon name="pause" />
-          </button>
+        usarVideo ? (
+          <video
+            id="hero-video"
+            class="hero__video"
+            muted
+            loop
+            playsinline
+            disablepictureinpicture
+            preload="none"
+            poster={site.video.poster}
+            data-mp4={hayMp4 ? site.video.mp4 : null}
+            data-webm={hayWebm ? site.video.webm : null}
+          />
+        ) : (
+          <img src={site.video.poster} alt="" fetchpriority="high" decoding="async" />
         )
       }
+    </div>
 
-      <div class="wrap hero__inner">
-        <p class="hero__badge"><b>{d.hero.badge}</b> {d.hero.badgeTexto}</p>
+    {
+      usarVideo && (
+        <button
+          class="hero__vctrl"
+          id="hero-vctrl"
+          type="button"
+          hidden
+          aria-label={d.hero.pausar}
+          data-pausar={d.hero.pausar}
+          data-reproducir={d.hero.reproducir}
+        >
+          <Icon name="pause" />
+        </button>
+      )
+    }
 
-        <h1>
-          {d.hero.titulo1} <span class="ital">{d.hero.titulo2}</span><br />
-          {d.hero.titulo3} <span class="ital ital--orange">{d.hero.titulo4}</span>
-        </h1>
+    <div class="wrap hero__inner">
+      <p class="hero__badge"><b>{d.hero.badge}</b> {d.hero.badgeTexto}</p>
 
-        <p class="hero__sub">{d.hero.bajada}</p>
+      <h1>
+        {d.hero.titulo1} <span class="ital">{d.hero.titulo2}</span><br />
+        {d.hero.titulo3} <span class="ital ital--orange">{d.hero.titulo4}</span>
+      </h1>
 
-        <div class="btn-row">
-          <a class="btn" href={ruta('cotizacion', lang)}>
-            {d.comun.cotizarLargo}
-            <span class="btn__ico"><Icon name="arrowUpRight" /></span>
-          </a>
-          <a class="btn btn--light btn--plain" href={ruta('tracking', lang)}>
-            <Icon name="gps" />{d.comun.rastrear}
-          </a>
-        </div>
+      <p class="hero__sub">{d.hero.bajada}</p>
 
-        <div class="hero__foot">
-          <div class="hero__modes">
-            {d.hero.modos.map((m, i) => (
-              <span class="hero__mode"><Icon name={modos[i]} />{m}</span>
-            ))}
-          </div>
-        </div>
+      <div class="btn-row">
+        <a class="btn" href={ruta('cotizacion', lang)}>
+          {d.comun.cotizarLargo}
+          <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+        </a>
+        <a class="btn btn--light btn--plain" href={ruta('tracking', lang)}>
+          <Icon name="gps" />{d.comun.rastrear}
+        </a>
       </div>
 
-      <!-- Sello giratorio -->
-      <div class="sticker" aria-hidden="true">
-        <svg class="sticker__ring" viewBox="0 0 100 100">
-          <defs>
-            <path id="sello" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" />
-          </defs>
-          <text>
-            <textPath href="#sello" startOffset="0">
-              World Logistics International · 
-            </textPath>
-          </text>
-        </svg>
-        <img src="/brand/isotipo-woli-blanco.png" alt="" width="50" height="46" />
+      <div class="hero__foot">
+        <div class="hero__modes">
+          {d.hero.modos.map((m, i) => (
+            <span class="hero__mode"><Icon name={modos[i]} />{m}</span>
+          ))}
+        </div>
       </div>
+    </div>
+
+    <!-- Sello giratorio -->
+    <div class="sticker" aria-hidden="true">
+      <svg class="sticker__ring" viewBox="0 0 100 100">
+        <defs>
+          <path id="sello" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" />
+        </defs>
+        <text>
+          <textPath href="#sello" startOffset="0">
+            World Logistics International ·
+          </textPath>
+        </text>
+      </svg>
+      <img src="/brand/isotipo-woli-blanco.png" alt="" width="50" height="46" />
+    </div>
   </div>
 </section>
 
@@ -109,27 +117,86 @@ const modos = ['ship', 'plane', 'truck', 'stamp'];
       (function () {
         var v = document.getElementById('hero-video');
         var b = document.getElementById('hero-vctrl');
-        if (!v || !b) return;
-        // Respeta a quien pide menos movimiento
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          v.removeAttribute('autoplay');
-          v.pause();
+        if (!v) return;
+
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Con datos limitados o conexión lenta no se descarga el vídeo:
+        // se queda el póster, que ya está pintado.
+        var con = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        var conexionPobre = !!(con && (con.saveData || /^(slow-)?2g$/.test(con.effectiveType || '')));
+
+        if (reduce || conexionPobre) return;
+
+        var cargado = false;
+        function cargar() {
+          if (cargado) return;
+          cargado = true;
+          // Las fuentes se añaden aquí para que el vídeo no compita con el
+          // primer pintado: hasta este momento no se ha pedido un solo byte.
+          ['webm', 'mp4'].forEach(function (tipo) {
+            var url = v.dataset[tipo];
+            if (!url) return;
+            var s = document.createElement('source');
+            s.src = url;
+            s.type = 'video/' + tipo;
+            v.appendChild(s);
+          });
+          v.preload = 'auto';
+          v.load();
+          var pr = v.play();
+          if (pr && pr.catch) pr.catch(function () {});
+          if (b) {
+            b.hidden = false;
+            pintar();
+          }
         }
+
         function pintar() {
+          if (!b) return;
           var pausado = v.paused;
           b.setAttribute('aria-label', pausado ? b.dataset.reproducir : b.dataset.pausar);
           b.innerHTML = pausado
             ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.4v13.2L19 12z"/></svg>'
             : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M9 5.5v13M15 5.5v13"/></svg>';
         }
-        b.addEventListener('click', function () {
-          if (v.paused) v.play();
-          else v.pause();
-          pintar();
+
+        if (b) {
+          b.addEventListener('click', function () {
+            v.paused ? v.play() : v.pause();
+            b.dataset.manual = v.paused ? 'pausado' : '';
+            pintar();
+          });
+          v.addEventListener('play', pintar);
+          v.addEventListener('pause', pintar);
+        }
+
+        // Arranca cuando el preloader ha terminado; si ya terminó, de inmediato.
+        if (document.documentElement.classList.contains('woli-ready')) cargar();
+        else document.addEventListener('woli:ready', cargar, { once: true });
+
+        // Fuera de pantalla o pestaña oculta: se pausa para no gastar batería.
+        function puedeReanudar() {
+          return cargado && b && b.dataset.manual !== 'pausado' && !document.hidden;
+        }
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(
+            function (entradas) {
+              entradas.forEach(function (e) {
+                if (e.isIntersecting) {
+                  if (puedeReanudar() && v.paused) v.play().catch(function () {});
+                } else if (!v.paused) {
+                  v.pause();
+                }
+              });
+            },
+            { threshold: 0.15 }
+          ).observe(v);
+        }
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) v.pause();
+          else if (puedeReanudar() && v.paused) v.play().catch(function () {});
         });
-        v.addEventListener('play', pintar);
-        v.addEventListener('pause', pintar);
-        pintar();
       })();
     </script>
   )

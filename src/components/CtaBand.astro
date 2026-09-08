@@ -4,13 +4,20 @@ import { waLink } from '../data/site.js';
 import { t } from '../i18n/ui.js';
 import { ruta } from '../i18n/config.js';
 
-const { lang = 'es', titulo, texto, mensaje } = Astro.props;
+const { lang = 'es', titulo, texto, mensaje, imagen = '/img/cr-ship-dusk.jpg' } = Astro.props;
 const d = t(lang);
 ---
 
 <section class="section section--tight">
   <div class="wrap">
-    <div class="cta" data-reveal>
+    <div class={`cta${imagen ? ' cta--foto' : ''}`} data-reveal>
+      {
+        imagen && (
+          <div class="cta__bg" aria-hidden="true">
+            <img src={imagen} alt="" loading="lazy" decoding="async" />
+          </div>
+        )
+      }
       <p class="eyebrow">{d.ctaFinal.eyebrow}</p>
       <h2>{titulo ?? d.ctaFinal.titulo}</h2>
       <p>{texto ?? d.ctaFinal.texto}</p>

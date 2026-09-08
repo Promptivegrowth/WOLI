@@ -66,9 +66,14 @@ const hitos = d.preloader.hitos;
     try {
       yaVisto = sessionStorage.getItem('woli_preloaded') === '1';
     } catch (e) {}
+    function listo() {
+      document.documentElement.classList.add('woli-ready');
+      document.dispatchEvent(new CustomEvent('woli:ready'));
+    }
+
     if (yaVisto) {
       el.setAttribute('hidden', '');
-      document.dispatchEvent(new CustomEvent('woli:ready'));
+      listo();
       return;
     }
 
@@ -95,7 +100,7 @@ const hitos = d.preloader.hitos;
       /* navegador sin getPointAtLength */
     }
 
-    var valor = 0, inicio = Date.now(), listo = false;
+    var valor = 0, inicio = Date.now(), terminado = false;
 
     function pintar(v) {
       valor = Math.max(valor, Math.min(100, v));
@@ -123,8 +128,8 @@ const hitos = d.preloader.hitos;
     }, 60);
 
     function terminar() {
-      if (listo) return;
-      listo = true;
+      if (terminado) return;
+      terminado = true;
       clearInterval(tick);
       pintar(100);
       // En modo privado o con el almacenamiento bloqueado esto lanza:
@@ -135,7 +140,7 @@ const hitos = d.preloader.hitos;
       setTimeout(function () {
         el.classList.add('is-done');
         body.classList.remove('is-locked');
-        document.dispatchEvent(new CustomEvent('woli:ready'));
+        listo();
         setTimeout(function () { el.setAttribute('hidden', ''); }, 900);
       }, reduce ? 60 : 420);
     }

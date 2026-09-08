@@ -172,8 +172,8 @@ const schema = {
     <div class="wrap">
       <div class="stats" data-reveal>
         {
-          cont.cifras.map((cf) => (
-            <div class="stat">
+          cont.cifras.map((cf, i) => (
+            <div class="stat" data-reveal-stat style={`--i:${i}`}>
               <p class="stat__num" data-count={cf.valor}>0<span>{cf.sufijo}</span></p>
               <p class="stat__label">{cf.label}</p>
               <p class="stat__detail">{cf.detalle}</p>
@@ -308,30 +308,42 @@ const schema = {
   <CtaBand lang={lang} />
 
   <script is:inline>
-    // Contadores animados de la banda de cifras.
+    // Cifras: la banda entra escalonada y los números suben rápido.
     (function () {
-      var nums = document.querySelectorAll('[data-count]');
-      if (!nums.length) return;
-      if (!('IntersectionObserver' in window)) {
-        nums.forEach(function (n) { n.childNodes[0].nodeValue = n.dataset.count; });
-        return;
-      }
+      var banda = document.querySelector('.stats');
+      if (!banda) return;
+      var nums = banda.querySelectorAll('[data-count]');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          io.unobserve(e.target);
-          var el = e.target, end = Number(el.dataset.count);
-          if (reduce) { el.childNodes[0].nodeValue = end; return; }
+
+      function contar(el, retraso) {
+        var fin = Number(el.dataset.count);
+        if (reduce) { el.childNodes[0].nodeValue = fin; return; }
+        setTimeout(function () {
           var t0 = performance.now();
-          (function step(now) {
-            var p = Math.min(1, (now - t0) / 1400);
-            el.childNodes[0].nodeValue = Math.round(end * (1 - Math.pow(1 - p, 3)));
-            if (p < 1) requestAnimationFrame(step);
+          var dur = 900; // conteo ascendente rápido
+          (function paso(ahora) {
+            var p = Math.min(1, (ahora - t0) / dur);
+            // Arranca fuerte y frena al final
+            el.childNodes[0].nodeValue = Math.round(fin * (1 - Math.pow(1 - p, 4)));
+            if (p < 1) requestAnimationFrame(paso);
           })(t0);
+        }, retraso);
+      }
+
+      function arrancar() {
+        banda.classList.add('is-in');
+        nums.forEach(function (n, i) { contar(n, i * 110); });
+      }
+
+      if (!('IntersectionObserver' in window)) { arrancar(); return; }
+      var io = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.disconnect();
+          arrancar();
         });
-      }, { threshold: 0.4 });
-      nums.forEach(function (n) { io.observe(n); });
+      }, { threshold: 0.25 });
+      io.observe(banda);
     })();
   </script>
 </Base>

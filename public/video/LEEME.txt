@@ -20,5 +20,13 @@ Recomendaciones
 Imagen de respaldo
 ------------------
 Mientras no haya vídeo, y como póster mientras carga, se usa la imagen
-indicada en `site.video.poster` (src/data/site.js). Ahora mismo es
-/img/cr-ship-dusk.jpg. Puedes cambiarla por un fotograma de tu propio vídeo.
+indicada en `site.video.poster` (src/data/site.js): /img/hero-poster.jpg,
+que es un fotograma del propio vídeo. Si cambias el vídeo, cambia también
+ese póster por un fotograma del nuevo para que el arranque sea invisible.
+
+Cómo se carga
+-------------
+El vídeo no se descarga al abrir la página: las fuentes se añaden por
+JavaScript cuando termina el preloader. Se pausa al salir de pantalla o al
+pasar la pestaña a segundo plano, y no se descarga con ahorro de datos,
+conexión 2G ni con "reducir movimiento" activado.

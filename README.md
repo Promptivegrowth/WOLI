@@ -126,6 +126,16 @@ Deja `hero.mp4` (y opcionalmente `hero.webm`) en `public/video/`. **No hay que t
 al compilar, el hero comprueba si el archivo existe y lo usa; si no está, muestra la imagen de
 respaldo. Las recomendaciones de formato están en `public/video/LEEME.txt`.
 
+Cómo se sirve, para que no penalice la carga:
+
+- El `<video>` sale con `preload="none"` y **sin `<source>`**. Las fuentes se añaden por JavaScript
+  cuando el preloader termina: hasta ese momento no se descarga un solo byte.
+- Mientras tanto se ve `poster`, un fotograma del propio vídeo (`/img/hero-poster.jpg`), así que
+  el primer pintado es instantáneo y el cambio a vídeo resulta invisible.
+- Se pausa solo cuando el hero sale de pantalla o la pestaña pasa a segundo plano.
+- No se descarga con `prefers-reduced-motion`, con el ahorro de datos activado ni en conexiones 2G:
+  en esos casos se queda el póster.
+
 ### Pendiente de completar
 
 - `site.ruc` está puesto como `20608160061`, tomado del parámetro `ruc` de las URL del sistema de
@@ -176,4 +186,6 @@ ruta, el porcentaje y el rótulo de estado están atados al progreso real de car
 - Todas las animaciones se desactivan con `prefers-reduced-motion`, incluidas las marquesinas.
 - Imágenes optimizadas y con carga diferida; tipografías con `display=swap`.
 - Responsive verificado de 320 px a 1920 px en las 21 rutas: sin desborde horizontal.
+- El velo del hero está calibrado midiendo el contraste real del fondo a lo largo del bucle de
+  vídeo: el peor fotograma da 3.47:1 bajo el titular, por encima del mínimo AA para texto grande.
 - `hreflang` recíproco entre idiomas, datos estructurados JSON-LD y `sitemap-index.xml`.

@@ -96,11 +96,18 @@ const organizacion = {
     <!-- Se ejecuta antes de pintar: si el preloader ya se vio en esta sesión,
          la marca en <html> lo oculta por CSS y no llega a parpadear al navegar. -->
     <script is:inline>
+      // `js` habilita las animaciones de entrada: sin JavaScript el contenido
+      // se ve directamente, nunca oculto.
+      document.documentElement.classList.add('js');
       try {
         if (sessionStorage.getItem('woli_preloaded') === '1') {
           document.documentElement.classList.add('sin-preloader');
         }
       } catch (e) {}
+      // Salvaguarda: pase lo que pase, a los 7 s el contenido se muestra.
+      setTimeout(function () {
+        document.documentElement.classList.add('woli-ready');
+      }, 7000);
     </script>
 
     <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />

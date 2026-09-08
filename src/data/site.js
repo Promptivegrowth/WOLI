@@ -27,7 +27,7 @@ export const site = {
   zonaCliente: 'https://miranda-soft.com/zonacliente/#/login?ruc=20608160061',
   // Vídeo de portada. Sube tu archivo a public/video/ con estos nombres.
   // Si no existe, el hero usa la imagen de respaldo automáticamente.
-  video: { mp4: '/video/hero.mp4', webm: '/video/hero.webm', poster: '/img/cr-ship-dusk.jpg' },
+  video: { mp4: '/video/hero.mp4', webm: '/video/hero.webm', poster: '/img/hero-poster.jpg' },
   redes: [
     { nombre: 'LinkedIn', url: 'https://www.linkedin.com', icono: 'linkedin' },
     { nombre: 'Facebook', url: 'https://www.facebook.com', icono: 'facebook' },
