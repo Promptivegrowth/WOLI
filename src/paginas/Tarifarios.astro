@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { tarifarios } from '../data/tarifarios.js';
+import { tarifarios, visibles } from '../data/tarifarios.js';
 import { waLink } from '../data/site.js';
 import { t } from '../i18n/ui.js';
 import { ruta } from '../i18n/config.js';
@@ -56,7 +56,7 @@ const p = d.tarifarios;
       </div>
       <div class="grid grid--2">
         {
-          tarifarios.aereos.map((tf) => (
+          visibles(tarifarios.aereos).map((tf) => (
             <a class="dl" href={tf.archivo} target="_blank" rel="noopener" download data-reveal>
               <span class="dl__code">{tf.codigo}</span>
               <span class="dl__body">
@@ -80,7 +80,7 @@ const p = d.tarifarios;
       </div>
       <div class="grid grid--2">
         {
-          tarifarios.maritimos.map((tf, i) => (
+          visibles(tarifarios.maritimos).map((tf, i) => (
             <a class="dl" href={tf.archivo} target="_blank" rel="noopener" download data-reveal style={`--d:${(i % 2) * 80}ms`}>
               <span class="dl__code">{tf.codigo}</span>
               <span class="dl__body">

@@ -9,8 +9,8 @@ export const site = {
   dominio: 'https://wlicargo.com',
   direccion: 'Cal. Germán Schreiber Nro. 276, San Isidro — Lima, Perú',
   email: 'gerencia@wlicargo.com',
-  telefonoDisplay: '+51 997 059 212',
-  whatsapp: '51997059212',
+  telefonoDisplay: '+51 912 507 555',
+  whatsapp: '51912507555',
   tiempoRespuesta: { es: '24 horas', en: '24 hours' },
   horario: { es: 'Lunes a viernes · 9:00 – 18:00 h', en: 'Monday to Friday · 9:00 – 18:00' },
   descripcion: {

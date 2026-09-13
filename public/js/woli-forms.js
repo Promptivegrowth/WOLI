@@ -10,7 +10,7 @@
   'use strict';
 
   var ENDPOINTS = ['/api/enviar.php', '/api/enviar'];
-  var WA_NUMBER = '51997059212';
+  var WA_NUMBER = '51912507555';
 
   function label(form, name) {
     var el = form.elements[name];

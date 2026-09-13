@@ -268,7 +268,7 @@ export const ui = {
       aereosTitulo: 'Carga aérea',
       maritimosEyebrow: 'Tarifarios marítimos',
       maritimosTitulo: 'Carga marítima por terminal',
-      maritimosBajada: 'Siete terminales portuarios del Perú, con tarifas de importación y exportación.',
+      maritimosBajada: 'Tarifas de importación y exportación por terminal portuario.',
       otroEyebrow: '¿Tu terminal no está en la lista?',
       otroTitulo: 'Cotizamos cualquier origen y destino',
       otroTexto:
@@ -742,7 +742,7 @@ export const ui = {
       aereosTitulo: 'Air freight',
       maritimosEyebrow: 'Ocean rate sheets',
       maritimosTitulo: 'Ocean freight by terminal',
-      maritimosBajada: 'Seven Peruvian port terminals, with import and export rates.',
+      maritimosBajada: 'Import and export rates by port terminal.',
       otroEyebrow: 'Terminal not on the list?',
       otroTitulo: 'We quote any origin and destination',
       otroTexto:
