@@ -170,7 +170,7 @@
           res.mensaje ||
           (form.dataset.woliForm === 'reclamacion'
             ? 'Registro recibido. Te enviamos una copia a tu correo y responderemos en el plazo de ley.'
-            : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 48 horas.');
+            : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 24 horas.');
         if (res.codigo) okText += ' Código de registro: ' + res.codigo + '.';
         message(form, 'ok', okText);
         form.reset();

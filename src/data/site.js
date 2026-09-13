@@ -11,7 +11,7 @@ export const site = {
   email: 'gerencia@wlicargo.com',
   telefonoDisplay: '+51 997 059 212',
   whatsapp: '51997059212',
-  tiempoRespuesta: { es: '48 horas', en: '48 hours' },
+  tiempoRespuesta: { es: '24 horas', en: '24 hours' },
   horario: { es: 'Lunes a viernes · 9:00 – 18:00 h', en: 'Monday to Friday · 9:00 – 18:00' },
   descripcion: {
     es: 'Operador logístico peruano con más de 20 años de experiencia. Carga marítima, aérea, consolidada, agenciamiento de aduana y logística médica internacional.',
@@ -52,9 +52,9 @@ export const contenido = {
   es: {
     cifras: [
       { valor: 20, sufijo: '+', label: 'Años de experiencia', detalle: 'conectando al Perú con el mundo' },
-      { valor: 7, sufijo: '', label: 'Puertos y terminales', detalle: 'con tarifario publicado' },
+      { valor: 120, sufijo: '+', label: 'Países', detalle: 'con presencia de agentes' },
       { valor: 24, sufijo: '/7', label: 'Rastreo de carga', detalle: 'trazabilidad en tiempo real' },
-      { valor: 48, sufijo: ' h', label: 'Respuesta comercial', detalle: 'tiempo de atención comprometido' },
+      { valor: 24, sufijo: ' h', label: 'Respuesta comercial', detalle: 'tiempo de atención comprometido' },
     ],
     diferenciales: [
       { icono: 'globe', titulo: 'Red global de agentes', texto: 'Conexión directa con corresponsales en origen y destino para coordinar cada embarque sin intermediarios innecesarios.' },
@@ -67,7 +67,7 @@ export const contenido = {
     valores: [
       { titulo: 'Transparencia', texto: 'Tarifas publicadas, costos claros y comunicación honesta en cada etapa del proceso.' },
       { titulo: 'Compromiso', texto: 'Cada carga se trata como propia: puntualidad, cuidado y responsabilidad de inicio a fin.' },
-      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y carga peligrosa.' },
+      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y mercancía peligrosa.' },
       { titulo: 'Mejora continua', texto: 'Tecnología e indicadores para elevar el estándar de servicio operación tras operación.' },
     ],
     testimonios: [
@@ -76,7 +76,7 @@ export const contenido = {
       { nombre: 'Laura Gómez', cargo: 'Coordinadora de Comercio Exterior', texto: 'Un servicio de primer nivel. Cada interacción con ellos es un recordatorio de que tomamos la decisión correcta al elegirlos como socios. Recomendados al 100%.' },
     ],
     proceso: [
-      { paso: '01', titulo: 'Cotización', texto: 'Recibimos tu requerimiento y en un plazo máximo de 48 horas entregamos una propuesta con costos, tiempos y modalidad recomendada.' },
+      { paso: '01', titulo: 'Cotización', texto: 'Recibimos tu requerimiento y en un plazo máximo de 24 horas entregamos una propuesta con costos, tiempos y modalidad recomendada.' },
       { paso: '02', titulo: 'Booking y recojo', texto: 'Reservamos el espacio de embarque, coordinamos el recojo en origen y preparamos la documentación de exportación o importación.' },
       { paso: '03', titulo: 'Tránsito y control', texto: 'Monitoreamos el embarque en tiempo real y te informamos cada hito relevante hasta el arribo.' },
       { paso: '04', titulo: 'Aduana y entrega', texto: 'Gestionamos el despacho aduanero y entregamos la carga en el destino final con toda la documentación en regla.' },
@@ -86,9 +86,9 @@ export const contenido = {
   en: {
     cifras: [
       { valor: 20, sufijo: '+', label: 'Years of experience', detalle: 'connecting Peru with the world' },
-      { valor: 7, sufijo: '', label: 'Ports and terminals', detalle: 'with published rate sheets' },
+      { valor: 120, sufijo: '+', label: 'Countries', detalle: 'with agent presence' },
       { valor: 24, sufijo: '/7', label: 'Cargo tracking', detalle: 'real-time traceability' },
-      { valor: 48, sufijo: ' h', label: 'Commercial response', detalle: 'committed response time' },
+      { valor: 24, sufijo: ' h', label: 'Commercial response', detalle: 'committed response time' },
     ],
     diferenciales: [
       { icono: 'globe', titulo: 'Global agent network', texto: 'Direct connection with correspondents at origin and destination to coordinate every shipment without unnecessary intermediaries.' },
@@ -110,7 +110,7 @@ export const contenido = {
       { nombre: 'Laura Gómez', cargo: 'Foreign Trade Coordinator', texto: 'A first-class service. Every interaction with them is a reminder that we made the right decision choosing them as partners. Recommended 100%.' },
     ],
     proceso: [
-      { paso: '01', titulo: 'Quote', texto: 'We receive your requirement and within a maximum of 48 hours we deliver a proposal with costs, transit times and recommended mode.' },
+      { paso: '01', titulo: 'Quote', texto: 'We receive your requirement and within a maximum of 24 hours we deliver a proposal with costs, transit times and recommended mode.' },
       { paso: '02', titulo: 'Booking and pickup', texto: 'We book the space, arrange pickup at origin and prepare the export or import documentation.' },
       { paso: '03', titulo: 'Transit and control', texto: 'We monitor the shipment in real time and keep you informed of every relevant milestone until arrival.' },
       { paso: '04', titulo: 'Customs and delivery', texto: 'We handle customs clearance and deliver the cargo at its final destination with all documentation in order.' },

@@ -177,7 +177,7 @@ export const ui = {
       eyebrow: 'Siguiente paso',
       titulo: 'Cuéntanos qué necesitas mover',
       texto:
-        'Envíanos tu requerimiento y recibe una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 48 horas.',
+        'Envíanos tu requerimiento y recibe una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 24 horas.',
     },
 
     // ---------- Nosotros ----------
@@ -257,7 +257,7 @@ export const ui = {
           texto:
             'Verifica los detalles de cada documento para asegurarte de que corresponden a tu operación: terminal, modalidad, tipo de carga y fecha de vigencia.',
         },
-        { titulo: 'Tiempo de atención', texto: 'Nuestro tiempo de atención comprometido para consultas y cotizaciones es de 48 horas.' },
+        { titulo: 'Tiempo de atención', texto: 'Nuestro tiempo de atención comprometido para consultas y cotizaciones es de 24 horas.' },
         {
           titulo: 'Precios sin IGV',
           texto:
@@ -363,7 +363,7 @@ export const ui = {
       titulo: 'Cuéntanos qué',
       tituloItalica: 'necesitas mover',
       bajada:
-        'Completa el formulario con los datos de tu operación y recibirás una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 48 horas.',
+        'Completa el formulario con los datos de tu operación y recibirás una propuesta con costos, tiempos y modalidad recomendada en un plazo máximo de 24 horas.',
       datosTitulo: 'Datos de tu operación',
       despuesTitulo: 'Qué pasa después',
       despues: [
@@ -382,7 +382,7 @@ export const ui = {
       titulo: '¡Ponte en contacto',
       tituloItalica: 'con nosotros!',
       bajada:
-        'Envíanos tu mensaje y elige cómo deseas contactarte: por correo o por WhatsApp. Nuestro equipo comercial te responderá en un plazo máximo de 48 horas.',
+        'Envíanos tu mensaje y elige cómo deseas contactarte: por correo o por WhatsApp. Nuestro equipo comercial te responderá en un plazo máximo de 24 horas.',
       escribenos: 'Escríbenos',
       infoTitulo: 'Información de contacto',
       oficina: 'Oficina',
@@ -654,7 +654,7 @@ export const ui = {
       eyebrow: 'Next step',
       titulo: 'Tell us what you need to move',
       texto:
-        'Send us your requirement and get a proposal with costs, transit times and recommended mode within a maximum of 48 hours.',
+        'Send us your requirement and get a proposal with costs, transit times and recommended mode within a maximum of 24 hours.',
     },
 
     nosotros: {
@@ -731,7 +731,7 @@ export const ui = {
           texto:
             'Check the details of each document to make sure they match your operation: terminal, mode, cargo type and validity date.',
         },
-        { titulo: 'Response time', texto: 'Our committed response time for enquiries and quotes is 48 hours.' },
+        { titulo: 'Response time', texto: 'Our committed response time for enquiries and quotes is 24 hours.' },
         {
           titulo: 'Prices excluding VAT',
           texto:
@@ -835,7 +835,7 @@ export const ui = {
       titulo: 'Tell us what',
       tituloItalica: 'you need to move',
       bajada:
-        'Fill in the form with your operation details and you will get a proposal with costs, transit times and recommended mode within a maximum of 48 hours.',
+        'Fill in the form with your operation details and you will get a proposal with costs, transit times and recommended mode within a maximum of 24 hours.',
       datosTitulo: 'Your operation details',
       despuesTitulo: 'What happens next',
       despues: [
@@ -854,7 +854,7 @@ export const ui = {
       titulo: 'Get in touch',
       tituloItalica: 'with us',
       bajada:
-        'Send us your message and choose how you want to be contacted: by email or WhatsApp. Our commercial team will reply within a maximum of 48 hours.',
+        'Send us your message and choose how you want to be contacted: by email or WhatsApp. Our commercial team will reply within a maximum of 24 hours.',
       escribenos: 'Write to us',
       infoTitulo: 'Contact details',
       oficina: 'Office',

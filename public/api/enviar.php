@@ -204,5 +204,5 @@ responder(200, [
     'codigo'  => $codigo,
     'mensaje' => $tipo === 'reclamacion'
         ? 'Registro recibido. Te enviamos la constancia a tu correo y responderemos dentro del plazo de ley.'
-        : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 48 horas.',
+        : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 24 horas.',
 ]);
