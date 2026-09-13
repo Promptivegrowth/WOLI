@@ -245,6 +245,9 @@ h1 .ital, .h1 .ital { -webkit-text-stroke-width: 2px; }
   transition: background 0.3s, transform 0.4s var(--ease);
 }
 .btn__ico svg { width: 16px; height: 16px; }
+/* Iconos puestos directamente en el botón (WhatsApp, correo, GPS…): sin esto
+   crecen a su tamaño natural cuando el texto envuelve en pantallas estrechas. */
+.btn > svg { width: 18px; height: 18px; flex: none; }
 .btn:hover .btn__ico { transform: translateX(3px); background: rgba(255, 255, 255, 0.3); }
 
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
@@ -728,8 +731,11 @@ h1 .ital, .h1 .ital { -webkit-text-stroke-width: 2px; }
 .media-stack__badge span { font-size: 0.8rem; opacity: 0.94; }
 
 .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1rem; }
-.gallery figure { position: relative; border-radius: var(--rc-sm) 0 var(--rc-sm) 0; overflow: hidden; aspect-ratio: 3 / 4; }
-.gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+/* 2/3 es la proporción de las fotos de operación: así no se recortan */
+.gallery figure { position: relative; border-radius: var(--rc-sm) 0 var(--rc-sm) 0; overflow: hidden; aspect-ratio: 2 / 3; }
+/* Anclado arriba: si alguna foto no encaja, el recorte se lleva la parte
+   inferior y nunca el logotipo, que va en la cabecera de la imagen. */
+.gallery img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.8s var(--ease); }
 .gallery figure:hover img { transform: scale(1.06); }
 .gallery figcaption { position: absolute; inset: auto 0 0 0; padding: 1.6rem 1.1rem 1rem; background: linear-gradient(180deg, transparent, rgba(7, 26, 38, 0.92)); color: #fff; font-weight: 600; font-size: 0.85rem; }
 

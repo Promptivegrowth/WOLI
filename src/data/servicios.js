@@ -307,7 +307,7 @@ export const servicios = [
     id: 'almacenaje',
     slug: { es: 'almacenaje', en: 'warehousing' },
     icono: 'warehouse',
-    imagen: '/img/op-03.jpg',
+    imagen: '/img/op-almacen.jpg',
     es: {
       nombre: 'Almacén Simple y Temporal',
       corto: 'Almacenaje y custodia',
@@ -357,7 +357,7 @@ export const servicios = [
     id: 'ultima-milla',
     slug: { es: 'ultima-milla', en: 'last-mile-delivery' },
     icono: 'truck',
-    imagen: '/img/op-01.jpg',
+    imagen: '/img/op-despacho.jpg',
     es: {
       nombre: 'Distribución de Última Milla',
       corto: 'Entrega final',
