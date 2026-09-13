@@ -67,7 +67,7 @@ export const contenido = {
     valores: [
       { titulo: 'Transparencia', texto: 'Tarifas publicadas, costos claros y comunicación honesta en cada etapa del proceso.' },
       { titulo: 'Compromiso', texto: 'Cada carga se trata como propia: puntualidad, cuidado y responsabilidad de inicio a fin.' },
-      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y mercancía peligrosa.' },
+      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y carga peligrosa.' },
       { titulo: 'Mejora continua', texto: 'Tecnología e indicadores para elevar el estándar de servicio operación tras operación.' },
     ],
     testimonios: [
