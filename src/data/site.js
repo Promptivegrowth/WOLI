@@ -67,7 +67,7 @@ export const contenido = {
     valores: [
       { titulo: 'Transparencia', texto: 'Tarifas publicadas, costos claros y comunicación honesta en cada etapa del proceso.' },
       { titulo: 'Compromiso', texto: 'Cada carga se trata como propia: puntualidad, cuidado y responsabilidad de inicio a fin.' },
-      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y médica.' },
+      { titulo: 'Especialización', texto: 'Equipos dedicados por modalidad y por sector, incluyendo carga sensible y mercancía peligrosa.' },
       { titulo: 'Mejora continua', texto: 'Tecnología e indicadores para elevar el estándar de servicio operación tras operación.' },
     ],
     testimonios: [
@@ -101,7 +101,7 @@ export const contenido = {
     valores: [
       { titulo: 'Transparency', texto: 'Published rates, clear costs and honest communication at every stage of the process.' },
       { titulo: 'Commitment', texto: 'Every shipment is treated as our own: punctuality, care and accountability from start to finish.' },
-      { titulo: 'Specialisation', texto: 'Dedicated teams per mode and per sector, including sensitive and medical cargo.' },
+      { titulo: 'Specialisation', texto: 'Dedicated teams per mode and per sector, including sensitive cargo and dangerous goods.' },
       { titulo: 'Continuous improvement', texto: 'Technology and indicators to raise the service standard operation after operation.' },
     ],
     testimonios: [

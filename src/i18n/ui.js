@@ -205,7 +205,7 @@ export const ui = {
       valoresBajada:
         'Transparencia en procesos y costos, menos complicaciones y más eficiencia, optimización estratégica de costos. Así entendemos el trabajo con cada cliente.',
       capacidadesEyebrow: 'Capacidades',
-      capacidadesTitulo: 'Lo que ponemos en cada operación',
+      capacidadesTitulo: 'Lo que ofrecemos en cada operación',
       ctaTitulo: 'Trabajemos juntos en tu próxima operación',
       ctaTexto: 'Cuéntanos qué necesitas mover y te enviamos una propuesta con costos, tiempos y modalidad recomendada.',
     },
@@ -681,7 +681,7 @@ export const ui = {
       valoresBajada:
         'Transparency in processes and costs, fewer complications and more efficiency, strategic cost optimisation. That is how we approach work with every client.',
       capacidadesEyebrow: 'Capabilities',
-      capacidadesTitulo: 'What we bring to every operation',
+      capacidadesTitulo: 'What we offer in every operation',
       ctaTitulo: "Let's work together on your next operation",
       ctaTexto: 'Tell us what you need to move and we will send you a proposal with costs, transit times and recommended mode.',
     },
