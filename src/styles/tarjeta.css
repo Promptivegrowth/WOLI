@@ -126,6 +126,38 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     radial-gradient(90% 60% at 8% 105%, rgba(242, 86, 29, 0.28), transparent 62%);
 }
 
+/* Filo de luz: un destello recorre el canto superior y el izquierdo, como la
+   luz al pasar por el borde de una tarjeta impresa. Plata en las comerciales,
+   oro en la de gerencia. Lento y tenue: tiene que notarse sin llamar. */
+.tk__canto { position: absolute; z-index: 4; overflow: hidden; }
+/* Arrancan pasada la esquina redondeada: si empezaran antes, el recorte se
+   comería el destello justo al entrar y parecería que parpadea. */
+.tk__canto--sup { top: 0; left: var(--rc); right: 0; height: 2px; }
+.tk__canto--izq { left: 0; top: var(--rc); bottom: 0; width: 2px; }
+.tk__canto::before {
+  content: ""; position: absolute;
+  /* El halo sigue la forma del degradado, no la caja: por eso drop-shadow */
+  filter: drop-shadow(0 0 5px var(--filo));
+}
+.tk__canto--sup::before {
+  top: 0; bottom: 0; left: 0; width: 38%;
+  background: linear-gradient(90deg, transparent, var(--filo), transparent);
+  animation: tk-filo-x 6.5s linear infinite;
+}
+.tk__canto--izq::before {
+  left: 0; right: 0; top: 0; height: 32%;
+  background: linear-gradient(180deg, transparent, var(--filo), transparent);
+  animation: tk-filo-y 6.5s linear infinite;
+}
+@keyframes tk-filo-x {
+  0% { transform: translateX(-105%); }
+  34%, 100% { transform: translateX(270%); }
+}
+@keyframes tk-filo-y {
+  0% { transform: translateY(-105%); }
+  34%, 100% { transform: translateY(320%); }
+}
+
 /* Reflejo que sigue al puntero */
 .tk__shine {
   position: absolute; inset: 0; z-index: 3;
@@ -151,7 +183,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .tk__card::before {
   content: "";
   position: absolute; inset: 0 0 auto 0; height: 1px; z-index: 5;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
 }
 
 .tk__inner { position: relative; z-index: 2; transform-style: preserve-3d; }
@@ -224,6 +256,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* ==========================================================================
    MODELO COMERCIAL — el retrato al frente, azul de marca
    ========================================================================== */
+.tk--comercial { --filo: rgba(255, 255, 255, 0.96); }
 .tk--comercial .tk__card {
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.04) 46%, rgba(255, 255, 255, 0.08) 100%),
@@ -238,6 +271,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
    iniciales quedan grabadas al fondo como marca de agua y un filo naranja
    recorre el canto izquierdo. Es otra pieza, no la misma sin la foto.
    ========================================================================== */
+.tk--gerencia { --oro: #e9cf9d; --oro-tenue: rgba(233, 207, 157, 0.42); --filo: #f2dcae; }
 .tk--gerencia .tk__card {
   padding: clamp(1.7rem, 6.5vw, 2.4rem) clamp(1.5rem, 5.5vw, 2.1rem);
   border-color: rgba(242, 86, 29, 0.36);
@@ -246,13 +280,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     linear-gradient(158deg, #123246 0%, #081d2a 48%, #03090f 100%);
   box-shadow: 0 34px 78px rgba(0, 0, 0, 0.62), 0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }
-/* Filo encendido en el canto izquierdo */
-.tk--gerencia .tk__card::after {
-  content: "";
-  position: absolute; left: 0; top: 14%; bottom: 14%; width: 3px; z-index: 5;
-  background: linear-gradient(180deg, transparent, var(--wo-orange) 42%, var(--wo-orange-300) 58%, transparent);
-  box-shadow: 0 0 18px rgba(242, 86, 29, 0.7);
-}
+
 .tk--gerencia .tk__textura { opacity: 0.35; }
 .tk--gerencia .tk__textura::after {
   background:
@@ -260,15 +288,26 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     radial-gradient(85% 55% at 96% 4%, rgba(242, 86, 29, 0.2), transparent 60%);
 }
 
-/* Iniciales grabadas al fondo */
-.tk__marca {
-  /* Centrado y cortado por el canto derecho: si queda debajo del botón se ve
-     en trozos, y unos trozos de letra no son una marca de agua. */
-  position: absolute; right: -0.05em; top: 50%; z-index: 1;
-  transform: translateY(-48%);
-  font-family: var(--font-display); font-weight: 700; line-height: 0.78;
-  font-size: clamp(7.5rem, 34vw, 11rem); letter-spacing: -0.06em;
-  color: transparent; -webkit-text-stroke: 1.4px rgba(255, 255, 255, 0.1);
+/* Sello con las iniciales.
+
+   Antes eran unas iniciales gigantes al fondo, y de fondo quedaban mal: se
+   cortaban contra el botón y contra el canto. Aquí son una pieza pequeña y
+   deliberada, con serifa fina, del tamaño de un sello lacrado. */
+.tk__sello {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 58px; height: 58px; margin-bottom: 1rem;
+  border: 1px solid var(--oro-tenue); border-radius: 14px 0 14px 0;
+  background: linear-gradient(150deg, rgba(233, 207, 157, 0.12), transparent 70%);
+}
+.tk__sello i {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  font-style: normal; font-weight: 300; font-size: 1.6rem; line-height: 1;
+  letter-spacing: 0.16em; text-indent: 0.16em; color: var(--oro);
+}
+/* Hilo que sale del sello y se apaga: apoya el nombre sin competir con él */
+.tk__sello::after {
+  content: ""; position: absolute; left: calc(100% + 13px); top: 50%; height: 1px; width: 58px;
+  background: linear-gradient(90deg, var(--oro-tenue), transparent);
 }
 
 .tk--gerencia .tk__chip { color: rgba(255, 255, 255, 0.72); border-color: rgba(255, 255, 255, 0.28); }
@@ -293,66 +332,97 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* ==========================================================================
    BLOQUES BAJO LA TARJETA
    ========================================================================== */
-.tk-sec { margin-top: clamp(1.4rem, 5vw, 2rem); }
+.tk-sec { margin-top: clamp(1.6rem, 5.5vw, 2.2rem); }
 .tk-sec__t {
   font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5); margin-bottom: 0.85rem;
+  color: rgba(255, 255, 255, 0.5); margin-bottom: 0.9rem;
   display: flex; align-items: center; gap: 0.6rem;
 }
-.tk-sec__t::before { content: ''; width: 22px; height: 2px; background: var(--wo-orange); border-radius: 2px; flex: none; }
+.tk-sec__t::before { content: ""; width: 22px; height: 2px; background: var(--wo-orange); border-radius: 2px; flex: none; }
 
 .tk-panel {
   background: rgba(255, 255, 255, 0.055); border: 1px solid var(--line);
   border-radius: var(--r); overflow: hidden;
 }
 
-/* Filas de datos */
-.tk-dato { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 1rem; transition: background 0.25s; }
-.tk-dato + .tk-dato { border-top: 1px solid var(--line); }
+/* ---------- Datos de contacto: una lista, no una caja ---------- */
+.tk-lista {
+  list-style: none; padding: 0;
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: rgba(255, 255, 255, 0.045); overflow: hidden;
+}
+.tk-lista li + li { border-top: 1px solid var(--line); }
+
+.tk-dato { display: flex; align-items: center; gap: 0.9rem; padding: 0.9rem 1rem; transition: background 0.25s; }
 .tk-dato:hover { background: rgba(255, 255, 255, 0.05); }
-.tk-dato__ico { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 30% 30% 30% 6px; background: rgba(242, 86, 29, 0.16); color: var(--wo-orange-300); }
+.tk-dato__ico {
+  flex: none; width: 38px; height: 38px; display: grid; place-items: center;
+  border-radius: 12px 0 12px 0; background: rgba(242, 86, 29, 0.16); color: var(--wo-orange-300);
+  transition: background 0.3s, color 0.3s;
+}
+.tk-dato:hover .tk-dato__ico { background: var(--wo-orange); color: #fff; }
 .tk-dato__ico svg { width: 18px; height: 18px; }
 .tk-dato__txt { min-width: 0; flex: 1; }
 .tk-dato__txt b { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
 .tk-dato__txt span { font-size: 0.93rem; overflow-wrap: anywhere; }
-.tk-dato__go { flex: none; color: rgba(255, 255, 255, 0.35); }
+.tk-dato__go { flex: none; color: rgba(255, 255, 255, 0.35); transition: transform 0.3s var(--ease), color 0.3s; }
 .tk-dato__go svg { width: 16px; height: 16px; }
+.tk-dato:hover .tk-dato__go { transform: translate(3px, -3px); color: var(--wo-orange-300); }
 
-/* Servicios */
-.tk-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.tk-chip {
-  font-size: 0.78rem; font-weight: 500;
-  padding: 0.5rem 0.85rem; border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line);
-  color: rgba(255, 255, 255, 0.85);
-  transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease);
+/* ---------- Servicios ---------- */
+.tk-servs { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tk-serv {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  padding: 0.42rem 0.9rem 0.42rem 0.45rem; border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line);
+  font-size: 0.79rem; font-weight: 500; color: rgba(255, 255, 255, 0.88);
+  transition: background 0.28s, border-color 0.28s, transform 0.28s var(--ease);
 }
-.tk-chip:hover { background: rgba(242, 86, 29, 0.18); border-color: rgba(242, 86, 29, 0.5); transform: translateY(-2px); }
-
-/* Redes */
-.tk-redes { display: flex; gap: 0.6rem; }
-.tk-redes a {
-  width: 44px; height: 44px; display: grid; place-items: center;
-  border-radius: 30% 30% 30% 6px; border: 1px solid var(--line); color: #fff;
-  background: rgba(255, 255, 255, 0.055);
-  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+.tk-serv__ico {
+  flex: none; width: 27px; height: 27px; display: grid; place-items: center;
+  border-radius: 50%; background: rgba(242, 86, 29, 0.18); color: var(--wo-orange-300);
+  transition: background 0.28s, color 0.28s, transform 0.4s var(--ease);
 }
-.tk-redes a:hover { background: var(--wo-orange); border-color: var(--wo-orange); transform: translateY(-3px); }
-.tk-redes svg { width: 18px; height: 18px; }
+.tk-serv__ico svg { width: 15px; height: 15px; }
+.tk-serv:hover { background: rgba(242, 86, 29, 0.13); border-color: rgba(242, 86, 29, 0.5); transform: translateY(-2px); }
+.tk-serv:hover .tk-serv__ico { background: var(--wo-orange); color: #fff; transform: rotate(-8deg) scale(1.08); }
+.tk-serv--todos { padding-left: 0.9rem; color: var(--wo-orange-300); font-weight: 600; }
+.tk-serv--todos svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease); }
+.tk-serv--todos:hover svg { transform: translateX(3px); }
 
-/* QR */
+/* ---------- Redes: el mismo giro de la tarjeta, en pequeño ---------- */
+.tk-redes { display: flex; gap: 0.6rem; perspective: 600px; }
+.tk-red {
+  position: relative; width: 52px; height: 52px; display: grid; place-items: center;
+  border-radius: 16px 0 16px 0; border: 1px solid var(--line); color: #fff;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03));
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.36);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s var(--ease), border-color 0.3s, background 0.3s;
+}
+.tk-red.is-live { transition: transform 0.08s linear, border-color 0.3s, background 0.3s; }
+.tk-red__ico { display: grid; place-items: center; transform: translateZ(18px); }
+.tk-red__ico svg { width: 18px; height: 18px; }
+.tk-red__luz {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(110px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.4), transparent 62%);
+  opacity: 0; transition: opacity 0.35s var(--ease); mix-blend-mode: soft-light;
+}
+.tk-red.is-live .tk-red__luz { opacity: 1; }
+.tk-red:hover { border-color: rgba(242, 86, 29, 0.6); background: linear-gradient(150deg, rgba(242, 86, 29, 0.32), rgba(242, 86, 29, 0.07)); }
+.tk-red--wa:hover { border-color: rgba(110, 240, 160, 0.55); background: linear-gradient(150deg, rgba(110, 240, 160, 0.26), rgba(110, 240, 160, 0.05)); }
+
+/* ---------- QR ---------- */
 .tk-qr { display: flex; align-items: center; gap: 1.1rem; padding: 1rem; }
 .tk-qr__img { flex: none; width: 116px; height: 116px; background: #fff; border-radius: 12px; padding: 7px; }
 .tk-qr__img img { width: 100%; height: 100%; }
 .tk-qr__txt { min-width: 0; }
 .tk-qr__txt p { font-size: 0.83rem; color: rgba(255, 255, 255, 0.68); margin-bottom: 0.6rem; }
-.tk-link {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  font-size: 0.8rem; font-weight: 600; color: var(--wo-orange-300);
-}
-.tk-link svg { width: 15px; height: 15px; }
+.tk-link { display: inline-flex; align-items: flex-start; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--wo-orange-300); }
+.tk-link svg { width: 15px; height: 15px; flex: none; margin-top: 0.18rem; }
 
-/* Compartir */
+/* ---------- Compartir ---------- */
 .tk-compartir {
   display: flex; align-items: center; justify-content: center; gap: 0.6rem;
   width: 100%; padding: 0.85rem 1.2rem; margin-top: 0.7rem;
@@ -363,12 +433,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .tk-compartir:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.4); }
 .tk-compartir svg { width: 17px; height: 17px; }
 
-/* Pie */
+/* ---------- Pie ---------- */
 .tk-pie { margin-top: 2.2rem; text-align: center; font-size: 0.74rem; color: rgba(255, 255, 255, 0.42); }
 .tk-pie a { color: rgba(255, 255, 255, 0.66); }
 .tk-pie a:hover { color: var(--wo-orange-300); }
 
-/* Aviso de tarjeta dada de baja */
+/* ---------- Aviso de tarjeta dada de baja ---------- */
 .tk-baja { text-align: center; padding: clamp(2rem, 8vw, 3rem) 0; }
 .tk-baja img { width: 120px; margin: 0 auto 1.6rem; }
 .tk-baja h1 { font-size: 1.5rem; margin-bottom: 0.8rem; }
@@ -392,7 +462,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 }
 @keyframes tk-destello {
   0%, 100% { opacity: 0; }
-  38%, 68% { opacity: 0.9; }
+  38%, 68% { opacity: 0.62; }
 }
 @keyframes tk-aparece {
   from { opacity: 0; }
@@ -402,9 +472,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes tk-brota {
+  from { opacity: 0; transform: translateY(12px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
 
 .js .tk__card { opacity: 0; }
-.js .tk__inner > *, .js .tk-sec, .js .tk-pie { opacity: 0; }
+.js .tk__inner > * { opacity: 0; }
 
 .js.tk-ready .tk__float { animation: tk-presenta 3.6s var(--ease) 0.15s 1 both; }
 .js.tk-ready .tk__card { animation: tk-aparece 0.7s var(--ease) 0.15s both; }
@@ -419,12 +493,45 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .js.tk-ready .tk__inner > *:nth-child(2) { animation-delay: 0.42s; }
 .js.tk-ready .tk__inner > *:nth-child(3) { animation-delay: 0.52s; }
 .js.tk-ready .tk__inner > *:nth-child(4) { animation-delay: 0.62s; }
-.js.tk-ready .tk-sec { animation: tk-entra 0.65s var(--ease) both; }
-.js.tk-ready .tk-sec:nth-of-type(1) { animation-delay: 0.7s; }
-.js.tk-ready .tk-sec:nth-of-type(2) { animation-delay: 0.78s; }
-.js.tk-ready .tk-sec:nth-of-type(3) { animation-delay: 0.86s; }
-.js.tk-ready .tk-sec:nth-of-type(4) { animation-delay: 0.94s; }
-.js.tk-ready .tk-pie { animation: tk-entra 0.6s var(--ease) 1.02s both; }
+
+/* El sello se graba: el marco crece y las iniciales cierran el espaciado */
+.js.tk-ready .tk__sello { animation: tk-sello 0.9s var(--ease) 0.52s both; }
+.js.tk-ready .tk__sello i { animation: tk-sello-letras 1.2s var(--ease) 0.64s both; }
+@keyframes tk-sello {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tk-sello-letras {
+  from { opacity: 0; letter-spacing: 0.7em; text-indent: 0.7em; }
+  to { opacity: 1; letter-spacing: 0.16em; text-indent: 0.16em; }
+}
+
+/* ==========================================================================
+   APARICIÓN AL LLEGAR
+
+   Las secciones se revelan al entrar en pantalla, no al cargar la página:
+   con retardos fijos, quien baja despacio encuentra la animación ya ocurrida
+   y quien no baja nunca la ve.
+   ========================================================================== */
+.js .rev .tk-sec__t,
+.js .rev .tk-lista li,
+.js .rev .tk-servs li,
+.js .rev .tk-red,
+.js .rev .tk-panel,
+.js .rev .tk-compartir,
+.js .rev.tk-pie { opacity: 0; }
+
+.js .rev.vista .tk-sec__t { animation: tk-entra 0.5s var(--ease) both; }
+.js .rev.vista .tk-lista li { animation: tk-entra 0.55s var(--ease) calc(0.1s + var(--i) * 80ms) both; }
+.js .rev.vista .tk-servs li { animation: tk-brota 0.5s var(--ease) calc(0.1s + var(--i) * 55ms) both; }
+.js .rev.vista .tk-red { animation: tk-brota 0.55s var(--ease) calc(0.1s + var(--i) * 90ms) both; }
+.js .rev.vista .tk-panel { animation: tk-entra 0.55s var(--ease) 0.12s both; }
+.js .rev.vista .tk-compartir { animation: tk-entra 0.55s var(--ease) 0.22s both; }
+.js .rev.tk-pie.vista { animation: tk-entra 0.6s var(--ease) both; }
+
+/* El giro de las redes lo manda el puntero: la animación de entrada no puede
+   dejar un transform pegado encima, así que al terminar suelta el control. */
+.js .rev.vista .tk-red { animation-fill-mode: backwards; opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -432,7 +539,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .js .tk__card, .js .tk__inner > *, .js .tk-sec, .js .tk-pie { opacity: 1 !important; transform: none !important; }
-  .tk__sheen { display: none; }
+  .js .tk__card, .js .tk__inner > *, .js .rev *, .js .rev.tk-pie { opacity: 1 !important; transform: none !important; }
+  .tk__sheen, .tk__canto { display: none; }
   .tk__float, .tk__card { transform: none !important; }
 }

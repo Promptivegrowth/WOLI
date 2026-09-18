@@ -69,7 +69,7 @@ const schema = {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Exo+2:wght@600;700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
@@ -110,7 +110,8 @@ const schema = {
                       Si el recorte viviera en la tarjeta, aplanaría el 3D. */}
                   <span class="tk__fx" aria-hidden="true">
                     <span class="tk__textura"></span>
-                    {!persona.foto && <span class="tk__marca">{persona.iniciales}</span>}
+                    <span class="tk__canto tk__canto--sup"></span>
+                    <span class="tk__canto tk__canto--izq"></span>
                     <span class="tk__shine"></span>
                     <span class="tk__sheen"></span>
                   </span>
@@ -130,6 +131,9 @@ const schema = {
                         </div>
                       )}
                       <div class="tk__txt">
+                        {!persona.foto && (
+                          <span class="tk__sello" aria-hidden="true"><i>{persona.iniciales}</i></span>
+                        )}
                         <h1 class="tk__nombre">{persona.nombre}</h1>
                         <span class="tk__regla" aria-hidden="true"></span>
                         <p class="tk__cargo">{persona.cargo}</p>
@@ -169,62 +173,80 @@ const schema = {
             </main>
 
             <!-- ========================= DATOS ========================= -->
-            <section class="tk-sec">
+            <section class="tk-sec rev">
               <h2 class="tk-sec__t">Datos de contacto</h2>
-              <div class="tk-panel">
-                <a class="tk-dato" href={`tel:${tel(persona)}`}>
-                  <span class="tk-dato__ico"><Icon name="phone" /></span>
-                  <span class="tk-dato__txt"><b>Móvil</b><span>{persona.movil}</span></span>
-                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
-                </a>
-                <a class="tk-dato" href={`mailto:${persona.email}`}>
-                  <span class="tk-dato__ico"><Icon name="mail" /></span>
-                  <span class="tk-dato__txt"><b>Correo</b><span>{persona.email}</span></span>
-                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
-                </a>
-                <a class="tk-dato" href={site.mapaLink} target="_blank" rel="noopener">
-                  <span class="tk-dato__ico"><Icon name="pin" /></span>
-                  <span class="tk-dato__txt"><b>Oficina</b><span>{site.direccion}</span></span>
-                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
-                </a>
-                <a class="tk-dato" href={site.dominio} target="_blank" rel="noopener">
-                  <span class="tk-dato__ico"><Icon name="globe" /></span>
-                  <span class="tk-dato__txt"><b>Sitio web</b><span>wlicargo.com</span></span>
-                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
-                </a>
-              </div>
+              <ul class="tk-lista">
+                <li style="--i:0">
+                  <a class="tk-dato" href={`tel:${tel(persona)}`}>
+                    <span class="tk-dato__ico"><Icon name="phone" /></span>
+                    <span class="tk-dato__txt"><b>Móvil</b><span>{persona.movil}</span></span>
+                    <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                  </a>
+                </li>
+                <li style="--i:1">
+                  <a class="tk-dato" href={`mailto:${persona.email}`}>
+                    <span class="tk-dato__ico"><Icon name="mail" /></span>
+                    <span class="tk-dato__txt"><b>Correo</b><span>{persona.email}</span></span>
+                    <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                  </a>
+                </li>
+                <li style="--i:2">
+                  <a class="tk-dato" href={site.mapaLink} target="_blank" rel="noopener">
+                    <span class="tk-dato__ico"><Icon name="pin" /></span>
+                    <span class="tk-dato__txt"><b>Oficina</b><span>{site.direccion}</span></span>
+                    <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                  </a>
+                </li>
+                <li style="--i:3">
+                  <a class="tk-dato" href={site.dominio} target="_blank" rel="noopener">
+                    <span class="tk-dato__ico"><Icon name="globe" /></span>
+                    <span class="tk-dato__txt"><b>Sitio web</b><span>wlicargo.com</span></span>
+                    <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                  </a>
+                </li>
+              </ul>
             </section>
 
             <!-- ======================= SERVICIOS ======================= -->
-            <section class="tk-sec">
+            <section class="tk-sec rev">
               <h2 class="tk-sec__t">Nuestros servicios</h2>
-              <div class="tk-chips">
-                {servicios.map((s) => (
-                  <a class="tk-chip" href={`${site.dominio}/servicios/${s.slugActual}`} target="_blank" rel="noopener">
-                    {s.nombre}
-                  </a>
+              <ul class="tk-servs">
+                {servicios.map((s, i) => (
+                  <li style={`--i:${i}`}>
+                    <a class="tk-serv" href={`${site.dominio}/servicios/${s.slugActual}`} target="_blank" rel="noopener">
+                      <span class="tk-serv__ico"><Icon name={s.icono} /></span>
+                      <span class="tk-serv__n">{s.nombre}</span>
+                    </a>
+                  </li>
                 ))}
-                <a class="tk-chip" href={`${site.dominio}/servicios`} target="_blank" rel="noopener">Ver todos</a>
-              </div>
+                <li style={`--i:${servicios.length}`}>
+                  <a class="tk-serv tk-serv--todos" href={`${site.dominio}/servicios`} target="_blank" rel="noopener">
+                    <span class="tk-serv__n">Ver todos</span>
+                    <Icon name="arrowRight" />
+                  </a>
+                </li>
+              </ul>
             </section>
 
             <!-- ========================= REDES ========================= -->
-            <section class="tk-sec">
+            <section class="tk-sec rev">
               <h2 class="tk-sec__t">Síguenos</h2>
               <div class="tk-redes">
-                {site.redes.map((r) => (
-                  <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre} title={r.nombre}>
-                    <Icon name={r.icono} />
+                {site.redes.map((r, i) => (
+                  <a class="tk-red" data-giro style={`--i:${i}`} href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre} title={r.nombre}>
+                    <span class="tk-red__luz" aria-hidden="true"></span>
+                    <span class="tk-red__ico"><Icon name={r.icono} /></span>
                   </a>
                 ))}
-                <a href={`https://wa.me/${persona.whatsapp}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
-                  <Icon name="whatsapp" />
+                <a class="tk-red tk-red--wa" data-giro style={`--i:${site.redes.length}`} href={`https://wa.me/${persona.whatsapp}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                  <span class="tk-red__luz" aria-hidden="true"></span>
+                  <span class="tk-red__ico"><Icon name="whatsapp" /></span>
                 </a>
               </div>
             </section>
 
             <!-- ========================== QR =========================== -->
-            <section class="tk-sec">
+            <section class="tk-sec rev">
               <h2 class="tk-sec__t">Mi código QR</h2>
               <div class="tk-panel tk-qr">
                 <div class="tk-qr__img">
@@ -243,7 +265,7 @@ const schema = {
               </button>
             </section>
 
-            <p class="tk-pie">
+            <p class="tk-pie rev">
               © {new Date().getFullYear()} <a href={site.dominio}>{site.nombreLargo}</a><br />
               San Isidro, Lima — Perú
             </p>
@@ -265,8 +287,12 @@ const schema = {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
         var marco = null;
+        /* Sobre un botón la tarjeta se queda quieta: si se inclina bajo el dedo,
+           el botón se aparta del punto que se está tocando y el toque se pierde. */
+        function sobreBoton(destino) {
+          return !!(destino && destino.closest && destino.closest('a, button'));
+        }
         function quieto() {
-          /* La presentación automática se interrumpe en cuanto alguien toca */
           if (escena) escena.classList.add('tk--quieto');
         }
         function mover(x, y) {
@@ -287,21 +313,28 @@ const schema = {
           card.style.setProperty('--ry', '0deg');
         }
 
-        card.addEventListener('pointerenter', function () { quieto(); card.classList.add('is-live'); });
-        card.addEventListener('pointermove', function (e) { mover(e.clientX, e.clientY); });
+        card.addEventListener('pointerenter', function (e) {
+          if (e.pointerType !== 'mouse' || sobreBoton(e.target)) return;
+          quieto();
+          card.classList.add('is-live');
+        });
+        card.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'mouse' || sobreBoton(e.target)) return;
+          card.classList.add('is-live');
+          mover(e.clientX, e.clientY);
+        });
         card.addEventListener('pointerleave', soltar);
-        card.addEventListener('touchstart', function (e) {
+
+        /* En táctil solo gira al arrastrar. Un toque limpio nunca la mueve. */
+        card.addEventListener('touchmove', function (e) {
           var t = e.touches[0];
-          if (!t) return;
+          if (!t || sobreBoton(e.target)) return;
           quieto();
           card.classList.add('is-live');
           mover(t.clientX, t.clientY);
         }, { passive: true });
-        card.addEventListener('touchmove', function (e) {
-          var t = e.touches[0];
-          if (t) mover(t.clientX, t.clientY);
-        }, { passive: true });
         card.addEventListener('touchend', soltar);
+        card.addEventListener('touchcancel', soltar);
 
         /* En Android la tarjeta también responde a la inclinación del teléfono.
            iOS exige permiso explícito y no vamos a pedirlo nada más abrir. */
@@ -318,6 +351,58 @@ const schema = {
             card.style.setProperty('--my', (50 + b * 2).toFixed(1) + '%');
           });
         }
+      })();
+
+      /* ---------- El mismo giro, en pequeño, para los iconos de redes ---------- */
+      (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var piezas = document.querySelectorAll('[data-giro]');
+        Array.prototype.forEach.call(piezas, function (el) {
+          function seguir(x, y) {
+            var r = el.getBoundingClientRect();
+            var px = (x - r.left) / r.width;
+            var py = (y - r.top) / r.height;
+            el.style.setProperty('--ry', ((px - 0.5) * 26).toFixed(1) + 'deg');
+            el.style.setProperty('--rx', ((0.5 - py) * 22).toFixed(1) + 'deg');
+            el.style.setProperty('--mx', (px * 100).toFixed(0) + '%');
+            el.style.setProperty('--my', (py * 100).toFixed(0) + '%');
+          }
+          function parar() {
+            el.classList.remove('is-live');
+            el.style.setProperty('--rx', '0deg');
+            el.style.setProperty('--ry', '0deg');
+          }
+          el.addEventListener('pointerenter', function (e) {
+            if (e.pointerType !== 'mouse') return;
+            el.classList.add('is-live');
+          });
+          el.addEventListener('pointermove', function (e) {
+            if (e.pointerType !== 'mouse') return;
+            seguir(e.clientX, e.clientY);
+          });
+          el.addEventListener('pointerleave', parar);
+          el.addEventListener('blur', parar);
+        });
+      })();
+
+      /* ---------- Aparición al llegar ----------
+         Las secciones se revelan cuando entran en pantalla, no al cargar:
+         abajo del todo nadie llega a ver una animación que ya ocurrió. */
+      (function () {
+        var piezas = document.querySelectorAll('.rev');
+        if (!piezas.length) return;
+        if (!('IntersectionObserver' in window)) {
+          Array.prototype.forEach.call(piezas, function (el) { el.classList.add('vista'); });
+          return;
+        }
+        var ojo = new IntersectionObserver(function (entradas) {
+          entradas.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            en.target.classList.add('vista');
+            ojo.unobserve(en.target);
+          });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+        Array.prototype.forEach.call(piezas, function (el) { ojo.observe(el); });
       })();
 
       /* ---------- Guardar contacto ----------
