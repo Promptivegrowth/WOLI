@@ -1,14 +1,14 @@
-TARJETA DIGITAL — John Valverde Rodríguez
+TARJETA DIGITAL — Alfonso Mc Cubbin Trisano
 ========================================
 
-Cargo:  Ejecutivo Comercial
-Enlace: https://wlicargo.com/t/john-valverde
+Cargo:  Pricing e Inside Sales
+Enlace: https://wlicargo.com/t/alfonso-mccubbin
 
 QUÉ HAY EN ESTA CARPETA
 -----------------------
-QR - John Valverde Rodríguez.png   2400 x 2400 px. Para imprimir en tarjetas,
+QR - Alfonso Mc Cubbin Trisano.png   2400 x 2400 px. Para imprimir en tarjetas,
                              folletos, credenciales o vinilos.
-QR - John Valverde Rodríguez.svg   Vectorial. Se amplía a cualquier tamaño sin
+QR - Alfonso Mc Cubbin Trisano.svg   Vectorial. Se amplía a cualquier tamaño sin
                              perder definición: úsalo si la imprenta lo admite.
 
 CÓMO USARLO
@@ -22,7 +22,7 @@ CÓMO USARLO
 NFC
 ---
 Para una tarjeta con chip NFC, graba en el tag exactamente este enlace:
-https://wlicargo.com/t/john-valverde
+https://wlicargo.com/t/alfonso-mccubbin
 
 COMPARTIR POR WHATSAPP
 ----------------------

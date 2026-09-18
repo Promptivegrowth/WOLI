@@ -193,7 +193,7 @@ export const ui = {
       relato2:
         'Además, contamos con un avanzado sistema de seguimiento que te brinda control total en cada etapa del proceso, garantizando la trazabilidad y el cumplimiento de los más altos estándares de seguridad.',
       relato3:
-        'Operamos desde San Isidro, Lima, con cobertura en los principales terminales portuarios y aéreos del Perú, y una red de agentes corresponsales que nos permite coordinar embarques en origen y destino sin intermediarios innecesarios.',
+        'Operamos desde Breña, Lima, con cobertura en los principales terminales portuarios y aéreos del Perú, y una red de agentes corresponsales que nos permite coordinar embarques en origen y destino sin intermediarios innecesarios.',
       misionTitulo: 'Misión',
       mision:
         'En World Logistics International transformamos la logística en una ventaja estratégica para tu negocio. Nuestra misión es optimizar cada proceso a través de soluciones personalizadas que analicen y mejoren cada eslabón de la cadena de suministro. Nos comprometemos a brindar un servicio confiable, transparente y altamente eficiente que reduzca costos, agilice tiempos y garantice un flujo logístico sin interrupciones, permitiéndote concentrarte en el crecimiento y éxito de tu empresa.',
@@ -391,8 +391,8 @@ export const ui = {
       reclamoTitulo: '¿Tienes un reclamo o una queja?',
       reclamoTexto: 'Regístralo en nuestro Libro de Reclamaciones y recibirás una constancia con el código de tu registro.',
       mapaEyebrow: 'Cómo llegar',
-      mapaTitulo: 'Encuéntranos en San Isidro',
-      mapaTitle: 'Ubicación de World Logistics International en San Isidro, Lima',
+      mapaTitulo: 'Encuéntranos en Breña',
+      mapaTitle: 'Ubicación de World Logistics International en Breña, Lima',
     },
 
     // ---------- Libro de reclamaciones ----------
@@ -669,7 +669,7 @@ export const ui = {
       relato2:
         'We also run an advanced tracking system that gives you full control at every stage of the process, guaranteeing traceability and compliance with the highest safety standards.',
       relato3:
-        'We operate from San Isidro, Lima, covering the main port and air terminals in Peru, with a network of correspondent agents that lets us coordinate shipments at origin and destination without unnecessary intermediaries.',
+        'We operate from Breña, Lima, covering the main port and air terminals in Peru, with a network of correspondent agents that lets us coordinate shipments at origin and destination without unnecessary intermediaries.',
       misionTitulo: 'Mission',
       mision:
         'At World Logistics International we turn logistics into a strategic advantage for your business. Our mission is to optimise every process through tailored solutions that analyse and improve each link of the supply chain. We are committed to delivering a reliable, transparent and highly efficient service that cuts costs, speeds up timelines and guarantees an uninterrupted logistics flow, so you can focus on growing your company.',
@@ -863,8 +863,8 @@ export const ui = {
       reclamoTitulo: 'Do you have a claim or complaint?',
       reclamoTexto: 'File it in our Complaints Book and you will receive a receipt with your registration code.',
       mapaEyebrow: 'How to find us',
-      mapaTitulo: 'Find us in San Isidro',
-      mapaTitle: 'Location of World Logistics International in San Isidro, Lima',
+      mapaTitulo: 'Find us in Breña',
+      mapaTitle: 'Location of World Logistics International in Breña, Lima',
     },
 
     libro: {

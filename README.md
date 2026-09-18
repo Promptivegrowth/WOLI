@@ -163,9 +163,10 @@ apuntar el DNS quedan publicadas sin ningún paso extra.
 
 | Persona | Tarjeta | Modelo |
 |---|---|---|
-| Fernando Boloña Prieto | `/t/fernando-bolona` | gerencia, sin foto |
-| John Valverde Rodríguez | `/t/john-valverde` | comercial |
-| Kevin Jibaja Vásquez | `/t/kevin-jibaja` | comercial |
+| Fernando Boloña Prieto | `/t/fernando-bolona` | gerencia, sello sin foto |
+| Alfonso Mc Cubbin Trisano | `/t/alfonso-mccubbin` | gerencia, sello sin foto |
+| John Valverde Rodríguez | `/t/john-valverde` | comercial, con retrato |
+| Kevin Jibaja Vásquez | `/t/kevin-jibaja` | comercial, con retrato |
 
 Añadir a alguien es añadir un objeto en **`src/data/equipo.js`** y ejecutar los
 dos generadores. Su tarjeta, su vCard, su QR y su vista previa salen solos.
@@ -196,6 +197,10 @@ Qué incluye cada tarjeta:
   antiguas siguen sirviendo la misma tarjeta.
 - **`activo: false`** — cuando alguien deja la empresa su URL sigue circulando.
   En lugar de un 404, la tarjeta muestra un aviso y lleva a contacto.
+- **`apellidos`** — solo cuando no se pueden deducir. La vCard supone la
+  convención peruana (los dos últimos son los apellidos) y eso falla con un
+  apellido de dos palabras, como Mc Cubbin.
+- **`cargo: null`** — la tarjeta, la vCard y la vista previa se componen sin él.
 
 ### Para el cliente
 

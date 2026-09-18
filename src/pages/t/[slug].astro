@@ -1,7 +1,7 @@
 ---
 import '../../styles/tarjeta.css';
 import Icon from '../../components/Icon.astro';
-import { equipo, rutaTarjeta, tel } from '../../data/equipo.js';
+import { equipo, etiquetaDe, nombreTarjeta, rutaTarjeta, tel } from '../../data/equipo.js';
 import { site } from '../../data/site.js';
 import { serviciosDe } from '../../data/servicios.js';
 
@@ -22,8 +22,11 @@ const vcf = `${rutaTarjeta(persona.slug)}.vcf`;
 const qr = `/qr/${persona.slug}.svg`;
 const og = `${site.dominio}/qr/${persona.slug}-og.jpg`;
 
-const titulo = `${persona.nombre} — ${persona.cargo} | ${site.nombreLargo}`;
-const descripcion = `${persona.cargo} en ${site.nombreLargo}. Llámame, escríbeme por WhatsApp o guarda mi contacto con un toque.`;
+// El cargo puede faltar: todo lo que lo nombra tiene que sostenerse sin él.
+const titulo = persona.cargo
+  ? `${persona.nombre} — ${persona.cargo} | ${site.nombreLargo}`
+  : `${persona.nombre} | ${site.nombreLargo}`;
+const descripcion = `${persona.cargo ? persona.cargo + ' en ' : ''}${site.nombreLargo}. Llámame, escríbeme por WhatsApp o guarda mi contacto con un toque.`;
 
 const mensajeWa = encodeURIComponent(`Hola ${persona.nombre.split(' ')[0]}, te escribo desde tu tarjeta de WOLI.`);
 
@@ -31,7 +34,7 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: persona.nombreCompleto,
-  jobTitle: persona.cargo,
+  ...(persona.cargo ? { jobTitle: persona.cargo } : {}),
   telephone: tel(persona),
   email: persona.email,
   url,
@@ -55,7 +58,7 @@ const schema = {
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
 
     <meta property="og:type" content="profile" />
-    <meta property="og:title" content={`${persona.nombre} · ${persona.cargo}`} />
+    <meta property="og:title" content={persona.cargo ? `${persona.nombre} · ${persona.cargo}` : persona.nombre} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={og} />
@@ -121,7 +124,7 @@ const schema = {
                       <a href={site.dominio}>
                         <img class="tk__logo" src="/brand/logo-woli-blanco.png" alt={site.nombreLargo} width="900" height="312" />
                       </a>
-                      <span class="tk__chip">{persona.modelo === 'gerencia' ? 'Dirección' : 'Tarjeta digital'}</span>
+                      <span class="tk__chip">{etiquetaDe(persona)}</span>
                     </div>
 
                     <div class="tk__id">
@@ -134,9 +137,9 @@ const schema = {
                         {!persona.foto && (
                           <span class="tk__sello" aria-hidden="true"><i>{persona.iniciales}</i></span>
                         )}
-                        <h1 class="tk__nombre">{persona.nombre}</h1>
+                        <h1 class="tk__nombre">{nombreTarjeta(persona)}</h1>
                         <span class="tk__regla" aria-hidden="true"></span>
-                        <p class="tk__cargo">{persona.cargo}</p>
+                        {persona.cargo && <p class="tk__cargo">{persona.cargo}</p>}
                         <p class="tk__empresa">{site.nombreLargo}</p>
                       </div>
                     </div>
@@ -267,7 +270,7 @@ const schema = {
 
             <p class="tk-pie rev">
               © {new Date().getFullYear()} <a href={site.dominio}>{site.nombreLargo}</a><br />
-              San Isidro, Lima — Perú
+              {site.direccionCorta}
             </p>
           </>
         )

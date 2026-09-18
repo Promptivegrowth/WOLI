@@ -7,7 +7,10 @@ export const site = {
   // de publicar: se muestra en la cabecera del Libro de Reclamaciones.
   ruc: '20608160061',
   dominio: 'https://wlicargo.com',
-  direccion: 'Cal. Germán Schreiber Nro. 276, San Isidro — Lima, Perú',
+  direccion: 'Av. Venezuela 1684, Breña — Lima, Perú',
+  // Para pies de página y tarjetas, donde la calle sobra
+  direccionCorta: 'Breña, Lima — Perú',
+  distrito: 'Breña',
   email: 'gerencia@wlicargo.com',
   telefonoDisplay: '+51 912 507 555',
   whatsapp: '51912507555',
@@ -17,9 +20,10 @@ export const site = {
     es: 'Operador logístico peruano con más de 20 años de experiencia. Carga marítima, aérea, consolidada, agenciamiento de aduana y logística médica internacional.',
     en: 'Peruvian freight forwarder with over 20 years of experience. Ocean, air and consolidated freight, customs brokerage and international medical logistics.',
   },
-  mapa:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2758.5904301880196!2d-77.02532943264664!3d-12.095989718965916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c86567bc14ab%3A0xa45eb32ad7d1aef1!2sSchreiber%20Coworking%20%26%20Offices%20-%20Sede%20San%20Isidro!5e0!3m2!1ses-419!2spe!4v1740165568032!5m2!1ses-419!2spe',
-  mapaLink: 'https://maps.google.com/?q=Germán+Schreiber+276+San+Isidro+Lima+Perú',
+  // Forma ?q=...&output=embed: no necesita clave de API ni el identificador
+  // interno de un local concreto, así que sigue funcionando si se mudan.
+  mapa: 'https://www.google.com/maps?q=Av.+Venezuela+1684,+Bre%C3%B1a,+Lima,+Per%C3%BA&hl=es&z=17&output=embed',
+  mapaLink: 'https://maps.google.com/?q=Av.+Venezuela+1684+Breña+Lima+Perú',
   // Dos accesos distintos al sistema de embarques:
   //  · seguimiento  — consulta pública por número de orden, sin credenciales
   //  · zonaCliente  — área privada, requiere usuario y contraseña

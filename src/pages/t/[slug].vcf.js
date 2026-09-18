@@ -5,7 +5,7 @@
  * unos datos y los pierde. La versión 3.0 es la que aceptan sin rechistar
  * tanto iOS como Android y Outlook.
  */
-import { equipo, tel } from '../../data/equipo.js';
+import { equipo, partirNombre, tel } from '../../data/equipo.js';
 import { site } from '../../data/site.js';
 
 export function getStaticPaths() {
@@ -21,12 +21,9 @@ const esc = (v = '') => String(v).replace(/\\/g, '\\\\').replace(/;/g, '\\;').re
 export function GET({ props }) {
   const p = props.persona;
 
-  // Convención peruana: los dos últimos son los apellidos (paterno y materno),
-  // el resto son nombres de pila. Separarlo mal deja la agenda del cliente
-  // archivando el contacto por un segundo nombre.
-  const partes = p.nombreCompleto.trim().split(/\s+/);
-  const apellidos = partes.slice(-2).join(' ');
-  const pila = partes.slice(0, -2).join(' ') || partes[0];
+  // Separar mal el nombre deja la agenda del cliente archivando el contacto
+  // por un segundo nombre. La regla vive junto a los datos, en equipo.js.
+  const { apellidos, pila } = partirNombre(p);
 
   const lineas = [
     'BEGIN:VCARD',
@@ -34,14 +31,16 @@ export function GET({ props }) {
     `N:${esc(apellidos)};${esc(pila)};;;`,
     `FN:${esc(p.nombre)}`,
     `ORG:${esc(site.nombreLargo)}`,
-    `TITLE:${esc(p.cargo)}`,
+    // Quien no tiene cargo declarado no lleva la línea: una vCard con TITLE
+    // vacío deja un renglón en blanco en la ficha de contacto.
+    ...(p.cargo ? [`TITLE:${esc(p.cargo)}`] : []),
     `TEL;TYPE=CELL,VOICE:${tel(p)}`,
     `EMAIL;TYPE=INTERNET,WORK:${p.email}`,
-    `ADR;TYPE=WORK:;;${esc('Cal. Germán Schreiber 276')};${esc('San Isidro')};${esc('Lima')};;${esc('Perú')}`,
+    `ADR;TYPE=WORK:;;${esc('Av. Venezuela 1684')};${esc('Breña')};${esc('Lima')};;${esc('Perú')}`,
     `URL:${site.dominio}`,
     `item1.URL:${site.dominio}/t/${p.slug}`,
     'item1.X-ABLabel:Tarjeta digital',
-    `NOTE:${esc(`${p.cargo} · ${site.nombreLargo}`)}`,
+    `NOTE:${esc(p.cargo ? `${p.cargo} · ${site.nombreLargo}` : site.nombreLargo)}`,
     `REV:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
     'END:VCARD',
   ];

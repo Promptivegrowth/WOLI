@@ -87,7 +87,7 @@ for (const persona of equipo) {
       `TARJETA DIGITAL — ${persona.nombre}`,
       '='.repeat(40),
       '',
-      `Cargo:  ${persona.cargo}`,
+      ...(persona.cargo ? [`Cargo:  ${persona.cargo}`] : []),
       `Enlace: ${url}`,
       '',
       'QUÉ HAY EN ESTA CARPETA',
@@ -113,7 +113,7 @@ for (const persona of equipo) {
       'COMPARTIR POR WHATSAPP',
       '----------------------',
       'Basta con enviar el enlace. WhatsApp muestra una vista previa con la',
-      'foto, el nombre y el cargo.',
+      'foto o el sello, el nombre y el cargo.',
       '',
     ].join('\n'),
     'utf8'

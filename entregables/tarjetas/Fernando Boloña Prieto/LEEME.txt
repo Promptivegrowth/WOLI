@@ -1,7 +1,6 @@
 TARJETA DIGITAL — Fernando Boloña Prieto
 ========================================
 
-Cargo:  Gerencia Comercial y de Operaciones
 Enlace: https://wlicargo.com/t/fernando-bolona
 
 QUÉ HAY EN ESTA CARPETA
@@ -27,4 +26,4 @@ https://wlicargo.com/t/fernando-bolona
 COMPARTIR POR WHATSAPP
 ----------------------
 Basta con enviar el enlace. WhatsApp muestra una vista previa con la
-foto, el nombre y el cargo.
+foto o el sello, el nombre y el cargo.

@@ -59,8 +59,6 @@ def leer_equipo():
             m = re.search(nombre + r":\s*'([^']*)'", bloque)
             return m.group(1) if m else None
         foto = campo('foto')
-        if foto is None and 'foto: null' in bloque:
-            foto = None
         personas.append({
             'slug': campo('slug'),
             'nombre': campo('nombre'),
@@ -173,9 +171,13 @@ def generar(p):
     d.text((x, y), p['nombre'], font=f_nombre, fill=BLANCO)
     y += f_nombre.size + 20
 
-    f_cargo = ajustar(p['cargo'].upper(), ImageFont.truetype(grot, 25), ancho, d)
-    d.text((x, y), p['cargo'].upper(), font=f_cargo, fill=NARANJA)
-    y += f_cargo.size + 34
+    # El cargo puede faltar; entonces el nombre respira un poco más
+    if p['cargo']:
+        f_cargo = ajustar(p['cargo'].upper(), ImageFont.truetype(grot, 25), ancho, d)
+        d.text((x, y), p['cargo'].upper(), font=f_cargo, fill=NARANJA)
+        y += f_cargo.size + 34
+    else:
+        y += 14
 
     d.line([(x, y), (x + 92, y)], fill=(*NARANJA, 255), width=4)
     y += 30
