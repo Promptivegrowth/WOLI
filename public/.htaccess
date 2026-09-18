@@ -97,6 +97,7 @@ ErrorDocument 404 /404.html
   AddType image/avif                 .avif
   AddType font/woff2                 .woff2
   AddType application/manifest+json  .webmanifest
+  AddType text/vcard                 .vcf
   AddCharset UTF-8                   .html .css .js .json .xml .svg
 </IfModule>
 

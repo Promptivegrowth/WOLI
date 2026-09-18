@@ -1,0 +1,319 @@
+---
+import '../../styles/tarjeta.css';
+import Icon from '../../components/Icon.astro';
+import { equipo, rutaTarjeta, tel } from '../../data/equipo.js';
+import { site } from '../../data/site.js';
+import { serviciosDe } from '../../data/servicios.js';
+
+export function getStaticPaths() {
+  // Una ruta por persona, más una por cada alias: las tarjetas se imprimen y
+  // las URL antiguas tienen que seguir funcionando para siempre.
+  return equipo.flatMap((p) => [
+    { params: { slug: p.slug }, props: { persona: p, canonico: true } },
+    ...(p.alias ?? []).map((a) => ({ params: { slug: a }, props: { persona: p, canonico: false } })),
+  ]);
+}
+
+const { persona, canonico } = Astro.props;
+const servicios = serviciosDe('es').slice(0, 6);
+
+const url = site.dominio + rutaTarjeta(persona.slug);
+const vcf = `${rutaTarjeta(persona.slug)}.vcf`;
+const qr = `/qr/${persona.slug}.svg`;
+const og = `${site.dominio}/qr/${persona.slug}-og.jpg`;
+
+const titulo = `${persona.nombre} — ${persona.cargo} | ${site.nombreLargo}`;
+const descripcion = `${persona.cargo} en ${site.nombreLargo}. Llámame, escríbeme por WhatsApp o guarda mi contacto con un toque.`;
+
+const mensajeWa = encodeURIComponent(`Hola ${persona.nombre.split(' ')[0]}, te escribo desde tu tarjeta de WOLI.`);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: persona.nombreCompleto,
+  jobTitle: persona.cargo,
+  telephone: tel(persona),
+  email: persona.email,
+  url,
+  worksFor: { '@type': 'Organization', name: site.nombreLargo, url: site.dominio },
+};
+---
+
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <!-- Tarjeta personal: pública por su enlace, pero fuera de los buscadores -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={url} />
+    <meta name="theme-color" content="#071A26" />
+
+    <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={`${persona.nombre} · ${persona.cargo}`} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={site.nombreLargo} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={og} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      requestAnimationFrame(function () {
+        document.documentElement.classList.add('tk-ready');
+      });
+      setTimeout(function () { document.documentElement.classList.add('tk-ready'); }, 1200);
+    </script>
+  </head>
+
+  <body>
+    <div class="tk-bg" aria-hidden="true">
+      <div class="tk-bg__grid"></div>
+      <div class="tk-bg__glow"></div>
+    </div>
+
+    <div class="tk-wrap">
+      {
+        !persona.activo ? (
+          <div class="tk-baja">
+            <img src="/brand/logo-woli-blanco.png" alt={site.nombreLargo} />
+            <h1>Esta tarjeta ya no está activa</h1>
+            <p>{persona.nombre} ya no forma parte del equipo. Escríbenos y te atendemos igual.</p>
+            <a class="tk__guardar" href={`${site.dominio}/contacto`}>
+              Ir a contacto
+              <Icon name="arrowUpRight" />
+            </a>
+          </div>
+        ) : (
+          <>
+            <!-- ======================= LA TARJETA ======================= -->
+            <main class="tk">
+              <article class="tk__card" id="tarjeta">
+                <span class="tk__shine" aria-hidden="true"></span>
+                <span class="tk__sheen" aria-hidden="true"></span>
+
+                <div class="tk__inner">
+                  <div class="tk__top">
+                    <a href={site.dominio}>
+                      <img class="tk__logo" src="/brand/logo-woli-blanco.png" alt={site.nombreLargo} width="900" height="312" />
+                    </a>
+                    <span class="tk__chip">Tarjeta digital</span>
+                  </div>
+
+                  <div class="tk__id">
+                    {
+                      persona.foto ? (
+                        <div class="tk__retrato">
+                          <img src={persona.foto} alt={persona.nombre} width="352" height="440" fetchpriority="high" />
+                        </div>
+                      ) : (
+                        <div class="tk__mono" aria-hidden="true">
+                          <span>{persona.iniciales}</span>
+                          <img src="/brand/isotipo-woli-blanco.png" alt="" width="30" height="27" />
+                        </div>
+                      )
+                    }
+                    <div>
+                      <h1 class="tk__nombre">{persona.nombre}</h1>
+                      <p class="tk__cargo">{persona.cargo}</p>
+                      <p class="tk__empresa">{site.nombreLargo}</p>
+                    </div>
+                  </div>
+
+                  <div class="tk__acciones">
+                    <a class="tk__accion" href={`tel:${tel(persona)}`}>
+                      <Icon name="phone" />Llamar
+                    </a>
+                    <a class="tk__accion tk__accion--wa" href={`https://wa.me/${persona.whatsapp}?text=${mensajeWa}`} target="_blank" rel="noopener">
+                      <Icon name="whatsapp" />WhatsApp
+                    </a>
+                    <a class="tk__accion" href={`mailto:${persona.email}`}>
+                      <Icon name="mail" />Correo
+                    </a>
+                    <a class="tk__accion" href={site.mapaLink} target="_blank" rel="noopener">
+                      <Icon name="pin" />Ubicación
+                    </a>
+                  </div>
+
+                  <a class="tk__guardar" href={vcf} download={`${persona.slug}.vcf`}>
+                    <Icon name="download" />
+                    Guardar contacto
+                  </a>
+                </div>
+              </article>
+            </main>
+
+            <!-- ========================= DATOS ========================= -->
+            <section class="tk-sec">
+              <h2 class="tk-sec__t">Datos de contacto</h2>
+              <div class="tk-panel">
+                <a class="tk-dato" href={`tel:${tel(persona)}`}>
+                  <span class="tk-dato__ico"><Icon name="phone" /></span>
+                  <span class="tk-dato__txt"><b>Móvil</b><span>{persona.movil}</span></span>
+                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                </a>
+                <a class="tk-dato" href={`mailto:${persona.email}`}>
+                  <span class="tk-dato__ico"><Icon name="mail" /></span>
+                  <span class="tk-dato__txt"><b>Correo</b><span>{persona.email}</span></span>
+                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                </a>
+                <a class="tk-dato" href={site.mapaLink} target="_blank" rel="noopener">
+                  <span class="tk-dato__ico"><Icon name="pin" /></span>
+                  <span class="tk-dato__txt"><b>Oficina</b><span>{site.direccion}</span></span>
+                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                </a>
+                <a class="tk-dato" href={site.dominio} target="_blank" rel="noopener">
+                  <span class="tk-dato__ico"><Icon name="globe" /></span>
+                  <span class="tk-dato__txt"><b>Sitio web</b><span>wlicargo.com</span></span>
+                  <span class="tk-dato__go"><Icon name="arrowUpRight" /></span>
+                </a>
+              </div>
+            </section>
+
+            <!-- ======================= SERVICIOS ======================= -->
+            <section class="tk-sec">
+              <h2 class="tk-sec__t">Nuestros servicios</h2>
+              <div class="tk-chips">
+                {servicios.map((s) => (
+                  <a class="tk-chip" href={`${site.dominio}/servicios/${s.slugActual}`} target="_blank" rel="noopener">
+                    {s.nombre}
+                  </a>
+                ))}
+                <a class="tk-chip" href={`${site.dominio}/servicios`} target="_blank" rel="noopener">Ver todos</a>
+              </div>
+            </section>
+
+            <!-- ========================= REDES ========================= -->
+            <section class="tk-sec">
+              <h2 class="tk-sec__t">Síguenos</h2>
+              <div class="tk-redes">
+                {site.redes.map((r) => (
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre} title={r.nombre}>
+                    <Icon name={r.icono} />
+                  </a>
+                ))}
+                <a href={`https://wa.me/${persona.whatsapp}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
+                  <Icon name="whatsapp" />
+                </a>
+              </div>
+            </section>
+
+            <!-- ========================== QR =========================== -->
+            <section class="tk-sec">
+              <h2 class="tk-sec__t">Mi código QR</h2>
+              <div class="tk-panel tk-qr">
+                <div class="tk-qr__img">
+                  <img src={qr} alt={`Código QR de la tarjeta de ${persona.nombre}`} width="116" height="116" loading="lazy" />
+                </div>
+                <div class="tk-qr__txt">
+                  <p>Apunta la cámara para abrir esta tarjeta, o descárgalo para imprimirlo.</p>
+                  <a class="tk-link" href={`/qr/${persona.slug}-print.png`} download>
+                    <Icon name="download" />Descargar en alta resolución
+                  </a>
+                </div>
+              </div>
+              <button class="tk-compartir" id="compartir" type="button" data-url={url} data-nombre={persona.nombre}>
+                <Icon name="arrowUpRight" />
+                Compartir mi tarjeta
+              </button>
+            </section>
+
+            <p class="tk-pie">
+              © {new Date().getFullYear()} <a href={site.dominio}>{site.nombreLargo}</a><br />
+              San Isidro, Lima — Perú
+            </p>
+          </>
+        )
+      }
+    </div>
+
+    <script is:inline>
+      /* ---------- Giro 3D y reflejo que siguen al puntero ---------- */
+      (function () {
+        var card = document.getElementById('tarjeta');
+        if (!card) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var marco = null;
+        function mover(x, y) {
+          var r = card.getBoundingClientRect();
+          var px = Math.min(1, Math.max(0, (x - r.left) / r.width));
+          var py = Math.min(1, Math.max(0, (y - r.top) / r.height));
+          if (marco) cancelAnimationFrame(marco);
+          marco = requestAnimationFrame(function () {
+            card.style.setProperty('--ry', ((px - 0.5) * 13).toFixed(2) + 'deg');
+            card.style.setProperty('--rx', ((0.5 - py) * 9).toFixed(2) + 'deg');
+            card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+            card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+          });
+        }
+        function soltar() {
+          card.classList.remove('is-live');
+          card.style.setProperty('--rx', '0deg');
+          card.style.setProperty('--ry', '0deg');
+        }
+
+        card.addEventListener('pointerenter', function () { card.classList.add('is-live'); });
+        card.addEventListener('pointermove', function (e) { mover(e.clientX, e.clientY); });
+        card.addEventListener('pointerleave', soltar);
+        card.addEventListener('touchmove', function (e) {
+          var t = e.touches[0];
+          if (!t) return;
+          card.classList.add('is-live');
+          mover(t.clientX, t.clientY);
+        }, { passive: true });
+        card.addEventListener('touchend', soltar);
+
+        /* En móvil, la tarjeta también responde a la inclinación del teléfono.
+           iOS exige permiso explícito, así que allí simplemente no se activa. */
+        if (window.DeviceOrientationEvent && !window.DeviceOrientationEvent.requestPermission) {
+          window.addEventListener('deviceorientation', function (e) {
+            if (card.classList.contains('is-live')) return;
+            var g = Math.max(-18, Math.min(18, e.gamma || 0));
+            var b = Math.max(-12, Math.min(12, (e.beta || 0) - 45));
+            card.style.setProperty('--ry', (g * 0.5).toFixed(2) + 'deg');
+            card.style.setProperty('--rx', (-b * 0.3).toFixed(2) + 'deg');
+          });
+        }
+      })();
+
+      /* ---------- Compartir nativo, con copia al portapapeles de reserva ---------- */
+      (function () {
+        var b = document.getElementById('compartir');
+        if (!b) return;
+        var original = b.innerHTML;
+        b.addEventListener('click', async function () {
+          var url = b.dataset.url;
+          var datos = { title: b.dataset.nombre + ' · WOLI', text: 'Mi tarjeta digital', url: url };
+          try {
+            if (navigator.share) {
+              await navigator.share(datos);
+              return;
+            }
+            await navigator.clipboard.writeText(url);
+            b.textContent = 'Enlace copiado';
+            setTimeout(function () { b.innerHTML = original; }, 2200);
+          } catch (e) {
+            /* El usuario canceló el diálogo de compartir: no hay nada que hacer */
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

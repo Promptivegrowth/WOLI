@@ -1,0 +1,30 @@
+TARJETA DIGITAL — John Valverde Rodríguez
+========================================
+
+Cargo:  Ejecutivo Comercial
+Enlace: https://wlicargo.com/t/john-valverde
+
+QUÉ HAY EN ESTA CARPETA
+-----------------------
+QR - John Valverde Rodríguez.png   2400 x 2400 px. Para imprimir en tarjetas,
+                             folletos, credenciales o vinilos.
+QR - John Valverde Rodríguez.svg   Vectorial. Se amplía a cualquier tamaño sin
+                             perder definición: úsalo si la imprenta lo admite.
+
+CÓMO USARLO
+-----------
+· Imprímelo a 2 cm de lado como mínimo; por debajo cuesta escanearlo.
+· Deja un margen blanco alrededor: el QR necesita ese aire para leerse.
+· No lo recolorees ni lo estires. El isotipo del centro ya está calculado
+  para que el código siga siendo válido.
+· Comprueba siempre el impreso con la cámara del teléfono antes del tiraje.
+
+NFC
+---
+Para una tarjeta con chip NFC, graba en el tag exactamente este enlace:
+https://wlicargo.com/t/john-valverde
+
+COMPARTIR POR WHATSAPP
+----------------------
+Basta con enviar el enlace. WhatsApp muestra una vista previa con la
+foto, el nombre y el cargo.

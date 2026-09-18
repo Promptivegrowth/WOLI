@@ -155,6 +155,59 @@ Ambos aparecen en la barra de utilidad y en `/tracking`.
 
 ---
 
+## Tarjetas virtuales
+
+Cada persona del equipo tiene una tarjeta en `/t/<slug>`, pensada para repartirse
+por QR y por WhatsApp. Conviven con el sitio y comparten dominio, así que al
+apuntar el DNS quedan publicadas sin ningún paso extra.
+
+| Persona | Tarjeta | Modelo |
+|---|---|---|
+| Fernando Boloña Prieto | `/t/fernando-bolona` | gerencia, sin foto |
+| John Valverde Rodríguez | `/t/john-valverde` | comercial |
+| Kevin Jibaja Vásquez | `/t/kevin-jibaja` | comercial |
+
+Añadir a alguien es añadir un objeto en **`src/data/equipo.js`** y ejecutar los
+dos generadores. Su tarjeta, su vCard, su QR y su vista previa salen solos.
+
+```bash
+npm run tarjetas               # QR (web + impresión) y carpetas de entrega
+python scripts/og-tarjetas.py  # vistas previas de WhatsApp
+npm run build
+```
+
+Qué incluye cada tarjeta:
+
+- **Guardar contacto** — descarga un vCard 3.0 generado en `/t/<slug>.vcf`.
+  Los apellidos se separan según la convención peruana (los dos últimos), o la
+  agenda del cliente archiva el contacto por un segundo nombre.
+- **Llamar, WhatsApp, correo y ubicación** a un toque.
+- **QR propio**, en la página y en alta resolución para imprenta.
+- **Compartir nativo** (`navigator.share`), con copia al portapapeles de reserva.
+- **Vista previa de marca** al pegar el enlace en WhatsApp o LinkedIn.
+- Efecto 3D y reflejo de luz que siguen al dedo o al cursor, y presentación
+  animada al abrir. Todo se apaga con `prefers-reduced-motion`.
+
+**NFC:** no requiere código. Se graba en el tag la misma URL de la tarjeta.
+
+### Dos campos que evitan problemas más adelante
+
+- **`alias`** — una tarjeta impresa vive años. Si un slug cambia, las URL
+  antiguas siguen sirviendo la misma tarjeta.
+- **`activo: false`** — cuando alguien deja la empresa su URL sigue circulando.
+  En lugar de un 404, la tarjeta muestra un aviso y lleva a contacto.
+
+### Para el cliente
+
+`entregables/tarjetas/<Nombre>/` trae el QR en PNG de 2400 px y en SVG vectorial,
+más un LEEME con el enlace, las medidas mínimas de impresión y cómo grabar el NFC.
+
+> El QR apunta a **wlicargo.com**, el dominio definitivo. Un QR impreso dura
+> años y no puede apuntar a la URL temporal de Vercel. Hasta que el DNS esté
+> configurado, los QR no resolverán: son para imprimir después.
+
+---
+
 ## Despliegue
 
 Ver **[DEPLOY.md](DEPLOY.md)**. Resumen:

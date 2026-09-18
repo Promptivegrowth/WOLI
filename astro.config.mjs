@@ -8,7 +8,10 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
   build: { format: 'directory', inlineStylesheets: 'auto' },
-  integrations: [sitemap()],
+  integrations: [
+    // Las tarjetas personales llevan noindex: no deben aparecer en el sitemap.
+    sitemap({ filter: (page) => !/\/t\//.test(page) }),
+  ],
   compressHTML: true,
   vite: {
     build: {
