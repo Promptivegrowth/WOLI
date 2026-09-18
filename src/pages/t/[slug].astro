@@ -103,60 +103,69 @@ const schema = {
         ) : (
           <>
             <!-- ======================= LA TARJETA ======================= -->
-            <main class="tk">
-              <article class="tk__card" id="tarjeta">
-                <span class="tk__shine" aria-hidden="true"></span>
-                <span class="tk__sheen" aria-hidden="true"></span>
+            <main class={`tk tk--${persona.modelo}`} id="escena">
+              <div class="tk__float" id="flotante">
+                <article class="tk__card" id="tarjeta">
+                  {/* Capa de efectos: se recorta a sí misma, nunca al contenido.
+                      Si el recorte viviera en la tarjeta, aplanaría el 3D. */}
+                  <span class="tk__fx" aria-hidden="true">
+                    <span class="tk__textura"></span>
+                    {!persona.foto && <span class="tk__marca">{persona.iniciales}</span>}
+                    <span class="tk__shine"></span>
+                    <span class="tk__sheen"></span>
+                  </span>
 
-                <div class="tk__inner">
-                  <div class="tk__top">
-                    <a href={site.dominio}>
-                      <img class="tk__logo" src="/brand/logo-woli-blanco.png" alt={site.nombreLargo} width="900" height="312" />
-                    </a>
-                    <span class="tk__chip">Tarjeta digital</span>
-                  </div>
+                  <div class="tk__inner">
+                    <div class="tk__top">
+                      <a href={site.dominio}>
+                        <img class="tk__logo" src="/brand/logo-woli-blanco.png" alt={site.nombreLargo} width="900" height="312" />
+                      </a>
+                      <span class="tk__chip">{persona.modelo === 'gerencia' ? 'Dirección' : 'Tarjeta digital'}</span>
+                    </div>
 
-                  <div class="tk__id">
-                    {
-                      persona.foto ? (
+                    <div class="tk__id">
+                      {persona.foto && (
                         <div class="tk__retrato">
                           <img src={persona.foto} alt={persona.nombre} width="352" height="440" fetchpriority="high" />
                         </div>
-                      ) : (
-                        <div class="tk__mono" aria-hidden="true">
-                          <span>{persona.iniciales}</span>
-                          <img src="/brand/isotipo-woli-blanco.png" alt="" width="30" height="27" />
-                        </div>
-                      )
-                    }
-                    <div>
-                      <h1 class="tk__nombre">{persona.nombre}</h1>
-                      <p class="tk__cargo">{persona.cargo}</p>
-                      <p class="tk__empresa">{site.nombreLargo}</p>
+                      )}
+                      <div class="tk__txt">
+                        <h1 class="tk__nombre">{persona.nombre}</h1>
+                        <span class="tk__regla" aria-hidden="true"></span>
+                        <p class="tk__cargo">{persona.cargo}</p>
+                        <p class="tk__empresa">{site.nombreLargo}</p>
+                      </div>
+                    </div>
+
+                    <div class="tk__acciones">
+                      <a class="tk__accion" href={`tel:${tel(persona)}`}>
+                        <Icon name="phone" />Llamar
+                      </a>
+                      <a class="tk__accion tk__accion--wa" href={`https://wa.me/${persona.whatsapp}?text=${mensajeWa}`} target="_blank" rel="noopener">
+                        <Icon name="whatsapp" />WhatsApp
+                      </a>
+                      <a class="tk__accion" href={`mailto:${persona.email}`}>
+                        <Icon name="mail" />Correo
+                      </a>
+                      <a class="tk__accion" href={site.mapaLink} target="_blank" rel="noopener">
+                        <Icon name="pin" />Ubicación
+                      </a>
+                    </div>
+
+                    <div class="tk__final">
+                      {/* Sin atributo download: así iOS abre la ficha de contacto
+                          en pantalla en vez de dejar un archivo en Archivos. */}
+                      <a class="tk__guardar" id="guardar" href={vcf}>
+                        <Icon name="download" />
+                        Guardar contacto
+                      </a>
+                      <p class="tk__pista" id="pista" hidden>
+                        Se descarga un archivo de contacto. Ábrelo y el teléfono lo añade a tu agenda.
+                      </p>
                     </div>
                   </div>
-
-                  <div class="tk__acciones">
-                    <a class="tk__accion" href={`tel:${tel(persona)}`}>
-                      <Icon name="phone" />Llamar
-                    </a>
-                    <a class="tk__accion tk__accion--wa" href={`https://wa.me/${persona.whatsapp}?text=${mensajeWa}`} target="_blank" rel="noopener">
-                      <Icon name="whatsapp" />WhatsApp
-                    </a>
-                    <a class="tk__accion" href={`mailto:${persona.email}`}>
-                      <Icon name="mail" />Correo
-                    </a>
-                    <a class="tk__accion" href={site.mapaLink} target="_blank" rel="noopener">
-                      <Icon name="pin" />Ubicación
-                    </a>
-                  </div>
-
-                  <a class="tk__guardar" href={vcf} download={`${persona.slug}.vcf`}>
-                    <Icon name="download" />
-                    Guardar contacto
-                  </a>
-                </div>
-              </article>
+                </article>
+              </div>
             </main>
 
             <!-- ========================= DATOS ========================= -->
@@ -244,21 +253,30 @@ const schema = {
     </div>
 
     <script is:inline>
-      /* ---------- Giro 3D y reflejo que siguen al puntero ---------- */
+      /* ---------- Giro 3D y reflejo de luz ----------
+         La tarjeta gira siguiendo al dedo o al cursor, y el contenido va en
+         planos a distinta profundidad, así que se despega del fondo al girar.
+         Al abrir hace una pasada sola de presentación: en un iPhone nadie
+         arrastra el dedo sobre una tarjeta si antes no ha visto que se mueve. */
       (function () {
+        var escena = document.getElementById('escena');
         var card = document.getElementById('tarjeta');
         if (!card) return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
         var marco = null;
+        function quieto() {
+          /* La presentación automática se interrumpe en cuanto alguien toca */
+          if (escena) escena.classList.add('tk--quieto');
+        }
         function mover(x, y) {
           var r = card.getBoundingClientRect();
           var px = Math.min(1, Math.max(0, (x - r.left) / r.width));
           var py = Math.min(1, Math.max(0, (y - r.top) / r.height));
           if (marco) cancelAnimationFrame(marco);
           marco = requestAnimationFrame(function () {
-            card.style.setProperty('--ry', ((px - 0.5) * 13).toFixed(2) + 'deg');
-            card.style.setProperty('--rx', ((0.5 - py) * 9).toFixed(2) + 'deg');
+            card.style.setProperty('--ry', ((px - 0.5) * 16).toFixed(2) + 'deg');
+            card.style.setProperty('--rx', ((0.5 - py) * 11).toFixed(2) + 'deg');
             card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
             card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
           });
@@ -269,28 +287,52 @@ const schema = {
           card.style.setProperty('--ry', '0deg');
         }
 
-        card.addEventListener('pointerenter', function () { card.classList.add('is-live'); });
+        card.addEventListener('pointerenter', function () { quieto(); card.classList.add('is-live'); });
         card.addEventListener('pointermove', function (e) { mover(e.clientX, e.clientY); });
         card.addEventListener('pointerleave', soltar);
-        card.addEventListener('touchmove', function (e) {
+        card.addEventListener('touchstart', function (e) {
           var t = e.touches[0];
           if (!t) return;
+          quieto();
           card.classList.add('is-live');
           mover(t.clientX, t.clientY);
         }, { passive: true });
+        card.addEventListener('touchmove', function (e) {
+          var t = e.touches[0];
+          if (t) mover(t.clientX, t.clientY);
+        }, { passive: true });
         card.addEventListener('touchend', soltar);
 
-        /* En móvil, la tarjeta también responde a la inclinación del teléfono.
-           iOS exige permiso explícito, así que allí simplemente no se activa. */
+        /* En Android la tarjeta también responde a la inclinación del teléfono.
+           iOS exige permiso explícito y no vamos a pedirlo nada más abrir. */
         if (window.DeviceOrientationEvent && !window.DeviceOrientationEvent.requestPermission) {
           window.addEventListener('deviceorientation', function (e) {
             if (card.classList.contains('is-live')) return;
-            var g = Math.max(-18, Math.min(18, e.gamma || 0));
-            var b = Math.max(-12, Math.min(12, (e.beta || 0) - 45));
-            card.style.setProperty('--ry', (g * 0.5).toFixed(2) + 'deg');
-            card.style.setProperty('--rx', (-b * 0.3).toFixed(2) + 'deg');
+            if (!e.gamma && !e.beta) return;
+            quieto();
+            var g = Math.max(-20, Math.min(20, e.gamma || 0));
+            var b = Math.max(-14, Math.min(14, (e.beta || 0) - 45));
+            card.style.setProperty('--ry', (g * 0.55).toFixed(2) + 'deg');
+            card.style.setProperty('--rx', (-b * 0.32).toFixed(2) + 'deg');
+            card.style.setProperty('--mx', (50 + g * 2.2).toFixed(1) + '%');
+            card.style.setProperty('--my', (50 + b * 2).toFixed(1) + '%');
           });
         }
+      })();
+
+      /* ---------- Guardar contacto ----------
+         Un navegador no puede escribir en la agenda: entrega un archivo y el
+         sistema lo abre. iOS muestra la ficha directamente; Android lo baja
+         primero, así que ahí avisamos de que hay que abrirlo. */
+      (function () {
+        var b = document.getElementById('guardar');
+        var pista = document.getElementById('pista');
+        if (!b || !pista) return;
+        var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        b.addEventListener('click', function () {
+          if (!ios) pista.hidden = false;
+        });
       })();
 
       /* ---------- Compartir nativo, con copia al portapapeles de reserva ---------- */
