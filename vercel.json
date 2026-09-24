@@ -58,14 +58,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "woli.vercel.app"
         }
       ],
-      "destination": "https://wlicargo.com/:path*",
+      "destination": "https://wlicargo.com/$1",
       "permanent": true
     },
     {
