@@ -58,6 +58,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "woli.vercel.app"
+        }
+      ],
+      "destination": "https://wlicargo.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/api/enviar.php",
       "destination": "/api/enviar",
       "permanent": false

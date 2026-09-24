@@ -207,9 +207,30 @@ Qué incluye cada tarjeta:
 `entregables/tarjetas/<Nombre>/` trae el QR en PNG de 2400 px y en SVG vectorial,
 más un LEEME con el enlace, las medidas mínimas de impresión y cómo grabar el NFC.
 
-> El QR apunta a **wlicargo.com**, el dominio definitivo. Un QR impreso dura
-> años y no puede apuntar a la URL temporal de Vercel. Hasta que el DNS esté
-> configurado, los QR no resolverán: son para imprimir después.
+> El QR apunta a **wlicargo.com**, el dominio definitivo, nunca a la URL
+> provisional de Vercel: un QR impreso dura años. `woli.vercel.app` redirige
+> entero a `wlicargo.com` (regla por host en `vercel.json`), así que los enlaces
+> provisionales que ya circulen también terminan en el dominio real.
+
+### Dominio y DNS
+
+La zona DNS de `wlicargo.com` vive en el hosting anterior (cPanel, nameservers
+`ns1/ns2.hpserverdns.com`), no en GoDaddy ni en Vercel. Solo dos registros
+apuntan a Vercel:
+
+| Registro | Valor |
+|---|---|
+| `wlicargo.com` A | `76.76.21.21` |
+| `www` CNAME | `cname.vercel-dns.com` (redirige a `wlicargo.com` desde Vercel) |
+
+El correo está en **Microsoft 365** y no pasa por Vercel: MX, SPF, DKIM
+(`selector1/2._domainkey`), DMARC, `autodiscover` y las verificaciones `MS=`
+no se tocan. `mail` es un registro A propio hacia el servidor: antes era un
+CNAME al dominio y se habría ido detrás de la web.
+
+- El cPanel se entra por `https://cpanel.wlicargo.com`, nunca por el dominio.
+- **No se puede cancelar ese hosting** sin mover antes la zona DNS entera: con
+  él se caería también el correo.
 
 ---
 
