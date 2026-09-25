@@ -1,16 +1,35 @@
 /* ==========================================================================
    WOLI · Manejo de formularios
-   Funciona en los dos entornos de despliegue:
-     1. cPanel / Namecheap  -> POST a /api/enviar.php   (PHP mail + registro)
-     2. Vercel              -> POST a /api/enviar       (función serverless)
-   Se intenta el primero y, si no existe, se usa el segundo automáticamente.
-   Si ninguno responde, se ofrece siempre la salida por WhatsApp o correo.
+   Los formularios se envían al portal del Grupo Pacheco (public/js/portal.js),
+   que guarda cada registro, numera el Libro de Reclamaciones, genera su PDF y
+   avisa por correo. Funciona igual con la web en Vercel o en cPanel.
+   Si el portal no responde, se ofrece siempre la salida por WhatsApp o correo.
    ========================================================================== */
 (function () {
   'use strict';
 
-  var ENDPOINTS = ['/api/enviar.php', '/api/enviar'];
-  var WA_NUMBER = '51912507555';
+  // portal.js se carga al final del documento: se consulta al enviar.
+  var EN = /^en\b/i.test(document.documentElement.lang || '');
+
+  // El número sale del primer enlace de WhatsApp de la página, que ya trae
+  // el valor del portal (datos-vivos.js).
+  function numeroWhatsApp() {
+    var a = document.querySelector('a[href*="wa.me/"]');
+    var m = a && a.getAttribute('href').match(/wa\.me\/(\d+)/);
+    return m ? m[1] : '51912507555';
+  }
+
+  // Campo del formulario ← nombre del campo en la API del portal
+  var CAMPO_FORM = {
+    numero_documento: 'documento',
+    domicilio: 'direccion',
+    correo: 'email',
+    bien_descripcion: 'descripcion_bien',
+    tipo: 'tipo_registro',
+    bien_tipo: 'tipo_bien',
+    acepta: 'declaracion',
+    asunto: 'servicio',
+  };
 
   function label(form, name) {
     var el = form.elements[name];
@@ -55,7 +74,7 @@
       if (valid && field.type === 'email') {
         valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(field.value.trim());
         if (!valid) {
-          setError(field, 'Ingresa un correo electrónico válido.');
+          setError(field, EN ? 'Enter a valid email address.' : 'Ingresa un correo electrónico válido.');
           ok = false;
           first = first || field;
           return;
@@ -63,20 +82,30 @@
       }
 
       if (valid && field.dataset.minlength && field.value.trim().length < Number(field.dataset.minlength)) {
-        setError(field, 'Necesitamos un poco más de detalle (mínimo ' + field.dataset.minlength + ' caracteres).');
+        setError(
+          field,
+          EN
+            ? 'Please add a little more detail (at least ' + field.dataset.minlength + ' characters).'
+            : 'Necesitamos un poco más de detalle (mínimo ' + field.dataset.minlength + ' caracteres).'
+        );
         ok = false;
         first = first || field;
         return;
       }
 
       if (!valid) {
-        setError(field, field.type === 'checkbox' ? 'Debes aceptar para continuar.' : 'Este campo es obligatorio.');
+        setError(
+          field,
+          field.type === 'checkbox'
+            ? EN ? 'You must accept to continue.' : 'Debes aceptar para continuar.'
+            : EN ? 'This field is required.' : 'Este campo es obligatorio.'
+        );
         ok = false;
         first = first || field;
       }
     });
 
-    if (first && first.focus) first.focus();
+    if (first && first.focus && !first.disabled) first.focus();
     return ok;
   }
 
@@ -106,42 +135,119 @@
       if (!data[k] || k === 'hp_website') return;
       lines.push('*' + label(form, k) + ':* ' + data[k]);
     });
-    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+    window.open('https://wa.me/' + numeroWhatsApp() + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
   }
 
-  async function post(url, payload) {
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    var text = await res.text();
-    var json = null;
-    try {
-      json = JSON.parse(text);
-    } catch (e) {
-      /* respuesta no JSON: el endpoint no existe en este hosting */
+  /** Traduce el formulario al formato de la API del portal. */
+  function carga(form) {
+    var d = collect(form);
+    var tipo = form.dataset.woliForm || 'contacto';
+    if (tipo === 'reclamacion') {
+      return {
+        ruta: 'reclamo',
+        cuerpo: {
+          tipo: d.tipo_registro,
+          nombre: d.nombre,
+          tipo_documento: d.tipo_documento,
+          numero_documento: d.documento,
+          domicilio: d.direccion,
+          ubigeo: d.ubigeo,
+          telefono: d.telefono,
+          correo: d.email,
+          menor_edad: !!d.menor_edad,
+          apoderado: d.menor_edad ? d.apoderado : undefined,
+          bien_tipo: d.tipo_bien,
+          moneda: d.moneda || 'PEN',
+          monto: d.monto || undefined,
+          bien_descripcion: d.descripcion_bien,
+          detalle: d.detalle,
+          pedido: d.pedido,
+          acepta: !!d.declaracion,
+          hp_website: d.hp_website,
+        },
+      };
     }
-    if (!json) throw new Error('no-endpoint');
-    if (!res.ok || json.ok !== true) throw new Error(json.error || 'error');
-    return json;
+    var extra = {};
+    ['ruc', 'modalidad', 'origen', 'destino', 'carga', 'peso', 'incoterm'].forEach(function (k) {
+      if (d[k]) extra[k] = d[k];
+    });
+    return {
+      ruta: 'contacto',
+      cuerpo: {
+        tipo: tipo === 'cotizacion' ? 'cotizacion' : 'contacto',
+        nombre: d.nombre,
+        empresa: d.empresa,
+        correo: d.email,
+        telefono: d.telefono,
+        asunto: d.servicio,
+        mensaje: d.mensaje,
+        pagina: window.location.href,
+        datos: extra,
+        hp_website: d.hp_website,
+      },
+    };
+  }
+
+  function errorPortal(mensaje, campo, conexion, estado) {
+    var e = new Error(mensaje);
+    e.campo = campo;
+    e.conexion = conexion;
+    e.estado = estado;
+    return e;
+  }
+
+  // El portal responde en español: en las páginas /en se muestra en inglés.
+  function traducir(err) {
+    if (!EN) return err.message;
+    if (err.estado === 429) return 'Too many submissions in a row. Please try again in a few minutes.';
+    return 'Please check the highlighted field and try again.';
   }
 
   async function send(form) {
-    var payload = collect(form);
-    payload._tipo = form.dataset.woliForm || 'contacto';
-    payload._pagina = window.location.href;
-
-    var lastError = null;
-    for (var i = 0; i < ENDPOINTS.length; i++) {
-      try {
-        return await post(ENDPOINTS[i], payload);
-      } catch (err) {
-        lastError = err;
-        if (err.message !== 'no-endpoint') throw err; // error real del servidor
-      }
+    var gp = window.GrupoPacheco;
+    if (!gp) throw errorPortal('sin-portal', null, true);
+    var c = carga(form);
+    var res;
+    try {
+      res = await fetch(gp.endpoint(c.ruta), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(c.cuerpo),
+      });
+    } catch (e) {
+      throw errorPortal('sin-conexion', null, true);
     }
-    throw lastError || new Error('sin-endpoint');
+    var json = null;
+    try {
+      json = await res.json();
+    } catch (e) {
+      /* respuesta no JSON */
+    }
+    if (res.ok && json && json.ok) return json;
+    if (json && (res.status === 422 || res.status === 429)) throw errorPortal(json.error, json.campo, false, res.status);
+    throw errorPortal('servidor', null, true);
+  }
+
+  function fechaLarga(iso) {
+    return new Intl.DateTimeFormat(EN ? 'en-GB' : 'es-PE', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(
+      new Date(iso + 'T00:00:00Z')
+    );
+  }
+
+  function textoExito(form, res) {
+    if (form.dataset.woliForm === 'reclamacion' && res.codigo) {
+      var correo = (form.elements.email && form.elements.email.value) || '';
+      return EN
+        ? 'Record No. ' + res.codigo + ' filed. ' +
+            (res.correoEnviado ? 'We have emailed the complaint form (PDF) to ' + correo + '. ' : 'Please keep this number as proof. ') +
+            'We will reply no later than ' + fechaLarga(res.vence) + '.'
+        : 'Registro N.º ' + res.codigo + ' recibido. ' +
+            (res.correoEnviado ? 'Te enviamos la hoja de reclamación en PDF a ' + correo + '. ' : 'Conserva este número como constancia. ') +
+            'Te responderemos a más tardar el ' + fechaLarga(res.vence) + '.';
+    }
+    return EN
+      ? 'Message sent. Our sales team will get back to you within 24 hours.'
+      : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 24 horas.';
   }
 
   function init(form) {
@@ -166,21 +272,38 @@
 
       try {
         var res = await send(form);
-        var okText =
-          res.mensaje ||
-          (form.dataset.woliForm === 'reclamacion'
-            ? 'Registro recibido. Te enviamos una copia a tu correo y responderemos en el plazo de ley.'
-            : 'Mensaje enviado. Nuestro equipo comercial te responderá en un plazo máximo de 24 horas.');
-        if (res.codigo) okText += ' Código de registro: ' + res.codigo + '.';
-        message(form, 'ok', okText);
+        message(form, 'ok', textoExito(form, res));
         form.reset();
+        var ub = form.querySelector('[data-ubigeo]');
+        if (ub && ub.reiniciarUbigeo) ub.reiniciarUbigeo();
+        var apo = form.querySelector('#campo-apoderado');
+        if (apo) apo.hidden = true;
       } catch (err) {
-        message(
-          form,
-          'err',
-          'No pudimos enviar el formulario desde el servidor. Usa el botón de WhatsApp o escríbenos a gerencia@wlicargo.com y te atendemos de inmediato.'
-        );
-        if (waBtn) waBtn.focus();
+        if (!err.conexion) {
+          // Dato rechazado por el portal: se marca el campo correspondiente.
+          var nombre = CAMPO_FORM[err.campo] || err.campo;
+          var campo =
+            nombre === 'ubigeo'
+              ? form.querySelector('[data-ubigeo-nivel="departamento"]')
+              : nombre && form.elements[nombre];
+          var texto = traducir(err);
+          if (campo && campo.nodeType === 1) {
+            setError(campo, EN ? 'Please check this field.' : err.message);
+            if (campo.focus) campo.focus();
+          }
+          message(form, 'err', texto);
+        } else {
+          var enlace = document.querySelector('[data-vivo="correo-principal"]');
+          var correo = ((enlace && enlace.textContent) || 'gerencia@wlicargo.com').trim();
+          message(
+            form,
+            'err',
+            EN
+              ? 'We could not send the form. Use the WhatsApp button or email ' + correo + ' and we will help you right away.'
+              : 'No pudimos enviar el formulario. Usa el botón de WhatsApp o escríbenos a ' + correo + ' y te atendemos de inmediato.'
+          );
+          if (waBtn) waBtn.focus();
+        }
       } finally {
         if (submit) submit.dataset.loading = 'false';
       }

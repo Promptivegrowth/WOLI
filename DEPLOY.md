@@ -1,9 +1,14 @@
 # Guía de despliegue — WOLI
 
 El proyecto compila a HTML estático, por lo que el **mismo código** se publica en Vercel o en un
-hosting cPanel sin cambios. Lo único que difiere es el endpoint que procesa los formularios, y eso
-se resuelve solo: el navegador intenta primero `/api/enviar.php` (cPanel) y, si no existe, usa
-`/api/enviar` (Vercel).
+hosting cPanel sin cambios.
+
+Los formularios (contacto, cotización y Libro de Reclamaciones) se envían al **portal del Grupo
+Pacheco** (`public/js/portal.js`), que guarda cada registro, numera las hojas de reclamación,
+genera su PDF y envía los correos. La web no necesita PHP, funciones propias ni claves de correo.
+Los datos de contacto (WhatsApp, correo, dirección, horario y redes) se editan desde el portal y se
+aplican en vivo (`public/js/datos-vivos.js`); el HTML conserva los valores de `src/data/site.js`
+como respaldo.
 
 El sitio es bilingüe: **español en la raíz** e **inglés bajo `/en/`**. Son páginas HTML reales,
 no traducción por JavaScript, así que ambas versiones se indexan por separado.
@@ -16,8 +21,9 @@ no traducción por JavaScript, así que ambas versiones se indexan por separado.
    No hay que tocar código: si el archivo está, el hero lo usa; si no, muestra la imagen de respaldo.
 2. **Confirma el RUC** en `src/data/site.js` (`site.ruc`). Está puesto como `20608160061`,
    tomado del parámetro `ruc` de las URL del sistema de embarques. Aparece en la cabecera del
-   Libro de Reclamaciones, así que conviene verificarlo antes de publicar.
-3. **Reemplaza los enlaces de redes sociales** en `src/data/site.js` por los perfiles reales.
+   Libro de Reclamaciones y en el PDF de cada hoja (tabla `empresas` del portal).
+3. **Redes sociales**: se configuran en el portal (Datos de la web). Las de `src/data/site.js`
+   solo se ven si el portal no responde.
 
 ---
 
@@ -32,31 +38,12 @@ no traducción por JavaScript, así que ambas versiones se indexan por separado.
 
 ### Dominio propio
 
-**Settings → Domains → Add** `wlicargo.com` y `www.wlicargo.com`. Vercel indica los registros DNS
-a crear en Namecheap (normalmente un `A` a `76.76.21.21` y un `CNAME` de `www` a `cname.vercel-dns.com`).
-
-### Correo de los formularios en Vercel
-
-PHP no se ejecuta en Vercel, así que la función `api/enviar.js` envía el correo a través de
-[Resend](https://resend.com). En **Settings → Environment Variables** agrega:
-
-| Variable | Valor | Obligatoria |
-|---|---|---|
-| `RESEND_API_KEY` | Clave de API de Resend | Sí |
-| `MAIL_TO` | `gerencia@wlicargo.com` | No (es el valor por defecto) |
-| `MAIL_FROM` | `World Logistics International <no-reply@wlicargo.com>` | No (es el valor por defecto) |
-
-El dominio del remitente debe estar verificado en Resend.
-
-> **Sin esta clave los formularios no envían correo**, pero el sitio no se rompe: muestra un aviso
-> y ofrece el botón de WhatsApp y el correo directo, que siempre funcionan.
+**Settings → Domains → Add** `wlicargo.com` y `www.wlicargo.com`, y crea en el DNS los registros
+exactos que indique Vercel.
 
 ---
 
 ## Opción B — cPanel de Namecheap
-
-Esta es la opción recomendada si se quiere mantener el correo del propio hosting, porque
-`mail()` de PHP funciona sin servicios externos.
 
 ### 1. Compilar
 
@@ -72,7 +59,7 @@ Se genera la carpeta **`dist/`** con todo el sitio ya resuelto, incluidas las do
 ### 2. Subir
 
 1. cPanel → **Administrador de archivos** → entra a `public_html`.
-2. Borra el contenido del sitio anterior (haz una copia de seguridad antes).
+2. Haz una copia de seguridad del sitio anterior y bórralo **excepto `api/registros/`** (ver abajo).
 3. Comprime **el contenido de `dist/`** en un `.zip` — el zip debe contener `index.html` en la raíz,
    no una carpeta `dist` dentro.
 4. Sube el `.zip` a `public_html` y usa **Extraer**.
@@ -81,29 +68,13 @@ Se genera la carpeta **`dist/`** con todo el sitio ya resuelto, incluidas las do
 
 El `.htaccess` incluido ya sirve las URLs limpias de los dos idiomas (`/servicios` y `/en/services`).
 
-### 3. Configurar el correo
+### 3. Registros antiguos del Libro de Reclamaciones
 
-1. cPanel → **Cuentas de correo** → crea `no-reply@wlicargo.com`.
-2. Edita `public_html/api/enviar.php` y revisa el bloque `CONFIG` del inicio:
+La versión anterior del sitio guardaba cada hoja en `public_html/api/registros/AAAA-MM.jsonl`.
+Si existe esa carpeta, **descárgala y consérvala**: las hojas de reclamación deben guardarse al
+menos dos años. Desde esta versión, las hojas nuevas quedan en el portal del Grupo Pacheco.
 
-```php
-const DESTINATARIO       = 'gerencia@wlicargo.com';
-const DESTINATARIO_LIBRO = 'gerencia@wlicargo.com';
-const REMITENTE          = 'no-reply@wlicargo.com';  // debe ser del propio dominio
-```
-
-El remitente **tiene que pertenecer al dominio** o los proveedores marcarán los correos como spam.
-
-3. Comprueba que PHP esté en 8.0 o superior en **Select PHP Version** (el archivo usa
-   `str_starts_with`, disponible desde PHP 8.0).
-
-### 4. Registros del Libro de Reclamaciones
-
-Cada registro se guarda además en `public_html/api/registros/AAAA-MM.jsonl` como respaldo, tal como
-exige el Código de Protección y Defensa del Consumidor. El propio script crea ahí un `.htaccess`
-que impide su acceso desde la web. **Descarga esa carpeta periódicamente** y no la borres.
-
-### 5. HTTPS y dominio
+### 4. HTTPS y dominio
 
 1. cPanel → **SSL/TLS Status** → emite el certificado gratuito (AutoSSL) para el dominio.
 2. Con el certificado activo, edita `public_html/.htaccess` y descomenta el bloque de HTTPS:
@@ -119,9 +90,10 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 ## Después de publicar
 
-- [ ] Probar el formulario de **contacto** y confirmar que llega el correo.
+- [ ] Probar el formulario de **contacto** y confirmar que el mensaje aparece en el portal.
 - [ ] Probar el formulario de **cotización**.
-- [ ] Probar el **Libro de Reclamaciones** y verificar que llegue la constancia al correo del usuario.
+- [ ] Probar el **Libro de Reclamaciones**: la constancia con su número debe verse en la web, la
+      hoja debe aparecer en el portal y, con el correo configurado, llegar al usuario en PDF.
 - [ ] Revisar la versión en inglés: `/en` y el cambio de idioma desde cualquier página interior.
 - [ ] Comprobar que el vídeo de portada carga y se reproduce en silencio.
 - [ ] Enviar `https://wlicargo.com/sitemap-index.xml` a Google Search Console, y declarar allí las
@@ -132,6 +104,8 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 ---
 
 ## Actualizar el sitio más adelante
+
+**Datos de contacto y redes:** desde el portal, sin publicar de nuevo.
 
 **En Vercel:** edita, `git commit`, `git push`. Se publica solo.
 

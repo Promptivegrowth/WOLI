@@ -56,12 +56,12 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
               <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:1.1rem">{p.paso1Texto}</p>
               <div class="radio-cards">
                 <label class="radio-card">
-                  <input type="radio" name="tipo_registro" value={p.reclamo} required />
+                  <input type="radio" name="tipo_registro" value="reclamo" required />
                   <b>{p.reclamo}</b>
                   <span>{p.reclamoTexto}</span>
                 </label>
                 <label class="radio-card">
-                  <input type="radio" name="tipo_registro" value={p.queja} required />
+                  <input type="radio" name="tipo_registro" value="queja" required />
                   <b>{p.queja}</b>
                   <span>{p.quejaTexto}</span>
                 </label>
@@ -78,7 +78,7 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
                 <div class="field">
                   <label for="tipo_documento">{p.tipoDocumento} <span class="req">*</span></label>
                   <select id="tipo_documento" name="tipo_documento" required>
-                    {p.tiposDocumento.map((x) => <option>{x}</option>)}
+                    {p.tiposDocumento.map((x, i) => <option value={['DNI', 'CE', 'Pasaporte', 'RUC'][i]}>{x}</option>)}
                   </select>
                 </div>
               </div>
@@ -103,6 +103,27 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
                   <input id="direccion" name="direccion" type="text" autocomplete="street-address" required />
                 </div>
               </div>
+              <!-- Ubigeo INEI en cascada (public/js/ubigeo.js) -->
+              <div
+                class="form__row form__row--3"
+                data-ubigeo
+                data-txt-seleccione={p.seleccione}
+                data-txt-elija-departamento={p.elijaDepartamento}
+                data-txt-elija-provincia={p.elijaProvincia}
+              >
+                <div class="field">
+                  <label for="ubigeo-departamento">{p.departamento} <span class="req">*</span></label>
+                  <select id="ubigeo-departamento" data-ubigeo-nivel="departamento" required><option value="">…</option></select>
+                </div>
+                <div class="field">
+                  <label for="ubigeo-provincia">{p.provincia} <span class="req">*</span></label>
+                  <select id="ubigeo-provincia" data-ubigeo-nivel="provincia" required disabled><option value="">{p.elijaDepartamento}</option></select>
+                </div>
+                <div class="field">
+                  <label for="ubigeo-distrito">{p.distrito} <span class="req">*</span></label>
+                  <select id="ubigeo-distrito" name="ubigeo" data-ubigeo-nivel="distrito" required disabled><option value="">{p.elijaProvincia}</option></select>
+                </div>
+              </div>
               <label class="check-inline" style="margin-top:.4rem">
                 <input type="checkbox" id="menor" name="menor_edad" value={lang === 'en' ? 'Yes' : 'Sí'} />
                 <span>{p.menorEdad}</span>
@@ -119,12 +140,18 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
                 <div class="field">
                   <label for="tipo_bien">{p.tipo} <span class="req">*</span></label>
                   <select id="tipo_bien" name="tipo_bien" required>
-                    {p.tipos.map((x) => <option>{x}</option>)}
+                    {p.tipos.map((x, i) => <option value={['servicio', 'producto'][i]}>{x}</option>)}
                   </select>
                 </div>
                 <div class="field">
                   <label for="monto">{p.monto}</label>
-                  <input id="monto" name="monto" type="text" placeholder={p.montoEj} />
+                  <div class="monto">
+                    <select name="moneda" aria-label={p.moneda}>
+                      <option value="PEN">S/</option>
+                      <option value="USD">US$</option>
+                    </select>
+                    <input id="monto" name="monto" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" />
+                  </div>
                 </div>
               </div>
               <div class="field">
@@ -193,6 +220,7 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
     </div>
   </section>
 
+  <script src="/js/ubigeo.js" defer></script>
   <script src="/js/woli-forms.js" defer></script>
   <script is:inline>
     // El campo del apoderado solo aparece cuando el consumidor es menor de edad.

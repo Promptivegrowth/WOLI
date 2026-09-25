@@ -53,11 +53,9 @@ Otros recursos del sistema:
 ## Estructura
 
 ```
-├── api/enviar.js                 Función serverless de formularios (solo Vercel)
 ├── astro.config.mjs
 ├── public/
 │   ├── .htaccess                 Reglas de Apache para cPanel
-│   ├── api/enviar.php            Endpoint de formularios (solo cPanel)
 │   ├── brand/                    Logotipos, isotipos y favicons
 │   ├── docs/                     Tarifarios en PDF
 │   ├── img/                      Fotografía curada y optimizada

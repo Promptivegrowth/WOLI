@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import { site, waLink } from '../data/site.js';
+import Redes from './Redes.astro';
 import { serviciosDe } from '../data/servicios.js';
 import { t } from '../i18n/ui.js';
 import { ruta, rutaServicio } from '../i18n/config.js';
@@ -18,13 +19,7 @@ const principales = serviciosDe(lang).slice(0, 6);
         <img class="footer__logo" src="/brand/logo-woli.png" alt="WOLI — World Logistics International" width="900" height="312" />
         <p style="max-width:34ch">{d.footer.descripcion}</p>
         <div class="social">
-          {
-            site.redes.map((r) => (
-              <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre} title={r.nombre}>
-                <Icon name={r.icono} />
-              </a>
-            ))
-          }
+          <Redes />
           <a href={waLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp">
             <Icon name="whatsapp" />
           </a>
@@ -54,10 +49,10 @@ const principales = serviciosDe(lang).slice(0, 6);
       <div>
         <h4>{d.footer.contacto}</h4>
         <ul>
-          <li><a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a></li>
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></li>
-          <li>{site.horario[lang]}</li>
+          <li><a href={site.mapaLink} target="_blank" rel="noopener noreferrer" data-vivo="direccion">{site.direccion}</a></li>
+          <li><a href={`mailto:${site.email}`} data-vivo="correo-principal">{site.email}</a></li>
+          <li><a href={waLink()} target="_blank" rel="noopener noreferrer" data-vivo="whatsapp-numero">{site.telefonoDisplay}</a></li>
+          <li data-vivo="horario">{site.horario[lang]}</li>
         </ul>
         <a class="book-link" href={ruta('reclamaciones', lang)} style="margin-top:1.4rem">
           <Icon name="book" />

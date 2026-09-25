@@ -1,0 +1,37 @@
+---
+/**
+ * Redes sociales. Se dibujan las seis que admite el portal del Grupo
+ * Pacheco; las que no están en site.redes salen ocultas. El script de datos
+ * en vivo (public/js/datos-vivos.js) ajusta enlaces y visibilidad según lo
+ * configurado en el portal, sin tener que volver a publicar la web.
+ */
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+
+const { titulo = true } = Astro.props;
+const REDES = [
+  ['linkedin', 'LinkedIn'],
+  ['facebook', 'Facebook'],
+  ['instagram', 'Instagram'],
+  ['youtube', 'YouTube'],
+  ['tiktok', 'TikTok'],
+  ['x', 'X'],
+];
+const actual = Object.fromEntries(site.redes.map((r) => [r.icono, r.url]));
+---
+
+{
+  REDES.map(([red, nombre]) => (
+    <a
+      href={actual[red] ?? '#'}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={nombre}
+      title={titulo ? nombre : undefined}
+      data-red={red}
+      hidden={!actual[red]}
+    >
+      <Icon name={red} />
+    </a>
+  ))
+}

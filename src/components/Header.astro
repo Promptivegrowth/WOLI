@@ -13,8 +13,8 @@ const activo = (k) => k === clave;
 <div class="topbar">
   <div class="wrap topbar__inner">
     <nav aria-label={lang === 'en' ? 'Utility links' : 'Enlaces de utilidad'}>
-      <a href={`mailto:${site.email}`}><Icon name="mail" />{site.email}</a>
-      <a href={waLink()} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{site.telefonoDisplay}</a>
+      <a href={`mailto:${site.email}`} data-vivo="correo-principal" data-vivo-icono><Icon name="mail" /><span>{site.email}</span></a>
+      <a href={waLink()} target="_blank" rel="noopener noreferrer" data-vivo="whatsapp-numero" data-vivo-icono><Icon name="whatsapp" /><span>{site.telefonoDisplay}</span></a>
     </nav>
     <nav aria-label={lang === 'en' ? 'Secondary links' : 'Enlaces secundarios'}>
       <a href={site.seguimiento} target="_blank" rel="noopener noreferrer"><Icon name="gps" />{d.utilidad.seguimiento}</a>
@@ -93,7 +93,7 @@ const activo = (k) => k === clave;
     <a class="btn btn--wa btn--block btn--plain" href={waLink()} target="_blank" rel="noopener noreferrer">
       <Icon name="whatsapp" />{d.comun.hablarWhatsapp}
     </a>
-    <p class="mobile-nav__meta">{site.direccion}<br />{site.email}</p>
+    <p class="mobile-nav__meta"><span data-vivo="direccion">{site.direccion}</span><br /><span data-vivo="correo-principal">{site.email}</span></p>
   </div>
 </div>
 

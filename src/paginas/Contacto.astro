@@ -4,6 +4,7 @@ import PageHead from '../components/PageHead.astro';
 import Icon from '../components/Icon.astro';
 import { serviciosDe } from '../data/servicios.js';
 import { site, waLink } from '../data/site.js';
+import Redes from '../components/Redes.astro';
 import { t } from '../i18n/ui.js';
 import { ruta } from '../i18n/config.js';
 
@@ -107,29 +108,23 @@ const schema = {
             <ul class="info-list">
               <li>
                 <span class="info-list__ico"><Icon name="pin" /></span>
-                <span><b>{p.oficina}</b><a href={site.mapaLink} target="_blank" rel="noopener noreferrer">{site.direccion}</a></span>
+                <span><b>{p.oficina}</b><a href={site.mapaLink} target="_blank" rel="noopener noreferrer" data-vivo="direccion">{site.direccion}</a></span>
               </li>
               <li>
                 <span class="info-list__ico"><Icon name="mail" /></span>
-                <span><b>{p.correo}</b><a href={`mailto:${site.email}`}>{site.email}</a></span>
+                <span><b>{p.correo}</b><a href={`mailto:${site.email}`} data-vivo="correo-principal">{site.email}</a></span>
               </li>
               <li>
                 <span class="info-list__ico"><Icon name="whatsapp" /></span>
-                <span><b>WhatsApp</b><a href={waLink()} target="_blank" rel="noopener noreferrer">{site.telefonoDisplay}</a></span>
+                <span><b>WhatsApp</b><a href={waLink()} target="_blank" rel="noopener noreferrer" data-vivo="whatsapp-numero">{site.telefonoDisplay}</a></span>
               </li>
               <li>
                 <span class="info-list__ico"><Icon name="clock" /></span>
-                <span><b>{p.horario}</b><p>{site.horario[lang]}</p></span>
+                <span><b>{p.horario}</b><p data-vivo="horario">{site.horario[lang]}</p></span>
               </li>
             </ul>
             <div class="social">
-              {
-                site.redes.map((r) => (
-                  <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={r.nombre}>
-                    <Icon name={r.icono} />
-                  </a>
-                ))
-              }
+              <Redes titulo={false} />
             </div>
           </div>
 

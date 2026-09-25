@@ -67,11 +67,6 @@
       ],
       "destination": "https://wlicargo.com/$1",
       "permanent": true
-    },
-    {
-      "source": "/api/enviar.php",
-      "destination": "/api/enviar",
-      "permanent": false
     }
   ]
 }

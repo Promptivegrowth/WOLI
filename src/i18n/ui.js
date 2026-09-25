@@ -433,7 +433,14 @@ export const ui = {
       pedido: 'Pedido del consumidor',
       pedidoEj: 'Indica qué solución esperas de nuestra parte.',
       aviso:
-        'La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI. El proveedor debe dar respuesta al reclamo en un plazo no mayor a treinta (30) días calendario, pudiendo ampliarlo hasta por treinta (30) días adicionales previa comunicación al consumidor.',
+        'La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI. El proveedor debe dar respuesta al reclamo o queja en un plazo no mayor a quince (15) días hábiles improrrogables.',
+      departamento: 'Departamento',
+      provincia: 'Provincia',
+      distrito: 'Distrito',
+      seleccione: 'Seleccione',
+      elijaDepartamento: 'Elija el departamento',
+      elijaProvincia: 'Elija la provincia',
+      moneda: 'Moneda',
       declaracion:
         'Declaro que la información consignada es verdadera y autorizo el tratamiento de mis datos personales para la atención de este registro, conforme a la',
       registrar: 'Registrar en el Libro',
@@ -444,7 +451,7 @@ export const ui = {
       plazosTitulo: 'Plazos y seguimiento',
       plazos: [
         'Recibirás una constancia con el código de tu registro en tu correo.',
-        'Respondemos dentro de los 30 días calendario que establece la ley.',
+        'Respondemos en un plazo no mayor a 15 días hábiles, como establece la ley.',
         'Conservamos el registro por el plazo legal correspondiente.',
         'Puedes escribirnos citando tu código para consultar el avance.',
       ],
@@ -904,7 +911,14 @@ export const ui = {
       pedido: 'Consumer request',
       pedidoEj: 'State what solution you expect from us.',
       aviso:
-        'Filing a claim does not prevent you from using other dispute resolution channels, nor is it a prerequisite for filing a complaint with INDECOPI. The supplier must respond to the claim within no more than thirty (30) calendar days, extendable by a further thirty (30) days with prior notice to the consumer.',
+        'Filing a claim does not prevent you from using other dispute resolution channels, nor is it a prerequisite for filing a complaint with INDECOPI. The supplier must respond to the claim or complaint within no more than fifteen (15) non-extendable business days.',
+      departamento: 'Department (region)',
+      provincia: 'Province',
+      distrito: 'District',
+      seleccione: 'Select',
+      elijaDepartamento: 'Choose the department first',
+      elijaProvincia: 'Choose the province first',
+      moneda: 'Currency',
       declaracion:
         'I declare that the information provided is true and I authorise the processing of my personal data to handle this record, in accordance with the',
       registrar: 'File in the Complaints Book',
@@ -915,7 +929,7 @@ export const ui = {
       plazosTitulo: 'Deadlines and follow-up',
       plazos: [
         'You will receive a receipt with your registration code by email.',
-        'We reply within the 30 calendar days set by law.',
+        'We reply within no more than 15 business days, as required by law.',
         'We keep the record for the corresponding legal period.',
         'You can write to us quoting your code to check progress.',
       ],
