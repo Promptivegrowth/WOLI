@@ -11,7 +11,12 @@
      [data-vivo="correo-principal"]
      [data-vivo="direccion"]        texto (y enlace al mapa si es <a>)
      [data-vivo="horario"]          usa la versión en inglés en páginas /en
-     a[data-red]                    redes sociales (enlace y visibilidad)
+     a[data-red]                    redes sociales (enlace y visibilidad); si su
+                                    padre lleva data-red-envoltura, se oculta el padre
+     [data-vivo-lista="correo|telefono"]
+                                    lista hecha con su <template> hijo: por cada dato
+                                    se clona y se rellenan [data-campo="etiqueta"] y
+                                    [data-campo="valor"] (enlace mailto:/tel: incluido)
    Con data-vivo-icono solo se cambia el <span> interno (el icono se queda).
    Formato del número: data-vivo-formato="internacional" → +51 912 507 555.
    ========================================================================== */
@@ -52,7 +57,7 @@
 
   gp.leer(
     'datos_contacto',
-    'empresa_id=eq.' + gp.empresa + '&visible=is.true&select=tipo,etiqueta,valor,valor_en,detalle,red,orden&order=orden.asc'
+    'empresa_id=eq.' + gp.empresa + '&visible=is.true&select=tipo,etiqueta,etiqueta_en,valor,valor_en,detalle,red,orden&order=orden.asc'
   ).then(function (filas) {
     if (!filas || !filas.length) return;
     var de = function (t) { return filas.filter(function (f) { return f.tipo === t; }); };
@@ -109,13 +114,32 @@
       redes.forEach(function (r) { if (esHttps(r.valor)) porRed[r.red] = r.valor; });
       $$('a[data-red]').forEach(function (a) {
         var url = porRed[a.getAttribute('data-red')];
-        if (url) {
-          a.href = url;
-          a.hidden = false;
-        } else {
-          a.hidden = true;
-        }
+        var objetivo = a.parentElement && a.parentElement.hasAttribute('data-red-envoltura') ? a.parentElement : a;
+        if (url) a.href = url;
+        objetivo.hidden = !url;
       });
     }
+
+    // Listas con plantilla (correos o teléfonos por área).
+    $$('[data-vivo-lista]').forEach(function (lista) {
+      var tipo = lista.getAttribute('data-vivo-lista');
+      var plantilla = lista.querySelector('template');
+      var filasTipo = de(tipo).filter(function (f) { return tipo !== 'correo' || esCorreo(f.valor); });
+      if (!plantilla || !filasTipo.length) return;
+      var nuevos = filasTipo.map(function (f) {
+        var nodo = plantilla.content.firstElementChild.cloneNode(true);
+        nodo.setAttribute('data-vivo-item', '');
+        var et = nodo.querySelector('[data-campo="etiqueta"]');
+        var va = nodo.querySelector('[data-campo="valor"]');
+        if (et) et.textContent = (ingles && f.etiqueta_en) || f.etiqueta;
+        if (va) {
+          va.textContent = tipo === 'telefono' ? formato(f.valor, false) : f.valor;
+          if (va.tagName === 'A') va.href = tipo === 'telefono' ? hrefTel(f.valor) : 'mailto:' + f.valor;
+        }
+        return nodo;
+      });
+      Array.prototype.slice.call(lista.querySelectorAll(':scope > [data-vivo-item]')).forEach(function (v) { v.remove(); });
+      nuevos.forEach(function (n) { lista.appendChild(n); });
+    });
   });
 })();
