@@ -21,7 +21,7 @@ const existe = (rel) => {
 const hayMp4 = existe(site.video.mp4);
 const hayWebm = existe(site.video.webm);
 const usarVideo = Astro.props.usarVideo ?? (hayMp4 || hayWebm);
-const modos = ['ship', 'plane', 'truck', 'stamp'];
+const modos = ['ship', 'plane', 'truck', 'stamp', 'shield'];
 ---
 
 <section class="hero" id="inicio">

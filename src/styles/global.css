@@ -434,7 +434,7 @@ h1 .ital, .h1 .ital { -webkit-text-stroke-width: 2px; }
   letter-spacing: 0.08em; padding: 0.28rem 0.7rem; border-radius: var(--r-pill); text-transform: uppercase;
 }
 
-.hero h1 { font-size: var(--fs-h1); max-width: 15ch; margin-bottom: 1.4rem; }
+.hero h1 { font-size: var(--fs-h1); max-width: 17ch; margin-bottom: 1.4rem; }
 .hero__sub { font-size: var(--fs-lg); color: rgba(255, 255, 255, 0.8); max-width: 54ch; margin-bottom: 2.2rem; }
 
 .hero__foot {

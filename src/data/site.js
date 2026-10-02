@@ -66,7 +66,7 @@ export const contenido = {
       { icono: 'stamp', titulo: 'Asesoría aduanera', texto: 'Clasificación arancelaria, regímenes y documentación gestionados por especialistas certificados.' },
       { icono: 'chart', titulo: 'Optimización de costos', texto: 'Análisis de rutas, consolidación y modalidad de transporte para reducir el costo total de tu operación.' },
       { icono: 'truck', titulo: 'Flota propia', texto: 'Unidades de 15 y 7 toneladas con cobertura nacional para el tramo terrestre y la última milla.' },
-      { icono: 'shield', titulo: 'Booking garantizado', texto: 'Reservas de embarque aseguradas y disponibilidad FCL y LCL durante todo el año.' },
+      { icono: 'shield', titulo: 'Seguro de carga', texto: 'Seguro de carga internacional para proteger tu mercancía durante el tránsito.' },
     ],
     valores: [
       { titulo: 'Transparencia', texto: 'Tarifas publicadas, costos claros y comunicación honesta en cada etapa del proceso.' },
@@ -100,7 +100,7 @@ export const contenido = {
       { icono: 'stamp', titulo: 'Customs advice', texto: 'Tariff classification, regimes and documentation handled by certified specialists.' },
       { icono: 'chart', titulo: 'Cost optimisation', texto: 'Route, consolidation and transport mode analysis to cut the total cost of your operation.' },
       { icono: 'truck', titulo: 'Own fleet', texto: '15 and 7 tonne trucks with nationwide coverage for the road leg and the last mile.' },
-      { icono: 'shield', titulo: 'Guaranteed booking', texto: 'Secured space bookings and FCL and LCL availability all year round.' },
+      { icono: 'shield', titulo: 'Cargo insurance', texto: 'International cargo insurance to protect your goods while in transit.' },
     ],
     valores: [
       { titulo: 'Transparency', texto: 'Published rates, clear costs and honest communication at every stage of the process.' },

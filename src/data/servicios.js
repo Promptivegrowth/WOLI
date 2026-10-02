@@ -11,14 +11,14 @@ export const servicios = [
     es: {
       nombre: 'Carga Marítima',
       corto: 'Marítimo FCL y LCL',
-      tagline: 'FCL y LCL con booking garantizado durante todo el año.',
+      tagline: 'FCL y LCL, con salidas durante todo el año.',
       resumen:
-        'Soluciones de transporte marítimo confiables: gestionamos el envío de tus mercancías de forma segura y optimizada, con reservas de embarque garantizadas hacia y desde los principales puertos del mundo.',
+        'Soluciones de transporte marítimo confiables: gestionamos el envío de tus mercancías de forma segura y optimizada, hacia y desde los principales puertos del mundo.',
       intro:
-        'El transporte marítimo sigue siendo la columna vertebral del comercio exterior peruano. En WOLI operamos contenedor completo (FCL) y carga suelta consolidada (LCL) con acuerdos directos con líneas navieras y agentes corresponsales, lo que nos permite asegurar espacio, sostener tarifas y responder cuando el mercado se ajusta.',
+        'El transporte marítimo sigue siendo la columna vertebral del comercio exterior peruano. En WOLI operamos contenedor completo (FCL) y carga suelta consolidada (LCL) con acuerdos directos con líneas navieras y agentes corresponsales, lo que nos permite gestionar espacio, negociar tarifas y responder cuando el mercado se ajusta.',
       beneficios: [
-        'FCL y LCL disponibles todo el año, incluso en temporada alta.',
-        'Reservas de embarque garantizadas con confirmación documentada.',
+        'FCL y LCL disponibles todo el año.',
+        'Reserva de espacio con confirmación documentada.',
         'Cobertura en Callao, Chancay, Paita, Pisco, Ilo, Matarani y Chimbote.',
         'Rastreo del contenedor en tiempo real hasta el arribo.',
       ],
@@ -33,14 +33,14 @@ export const servicios = [
     en: {
       nombre: 'Ocean Freight',
       corto: 'FCL and LCL ocean',
-      tagline: 'FCL and LCL with guaranteed booking all year round.',
+      tagline: 'FCL and LCL, with sailings all year round.',
       resumen:
-        'Reliable ocean transport: we handle your shipments safely and efficiently, with guaranteed bookings to and from the main ports in the world.',
+        'Reliable ocean transport: we handle your shipments safely and efficiently, to and from the main ports in the world.',
       intro:
-        'Ocean transport remains the backbone of Peruvian foreign trade. At WOLI we run full container load (FCL) and consolidated less-than-container load (LCL) with direct agreements with shipping lines and correspondent agents, which lets us secure space, hold rates and respond when the market tightens.',
+        'Ocean transport remains the backbone of Peruvian foreign trade. At WOLI we run full container load (FCL) and consolidated less-than-container load (LCL) with direct agreements with shipping lines and correspondent agents, which lets us source space, negotiate rates and respond when the market tightens.',
       beneficios: [
-        'FCL and LCL available all year, even in peak season.',
-        'Guaranteed bookings with documented confirmation.',
+        'FCL and LCL available all year.',
+        'Space booking with documented confirmation.',
         'Coverage in Callao, Chancay, Paita, Pisco, Ilo, Matarani and Chimbote.',
         'Real-time container tracking until arrival.',
       ],
@@ -465,14 +465,14 @@ export const servicios = [
       corto: 'Sin contratos a largo plazo',
       tagline: 'Importa o exporta sin contratos ni compromisos de volumen.',
       resumen:
-        'Para operaciones urgentes o puntuales: precio fijo y transparente, booking garantizado en el momento y cero compromisos a largo plazo.',
+        'Para operaciones urgentes o puntuales: precio fijo y transparente, reserva inmediata según disponibilidad y cero compromisos a largo plazo.',
       intro:
         'No toda empresa necesita —ni quiere— amarrarse a un contrato anual. La modalidad SPOT está pensada para operaciones puntuales, picos de demanda o proyectos específicos: cotizas, aceptas el precio y reservas, sin volúmenes mínimos ni permanencia.',
       beneficios: [
         'Sin contratos a largo plazo ni volúmenes mínimos.',
         'Precio fijo y transparente al momento de la reserva.',
         'Ideal para operaciones urgentes o puntuales.',
-        'Booking garantizado al confirmar la operación.',
+        'Reserva inmediata al confirmar la operación, según disponibilidad.',
       ],
       incluye: [
         'Cotización SPOT con validez definida',
@@ -487,14 +487,14 @@ export const servicios = [
       corto: 'No long-term contracts',
       tagline: 'Import or export with no contracts or volume commitments.',
       resumen:
-        'For urgent or one-off operations: fixed transparent pricing, booking guaranteed on the spot and zero long-term commitments.',
+        'For urgent or one-off operations: fixed transparent pricing, immediate booking subject to availability and zero long-term commitments.',
       intro:
         'Not every company needs — or wants — to be tied to an annual contract. The SPOT mode is designed for one-off operations, demand peaks or specific projects: you get a quote, accept the price and book, with no minimum volumes and no lock-in.',
       beneficios: [
         'No long-term contracts and no minimum volumes.',
         'Fixed, transparent price at the moment of booking.',
         'Ideal for urgent or one-off operations.',
-        'Booking guaranteed when the operation is confirmed.',
+        'Immediate booking once the operation is confirmed, subject to availability.',
       ],
       incluye: [
         'SPOT quote with a defined validity',
