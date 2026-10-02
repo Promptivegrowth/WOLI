@@ -111,6 +111,14 @@ const schema = {
                 <span><b>{p.oficina}</b><a href={site.mapaLink} target="_blank" rel="noopener noreferrer" data-vivo="direccion">{site.direccion}</a></span>
               </li>
               <li>
+                <span class="info-list__ico"><Icon name="pin" /></span>
+                <span><b>{p.oficinaComercial}</b><a href={site.oficinaComercial.mapaLink} target="_blank" rel="noopener noreferrer">{site.oficinaComercial.direccion}</a></span>
+              </li>
+              <li>
+                <span class="info-list__ico"><Icon name="warehouse" /></span>
+                <span><b>{p.almacenes}</b><p>{site.almacenes.join(' · ')} — Lima</p></span>
+              </li>
+              <li>
                 <span class="info-list__ico"><Icon name="mail" /></span>
                 <span><b>{p.correo}</b><a href={`mailto:${site.email}`} data-vivo="correo-principal">{site.email}</a></span>
               </li>

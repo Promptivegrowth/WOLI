@@ -1,5 +1,5 @@
 /**
- * Los diez servicios, en español e inglés.
+ * Los once servicios, en español e inglés.
  * Añadir un objeto aquí crea automáticamente su ficha en los dos idiomas.
  */
 export const servicios = [
@@ -300,6 +300,56 @@ export const servicios = [
         'Permit management with regulatory bodies',
         'Handling of orange and red inspection channels',
         'Regularisation and document filing',
+      ],
+    },
+  },
+  {
+    id: 'seguro-carga',
+    slug: { es: 'seguro-de-carga', en: 'cargo-insurance' },
+    icono: 'shield',
+    imagen: '/img/op-patio.jpg',
+    es: {
+      nombre: 'Seguro de Carga Internacional',
+      corto: 'Tu mercancía protegida',
+      tagline: 'Tu mercancía protegida de origen a destino.',
+      resumen:
+        'Protegemos el valor de tu carga durante el transporte internacional, por mar, aire o tierra, con un seguro contratado según el valor y la ruta de cada embarque.',
+      intro:
+        'En un transporte internacional la carga pasa por varias manos, puertos y medios de transporte. Un siniestro sin cobertura puede costar más que el propio embarque. Gestionamos el seguro de tu carga junto con el resto de la operación, para que tu mercancía viaje protegida y tengas un solo interlocutor.',
+      beneficios: [
+        'Cobertura para embarques marítimos, aéreos y terrestres.',
+        'Prima según el valor de la mercancía y la ruta.',
+        'Contratación junto con el embarque, sin trámites aparte.',
+        'Acompañamiento en caso de siniestro.',
+      ],
+      incluye: [
+        'Cotización del seguro según valor, mercancía y ruta',
+        'Gestión del certificado de seguro por embarque',
+        'Coordinación con la aseguradora',
+        'Asesoría sobre el valor asegurado y la documentación',
+        'Apoyo en la gestión del reclamo ante un siniestro',
+      ],
+    },
+    en: {
+      nombre: 'International Cargo Insurance',
+      corto: 'Your goods, protected',
+      tagline: 'Your goods protected from origin to destination.',
+      resumen:
+        'We protect the value of your cargo during international transport, by sea, air or road, with insurance arranged according to the value and route of each shipment.',
+      intro:
+        'In international transport your cargo passes through many hands, ports and modes of transport. An uninsured loss can cost more than the shipment itself. We arrange your cargo insurance together with the rest of the operation, so your goods travel protected and you deal with a single contact.',
+      beneficios: [
+        'Coverage for ocean, air and road shipments.',
+        'Premium based on the value of the goods and the route.',
+        'Arranged together with the shipment, with no separate paperwork.',
+        'Support in the event of a loss.',
+      ],
+      incluye: [
+        'Insurance quote based on value, goods and route',
+        'Insurance certificate arranged per shipment',
+        'Coordination with the insurer',
+        'Advice on the insured value and documentation',
+        'Support with the claim in the event of a loss',
       ],
     },
   },

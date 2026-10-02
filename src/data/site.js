@@ -10,6 +10,15 @@ export const site = {
   direccion: 'Av. Venezuela 1684, Breña — Lima, Perú',
   // Para pies de página y tarjetas, donde la calle sobra
   direccionCorta: 'Breña, Lima — Perú',
+  // Otras sedes, para la página de contacto. La principal es `direccion`, y
+  // es la única que el portal puede editar en vivo.
+  oficinaComercial: {
+    direccion: 'Cal. Germán Schreiber Nro. 276, San Isidro — Lima, Perú',
+    mapaLink: 'https://maps.google.com/?q=Germán+Schreiber+276+San+Isidro+Lima+Perú',
+  },
+  // El cliente indicó «Napo, Argentina y Venezuela». Van con su tipo de vía:
+  // sin él se leen como almacenes en esos países. Confirmar vía y número.
+  almacenes: ['Jr. Napo', 'Av. Argentina', 'Av. Venezuela'],
   distrito: 'Breña',
   email: 'gerencia@wlicargo.com',
   telefonoDisplay: '+51 912 507 555',
