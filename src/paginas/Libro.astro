@@ -33,7 +33,7 @@ const hoy = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-PE', { d
             <h2 class="h3" style="margin-bottom:.8rem">{site.legal}</h2>
             <p style="color:var(--ink-soft);font-size:.95rem">
               {site.direccion}{site.ruc ? ` · RUC ${site.ruc}` : ''}<br />
-              {site.email} · {site.telefonoDisplay}
+              <span data-vivo="correo-principal">{site.email}</span> · <span data-vivo="whatsapp-numero">{site.telefonoDisplay}</span>
             </p>
           </div>
           <div style="text-align:right">

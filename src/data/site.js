@@ -10,17 +10,16 @@ export const site = {
   direccion: 'Av. Venezuela 1684, Breña — Lima, Perú',
   // Para pies de página y tarjetas, donde la calle sobra
   direccionCorta: 'Breña, Lima — Perú',
-  // Otras sedes, para la página de contacto. La principal es `direccion`, y
-  // es la única que el portal puede editar en vivo.
-  oficinaComercial: {
-    direccion: 'Cal. Germán Schreiber Nro. 276, San Isidro — Lima, Perú',
-    mapaLink: 'https://maps.google.com/?q=Germán+Schreiber+276+San+Isidro+Lima+Perú',
-  },
+  // San Isidro (Cal. Germán Schreiber 276) es el domicilio legal, pero no
+  // una oficina que atienda al público: el cliente pidió no mostrarlo.
   // El cliente indicó «Napo, Argentina y Venezuela». Van con su tipo de vía:
   // sin él se leen como almacenes en esos países. Confirmar vía y número.
   almacenes: ['Jr. Napo', 'Av. Argentina', 'Av. Venezuela'],
   distrito: 'Breña',
-  email: 'gerencia@wlicargo.com',
+  // Buzón comercial de la web (redirige a quien cotiza). gerencia@ es el
+  // correo de Fernando Boloña y solo figura en su tarjeta.
+  // El portal lo sobrescribe en vivo: hay que cambiarlo también allí.
+  email: 'cotizaciones@wlicargo.com',
   telefonoDisplay: '+51 912 507 555',
   whatsapp: '51912507555',
   tiempoRespuesta: { es: '24 horas', en: '24 hours' },

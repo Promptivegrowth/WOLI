@@ -31,7 +31,7 @@ export const equipo = [
     cargo: null,
     movil: '+51 997 059 212',
     whatsapp: '51997059212',
-    // Sin correo personal facilitado: se usa el de gerencia de la empresa.
+    // Confirmado por el cliente: gerencia@ es el correo de Fernando.
     email: 'gerencia@wlicargo.com',
     foto: null,
   },

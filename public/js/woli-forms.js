@@ -294,7 +294,7 @@
           message(form, 'err', texto);
         } else {
           var enlace = document.querySelector('[data-vivo="correo-principal"]');
-          var correo = ((enlace && enlace.textContent) || 'gerencia@wlicargo.com').trim();
+          var correo = ((enlace && enlace.textContent) || 'cotizaciones@wlicargo.com').trim();
           message(
             form,
             'err',
