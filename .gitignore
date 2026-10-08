@@ -11,3 +11,7 @@ Thumbs.db
 npm-debug.log*
 # Material fuente del cliente (fotos originales, logos .ai, documentos)
 Woli - Web/
+# Vídeos originales del cliente en la raíz: pesan decenas de MB. A la web
+# va la versión comprimida de public/video/.
+/*.mp4
+/*.mov

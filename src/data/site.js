@@ -40,6 +40,14 @@ export const site = {
   // Vídeo de portada. Sube tu archivo a public/video/ con estos nombres.
   // Si no existe, el hero usa la imagen de respaldo automáticamente.
   video: { mp4: '/video/hero.mp4', webm: '/video/hero.webm', poster: '/img/hero-poster.jpg' },
+  // Spot institucional de la sección «Por qué WOLI». El original (74 MB, 60 fps)
+  // se queda en la raíz, fuera de git; aquí va la versión a 720p y 30 fps.
+  videoInstitucional: {
+    mp4: '/video/institucional.mp4',
+    webm: '/video/institucional.webm',
+    poster: '/img/institucional-poster.jpg',
+    duracion: '0:34',
+  },
   redes: [
     { nombre: 'LinkedIn', url: 'https://www.linkedin.com', icono: 'linkedin' },
     { nombre: 'Facebook', url: 'https://www.facebook.com', icono: 'facebook' },

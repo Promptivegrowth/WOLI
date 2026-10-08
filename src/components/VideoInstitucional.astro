@@ -1,0 +1,191 @@
+---
+/**
+ * Video institucional de WOLI.
+ *
+ * Es un spot con música, logo incrustado y teléfono en pantalla: se muestra
+ * entero (16:9, sin recortar) y se puede escuchar. Arranca en silencio y en
+ * bucle cuando la sección se acerca a la pantalla; el visitante activa el
+ * sonido con un botón, y al hacerlo el video vuelve al principio para que lo
+ * oiga completo.
+ *
+ * No se descarga al abrir la página (pesa unos 5 MB): las fuentes se añaden
+ * por JavaScript al acercarse. Con ahorro de datos, conexión 2G o «reducir
+ * movimiento» no arranca solo: queda la portada con un botón de reproducir.
+ */
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+import { t } from '../i18n/ui.js';
+
+const { lang = 'es' } = Astro.props;
+const v = t(lang).usp.video;
+const { mp4, webm, poster, duracion } = site.videoInstitucional;
+---
+
+<figure class="vid" data-vid>
+  <div class="vid__frame">
+    <video
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster={poster}
+      aria-label={v.etiqueta}
+      data-mp4={mp4}
+      data-webm={webm}
+    ></video>
+
+    <!-- Solo cuando no arranca solo: portada con botón grande -->
+    <button class="vid__play" type="button" data-vid-play hidden>
+      <span class="vid__play-ico"><Icon name="play" /></span>
+      <span>{v.ver}</span>
+    </button>
+
+    <div class="vid__ctrl">
+      <button class="vid__btn" type="button" data-vid-sonido aria-pressed="false">
+        <Icon name="mute" class="vid__si-mute" />
+        <Icon name="sound" class="vid__si-sound" />
+        <span data-on={v.silenciar} data-off={v.activarSonido}>{v.activarSonido}</span>
+      </button>
+      <button
+        class="vid__btn vid__btn--ico"
+        type="button"
+        data-vid-pausa
+        aria-label={v.pausar}
+        data-pausar={v.pausar}
+        data-reproducir={v.reproducir}
+      >
+        <Icon name="pause" class="vid__si-pause" />
+        <Icon name="play" class="vid__si-play" />
+      </button>
+    </div>
+
+    <div class="vid__bar" aria-hidden="true"><i></i></div>
+  </div>
+
+  <figcaption class="vid__cap">
+    <span class="vid__dot" aria-hidden="true"></span>
+    {v.leyenda} · {duracion}
+  </figcaption>
+</figure>
+
+<script is:inline>
+  (function () {
+    var fig = document.querySelector('[data-vid]');
+    if (!fig) return;
+    var video = fig.querySelector('video');
+    var btnSonido = fig.querySelector('[data-vid-sonido]');
+    var btnPausa = fig.querySelector('[data-vid-pausa]');
+    var btnPlay = fig.querySelector('[data-vid-play]');
+    var barra = fig.querySelector('.vid__bar i');
+    var textoSonido = btnSonido.querySelector('span');
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var con = navigator.connection || {};
+    var conexionPobre = !!(con.saveData || /^(slow-)?2g$/.test(con.effectiveType || ''));
+    var automatico = !reduce && !conexionPobre;
+
+    var cargado = false;
+    var pausadoPorUsuario = false;
+    var yaConSonido = false; // la primera vez que se activa el sonido, vuelve al inicio
+
+    function cargar() {
+      if (cargado) return;
+      cargado = true;
+      [['webm', video.dataset.webm], ['mp4', video.dataset.mp4]].forEach(function (f) {
+        if (!f[1]) return;
+        var s = document.createElement('source');
+        s.src = f[1];
+        s.type = 'video/' + f[0];
+        video.appendChild(s);
+      });
+      video.load();
+    }
+
+    function reproducir() {
+      cargar();
+      var p = video.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          // El navegador bloqueó el arranque (iPhone en bajo consumo, por
+          // ejemplo). Sin esto quedaría una portada sin nada que pulsar.
+          if (!fig.classList.contains('is-started')) {
+            btnPlay.hidden = false;
+            fig.classList.add('is-manual');
+          }
+        });
+      }
+    }
+
+    function pintarPausa() {
+      var pausado = video.paused;
+      fig.classList.toggle('is-paused', pausado);
+      btnPausa.setAttribute('aria-label', pausado ? btnPausa.dataset.reproducir : btnPausa.dataset.pausar);
+    }
+
+    function pintarSonido() {
+      var conSonido = !video.muted;
+      fig.classList.toggle('is-sound', conSonido);
+      btnSonido.setAttribute('aria-pressed', conSonido ? 'true' : 'false');
+      textoSonido.textContent = conSonido ? textoSonido.dataset.on : textoSonido.dataset.off;
+    }
+
+    video.addEventListener('play', function () { fig.classList.add('is-started'); btnPlay.hidden = true; pintarPausa(); });
+    video.addEventListener('pause', pintarPausa);
+    video.addEventListener('volumechange', pintarSonido);
+    video.addEventListener('timeupdate', function () {
+      if (video.duration) barra.style.width = (video.currentTime / video.duration) * 100 + '%';
+    });
+
+    btnSonido.addEventListener('click', function () {
+      if (video.muted && !yaConSonido) {
+        // Primera vez con sonido: desde el principio, para oírlo completo.
+        yaConSonido = true;
+        video.currentTime = 0;
+      }
+      video.muted = !video.muted;
+      pintarSonido();
+      pausadoPorUsuario = false;
+      reproducir();
+    });
+
+    btnPausa.addEventListener('click', function () {
+      if (video.paused) { pausadoPorUsuario = false; reproducir(); }
+      else { pausadoPorUsuario = true; video.pause(); }
+    });
+
+    // Sin reproducción automática: la portada con un botón que arranca con sonido.
+    btnPlay.addEventListener('click', function () {
+      yaConSonido = true;
+      video.muted = false;
+      // Se pinta a mano: la primera carga del video descarta los avisos
+      // pendientes del elemento, y el de «cambió el volumen» se perdería.
+      pintarSonido();
+      reproducir();
+    });
+
+    if (!automatico) {
+      btnPlay.hidden = false;
+      fig.classList.add('is-manual');
+    }
+
+    if ('IntersectionObserver' in window) {
+      // Se descarga al acercarse y se pausa al salir de pantalla: un video
+      // con sonido que sigue sonando donde nadie lo ve es lo primero que molesta.
+      new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (e.isIntersecting) {
+            if (automatico && !pausadoPorUsuario) reproducir();
+          } else if (!video.paused) {
+            video.pause();
+          }
+        });
+      }, { rootMargin: '200px 0px' }).observe(fig);
+    } else if (automatico) {
+      reproducir();
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && !video.paused) video.pause();
+    });
+  })();
+</script>

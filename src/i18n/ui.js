@@ -77,6 +77,15 @@ export const ui = {
       tituloItalica: 'porque',
       cta1: 'Hablemos de logística',
       cta2: 'Ver servicios',
+      video: {
+        etiqueta: 'Video institucional de World Logistics International',
+        leyenda: 'Video institucional',
+        ver: 'Ver video',
+        activarSonido: 'Activar sonido',
+        silenciar: 'Silenciar',
+        pausar: 'Pausar el video',
+        reproducir: 'Reproducir el video',
+      },
       items: [
         {
           titulo: 'Trato humano. Control digital.',
@@ -84,9 +93,9 @@ export const ui = {
             'Te atiende una persona que conoce tu operación de memoria, respaldada por un sistema de seguimiento que te muestra cada hito de la carga en tiempo real.',
         },
         {
-          titulo: 'Suficientemente grandes para mover el mundo. Suficientemente cercanos para responderte.',
+          titulo: 'Alcance internacional, atención cercana.',
           texto:
-            'Operamos en los siete terminales portuarios del Perú y con una red de agentes corresponsales en los principales mercados, sin perder de vista lo único que importa: tu negocio.',
+            'Operamos en los principales puertos del Perú y contamos con agentes corresponsales en más de 120 países, sin perder de vista lo único que importa: tu negocio.',
         },
         {
           titulo: 'Flexibilidad real.',
@@ -562,6 +571,15 @@ export const ui = {
       tituloItalica: 'because',
       cta1: "Let's talk logistics",
       cta2: 'View services',
+      video: {
+        etiqueta: 'World Logistics International corporate video',
+        leyenda: 'Corporate video',
+        ver: 'Watch video',
+        activarSonido: 'Sound on',
+        silenciar: 'Mute',
+        pausar: 'Pause video',
+        reproducir: 'Play video',
+      },
       items: [
         {
           titulo: 'Human outside. Digital inside.',
@@ -569,9 +587,9 @@ export const ui = {
             'You deal with a person who knows your operation by heart, backed by a tracking system that shows every cargo milestone in real time.',
         },
         {
-          titulo: 'Big enough to move the world. Close enough to answer you.',
+          titulo: 'Global reach, personal service.',
           texto:
-            'We operate across all seven Peruvian port terminals and through a network of correspondent agents in the main markets, never losing sight of the only thing that matters: your business.',
+            'We operate in Peru’s main ports and work with correspondent agents in more than 120 countries, never losing sight of the only thing that matters: your business.',
         },
         {
           titulo: 'Real flexibility.',

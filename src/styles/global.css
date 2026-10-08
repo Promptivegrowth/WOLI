@@ -543,10 +543,116 @@ h1 .ital, .h1 .ital { -webkit-text-stroke-width: 2px; }
 /* ==========================================================================
    ACORDEÓN
    ========================================================================== */
-.usp { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
-@media (max-width: 900px) { .usp { grid-template-columns: 1fr; } }
-.usp__media { border-radius: var(--rc-sm) 0 var(--rc-sm) 0; overflow: hidden; aspect-ratio: 4 / 3; }
-.usp__media img { width: 100%; height: 100%; object-fit: cover; }
+/* «Por qué WOLI»: el título a lo ancho y, debajo, el video institucional
+   junto a las razones. El video es 16:9 con texto incrustado (logo y
+   teléfono), así que no se recorta: manda su proporción, no la columna. */
+.usp {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-areas: 'head cta' 'media side';
+  column-gap: clamp(2rem, 4.2vw, 4rem);
+  row-gap: clamp(2rem, 4vw, 3.2rem);
+  align-items: start;
+}
+.usp__head { grid-area: head; }
+.usp__cta { grid-area: cta; align-self: end; justify-self: end; margin: 0; }
+.usp__head .h2 { margin-bottom: 0; }
+.usp__media { grid-area: media; }
+.usp__side { grid-area: side; }
+@media (max-width: 960px) {
+  .usp { grid-template-columns: 1fr; grid-template-areas: 'head' 'media' 'side' 'cta'; }
+  .usp__cta { justify-self: start; }
+}
+
+/* Acordeón numerado */
+.acc--num .acc__btn { justify-content: flex-start; }
+.acc__num {
+  flex: none; align-self: flex-start; margin-top: 0.3em;
+  font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--wo-orange); opacity: 0.55; transition: opacity 0.35s var(--ease);
+}
+.acc__btn[aria-expanded='true'] .acc__num { opacity: 1; }
+.acc__txt { flex: 1; min-width: 0; }
+
+/* ---------- Reproductor del video institucional ---------- */
+.vid { margin: 0; }
+.vid__frame {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; isolation: isolate;
+  border-radius: var(--rc-sm) 0 var(--rc-sm) 0;
+  background: #071a26 url('/img/institucional-poster.jpg') center / cover no-repeat;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.vid__frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Controles arriba a la derecha: el video trae su logo arriba a la izquierda,
+   el teléfono abajo a la derecha y la placa final abajo; ahí no tapan nada. */
+.vid__ctrl {
+  position: absolute; top: clamp(0.6rem, 2vw, 1rem); right: clamp(0.6rem, 2vw, 1rem); z-index: 2;
+  display: flex; gap: 0.45rem;
+}
+.vid__btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1rem;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(7, 26, 38, 0.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: #fff; font: 600 0.8rem/1 var(--font-body); cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+.vid__btn:hover { background: var(--wo-orange); border-color: var(--wo-orange); }
+.vid__btn svg { width: 16px; height: 16px; flex: none; }
+.vid__btn--ico { width: 40px; padding: 0; justify-content: center; }
+
+/* Iconos según estado */
+.vid__si-sound, .vid .vid__si-play { display: none; }
+.vid.is-sound .vid__si-mute { display: none; }
+.vid.is-sound .vid__si-sound { display: block; }
+.vid.is-paused .vid__si-pause { display: none; }
+.vid.is-paused .vid__si-play { display: block; }
+/* Con sonido, el botón se enciende: que se note que está sonando */
+.vid.is-sound [data-vid-sonido] { background: var(--wo-orange); border-color: var(--wo-orange); }
+
+/* Mientras no arranca (o si no arranca solo), los controles esperan */
+.vid:not(.is-started) .vid__ctrl { opacity: 0; pointer-events: none; }
+.vid__ctrl { transition: opacity 0.4s var(--ease); }
+
+/* Portada con botón grande: ahorro de datos, 2G o «reducir movimiento» */
+.vid__play {
+  position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.8rem; border: 0; cursor: pointer; color: #fff; font: 600 0.92rem var(--font-body);
+  background: linear-gradient(180deg, rgba(7, 26, 38, 0.1), rgba(7, 26, 38, 0.55));
+}
+.vid__play[hidden] { display: none; }
+.vid__play-ico {
+  width: 74px; height: 74px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--wo-orange); box-shadow: 0 14px 34px rgba(242, 86, 29, 0.45);
+  transition: transform 0.35s var(--ease);
+}
+.vid__play-ico svg { width: 28px; height: 28px; margin-left: 4px; }
+.vid__play:hover .vid__play-ico { transform: scale(1.07); }
+
+/* Progreso: una línea fina, como en un reproductor de cine */
+.vid__bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; z-index: 2; background: rgba(255, 255, 255, 0.16); }
+.vid__bar i { display: block; height: 100%; width: 0; background: var(--wo-orange); transition: width 0.25s linear; }
+
+.vid__cap {
+  display: flex; align-items: center; gap: 0.6rem; margin-top: 0.9rem;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+.vid__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wo-orange); flex: none; }
+.vid.is-started:not(.is-paused) .vid__dot { animation: vid-pulso 1.6s var(--ease) infinite; }
+@keyframes vid-pulso {
+  0% { box-shadow: 0 0 0 0 rgba(242, 86, 29, 0.6); }
+  100% { box-shadow: 0 0 0 9px rgba(242, 86, 29, 0); }
+}
+
+@media (max-width: 520px) {
+  .vid__btn { height: 36px; padding: 0 0.8rem; font-size: 0.74rem; }
+  .vid__btn--ico { width: 36px; padding: 0; }
+  .vid__play-ico { width: 60px; height: 60px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vid__dot { animation: none !important; }
+}
 
 .acc { border-top: 1px solid rgba(255, 255, 255, 0.2); }
 .acc__item { border-bottom: 1px solid rgba(255, 255, 255, 0.2); }

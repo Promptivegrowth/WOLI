@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import Marquee from '../components/Marquee.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import CtaBand from '../components/CtaBand.astro';
+import VideoInstitucional from '../components/VideoInstitucional.astro';
 import { site, c, terminalesPeru, puertosMundo } from '../data/site.js';
 import { serviciosDe } from '../data/servicios.js';
 import { t } from '../i18n/ui.js';
@@ -49,24 +50,38 @@ const schema = {
       <div class="slab slab--blue slab--tl-br" style="padding: clamp(2rem,5vw,4.5rem)" data-reveal>
         <div class="grid-lines" aria-hidden="true"></div>
         <div class="usp">
-          <div>
-            <p class="eyebrow">{d.usp.eyebrow}</p>
-            <h2 class="h2" style="color:#fff">
-              {d.usp.titulo}<br /><span class="ital">{d.usp.tituloItalica}</span>
-            </h2>
-            <div class="usp__media" style="margin-top:2rem">
-              <img src="/img/cr-team.jpg" alt={lang === 'en' ? 'WOLI coordinators reviewing an operation' : 'Coordinadores de WOLI revisando una operación'} loading="lazy" decoding="async" />
+          <!-- Título a lo ancho: el video necesita la columna grande -->
+          <div class="usp__head">
+            <div>
+              <p class="eyebrow">{d.usp.eyebrow}</p>
+              <h2 class="h2" style="color:#fff">
+                {d.usp.titulo}<br /><span class="ital">{d.usp.tituloItalica}</span>
+              </h2>
             </div>
           </div>
 
-          <div>
-            <div class="acc" data-single="true">
+          <!-- Junto al título en escritorio; al final en móvil, tras las razones -->
+          <div class="btn-row usp__cta">
+            <a class="btn" href={ruta('contacto', lang)}>
+              {d.usp.cta1}
+              <span class="btn__ico"><Icon name="arrowUpRight" /></span>
+            </a>
+            <a class="btn btn--light btn--plain" href={ruta('servicios', lang)}>{d.usp.cta2}</a>
+          </div>
+
+          <div class="usp__media">
+            <VideoInstitucional lang={lang} />
+          </div>
+
+          <div class="usp__side">
+            <div class="acc acc--num" data-single="true">
               {
                 d.usp.items.map((item, i) => (
                   <div class="acc__item">
                     <h3>
-                      <button class="acc__btn" type="button" aria-expanded={i === 1 ? 'true' : 'false'} aria-controls={`usp-${i}`}>
-                        {item.titulo}
+                      <button class="acc__btn" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`usp-${i}`}>
+                        <span class="acc__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                        <span class="acc__txt">{item.titulo}</span>
                         <span class="acc__ico"><Icon name="plus" /></span>
                       </button>
                     </h3>
@@ -76,14 +91,6 @@ const schema = {
                   </div>
                 ))
               }
-            </div>
-
-            <div class="btn-row" style="margin-top:2.4rem">
-              <a class="btn" href={ruta('contacto', lang)}>
-                {d.usp.cta1}
-                <span class="btn__ico"><Icon name="arrowUpRight" /></span>
-              </a>
-              <a class="btn btn--light btn--plain" href={ruta('servicios', lang)}>{d.usp.cta2}</a>
             </div>
           </div>
         </div>
